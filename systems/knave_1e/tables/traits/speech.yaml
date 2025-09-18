@@ -1,0 +1,27 @@
+kind: table
+id: speech
+name: "Speech"
+version: 1
+roll: 1d20
+description: "Speech patterns and styles"
+entries:
+  1: Blunt
+  2: Booming
+  3: Breathy
+  4: Cryptic
+  5: Drawling
+  6: Droning
+  7: Flowery
+  8: Formal
+  9: Gravelly
+  10: Hoarse
+  11: Mumbling
+  12: Precise
+  13: Quaint
+  14: Rambling
+  15: Rapid-fire
+  16: Dialect
+  17: Slow
+  18: Squeaky
+  19: Stuttering
+  20: Whispery

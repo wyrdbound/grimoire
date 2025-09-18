@@ -1,0 +1,53 @@
+id: choose_starting_weapon
+kind: flow
+name: "Choose Starting Weapon for Character Creation"
+description: "Starting weapon for character creation process for {{ system.name }}"
+version: 1
+
+inputs:
+  - type: character
+    id: knave
+outputs:
+  - type: character
+    id: knave
+
+variables:
+  - id: selected_weapon
+    type: weapon
+  - id: character_with_weapon
+    type: character
+
+steps:
+  - id: choose_weapon
+    name: "Choose Starting Weapon"
+    type: player_choice
+    prompt: "Choose one weapon to start with:"
+    choice_source:
+      table: weapons
+    actions:
+      - set_value:
+          path: "variables.selected_weapon"
+          value: "{{ result }}"
+      - display_value: "variables.selected_weapon"
+
+  - id: invoke_add_item_to_character
+    name: "Invoke Add Item to Character"
+    type: flow_call
+    flow: add_item_to_character
+    inputs:
+      character: "{{ inputs.knave }}"
+      item: "{{ variables.selected_weapon }}"
+    actions:
+      - set_value:
+          path: "variables.character_with_weapon"
+          value: "{{ result.character }}"
+      - display_value: "variables.character_with_weapon"
+
+  - id: complete_choose_weapon
+    name: "Complete Choose Starting Weapon"
+    type: completion
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ variables.character_with_weapon }}"
+      - display_value: "outputs.knave"

@@ -1,0 +1,9 @@
+id: armor
+kind: model
+name: "Armor"
+description: "Armor model for Knave (1st Edition)"
+extends: [item, breakable]
+version: 1
+attributes:
+  armor_defense: { type: int, optional: true }
+  armor_bonus: { type: int, default: 0 }

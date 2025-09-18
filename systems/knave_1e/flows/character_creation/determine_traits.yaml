@@ -1,0 +1,85 @@
+id: determine_traits
+kind: flow
+name: "Determine Character Traits"
+description: "Determine the physical and personality traits for character creation process for {{ system.name }}"
+version: 1
+
+outputs:
+  - type: character_traits
+    id: traits
+
+steps:
+  - id: generate_traits
+    name: "Determine Character Traits"
+    type: table_roll
+    prompt: "Rolling for your character's physical and personality traits..."
+    parallel: true
+    tables:
+      - table: physique
+        actions:
+          - set_value:
+              path: "outputs.traits.physique"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.physique"
+      - table: face
+        actions:
+          - set_value:
+              path: "outputs.traits.face"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.face"
+      - table: skin
+        actions:
+          - set_value:
+              path: "outputs.traits.skin"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.skin"
+      - table: hair
+        actions:
+          - set_value:
+              path: "outputs.traits.hair"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.hair"
+      - table: clothing
+        actions:
+          - set_value:
+              path: "outputs.traits.clothing"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.clothing"
+      - table: virtue
+        actions:
+          - set_value:
+              path: "outputs.traits.virtue"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.virtue"
+      - table: vice
+        actions:
+          - set_value:
+              path: "outputs.traits.vice"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.vice"
+      - table: speech
+        actions:
+          - set_value:
+              path: "outputs.traits.speech"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.speech"
+      - table: background
+        actions:
+          - set_value:
+              path: "outputs.traits.background"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.background"
+      - table: misfortunes
+        actions:
+          - set_value:
+              path: "outputs.traits.misfortunes"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.misfortunes"
+      - table: alignment
+        actions:
+          - set_value:
+              path: "outputs.traits.alignment"
+              value: "{{ result.entry }}"
+          # - display_value: "outputs.traits.alignment"
+    actions:
+      - display_value: "outputs.traits"

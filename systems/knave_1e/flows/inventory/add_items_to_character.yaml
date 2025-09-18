@@ -1,0 +1,43 @@
+id: "add_items_to_character"
+kind: "flow"
+name: "Add Items to Character"
+description: "Add multiple items to a character's inventory"
+version: 1
+
+inputs:
+  - type: "character"
+    id: "character"
+    required: true
+    description: "The character to add the items to"
+  - type: "list"
+    id: "items"
+    required: true
+    description: "The list of items to add to the character's inventory"
+
+outputs:
+  - type: "character"
+    id: "character"
+    description: "The updated character with the new items"
+
+steps:
+  - id: "add_items"
+    name: "Add Items to Inventory"
+    type: "completion"
+    # TODO: When flow calling is fully implemented, replace this with:
+    # for each item in inputs.items:
+    #   flow_call: add_item_to_character(character=character, item=item)
+    # This will ensure capacity checks and other validation logic is reused
+    actions:
+      - set_value:
+          path: "outputs.character.inventory"
+          value: "{{ (inputs.character.inventory | default([])) + (inputs.items | list) }}"
+      - log_event:
+          message: "Added {{ inputs.items | length }} items to {{ inputs.character.name or 'Unnamed Character' }}: {{ inputs.items | map(attribute='display_name') | join(', ') }}. Inventory: {{ ((inputs.character.inventory | default([])) + (inputs.items | list)) | length }} slots used / {{ inputs.character.inventory_capacity }} capacity"
+          data:
+            character_name: "{{ inputs.character.name }}"
+            items_added: "{{ inputs.items | map(attribute='display_name') | list }}"
+            items_count: "{{ inputs.items | length }}"
+            slots_used_after: "{{ ((inputs.character.inventory | default([])) + (inputs.items | list)) | sum(attribute='slot_cost') }}"
+            inventory_capacity: "{{ inputs.character.inventory_capacity }}"
+      - log_message:
+          message: "Added {{ inputs.items | length }} items to {{ inputs.character.name or 'Unnamed Character' }}: {{ inputs.items | map(attribute='display_name') | join(', ') }}. Inventory: {{ ((inputs.character.inventory | default([])) + (inputs.items | list)) | length }} slots used / {{ inputs.character.inventory_capacity }} capacity"

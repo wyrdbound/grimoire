@@ -1,0 +1,40 @@
+kind: compendium
+id: ranged
+name: "Ranged Weapons"
+model: weapon
+version: 1
+description: "A collection of ranged weapons for attacking from a distance."
+entries:
+  sling:
+    {
+      name: "Sling",
+      damage: "1d4",
+      type: "ranged",
+      quality: 3,
+      cost: 5,
+      description: "A simple leather pouch with cords. Easy to conceal and use, though it requires skill to aim accurately.",
+    }
+  bow:
+    {
+      name: "Bow",
+      damage: "1d6",
+      type: "ranged",
+      slot_cost: 2,
+      weight: 10,
+      hands: 2,
+      quality: 3,
+      cost: 15,
+      description: "A curved wooden stave that fires arrows. Silent and accurate in skilled hands, perfect for hunting or stealth.",
+    }
+  crossbow:
+    {
+      name: "Crossbow",
+      damage: "1d8",
+      type: "ranged",
+      slot_cost: 3,
+      weight: 15,
+      hands: 2,
+      quality: 3,
+      cost: 60,
+      description: "A mechanical bow mounted on a stock. More powerful than a regular bow but slower to reload and more complex.",
+    }

@@ -1,0 +1,70 @@
+id: roll_abilities
+kind: flow
+name: "Roll Abilities for a Character"
+description: "Rolling abilities during Character Creation for {{ system.name }}"
+version: 1
+
+outputs:
+  - type: character_abilities
+    id: abilities
+
+variables:
+  - id: hp_dice_roll
+    type: str
+    description: "The dice roll used to determine hit points."
+
+steps:
+  - id: roll_abilities
+    name: "Roll Abilities"
+    type: dice_sequence
+    prompt: "Roll 3d6 for each ability. The lowest die becomes your bonus."
+    sequence:
+      items:
+        [
+          "strength",
+          "dexterity",
+          "constitution",
+          "intelligence",
+          "wisdom",
+          "charisma",
+        ]
+      roll: "3d6kl1"
+      actions:
+        - set_value:
+            path: "outputs.abilities.{{ item }}.bonus"
+            value: "{{ result.total }}"
+        - log_message:
+            message: "{{ item[0:3]|upper }}: bonus +{{ result.total }}, defense {{ result.total + 10 }} ({{ result.detail }})"
+
+  - id: ability_swap_choice
+    name: "Optional Ability Swap"
+    type: player_choice
+    prompt: "You may optionally swap the scores of two abilities."
+    choices:
+      - id: no_swap
+        label: "Keep abilities as rolled"
+        next_step: "complete_roll_abilities"
+      - id: swap_abilities
+        label: "Swap two ability scores"
+        next_step: swap_values_step
+
+  - id: swap_values_step
+    name: "Choose Abilities to Swap"
+    type: player_choice
+    prompt: "Choose two abilities to swap:"
+    choice_source:
+      table_from_values: "outputs.abilities"
+      selection_count: 2
+      display_format: "{{ key|title }}: +{{ value.bonus }}"
+    actions:
+      - swap_values:
+          path1: "outputs.abilities.{{ results[0] }}.bonus"
+          path2: "outputs.abilities.{{ results[1] }}.bonus"
+    next_step: complete_roll_abilities
+
+  - id: complete_roll_abilities
+    name: "Complete Roll Abilities"
+    type: completion
+    prompt: "Abilities have been rolled for your character."
+    actions:
+      - display_value: "outputs.abilities"

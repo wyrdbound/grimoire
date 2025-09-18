@@ -1,0 +1,60 @@
+kind: compendium
+id: light
+name: "Light Sources"
+model: item
+version: 1
+description: "A collection of light sources for adventuring in dark environments."
+entries:
+  candle:
+    {
+      name: "Candle",
+      weight: 1,
+      cost: 1,
+      tags: [light],
+      description: "A simple wax candle that provides dim light for several hours. Burns quietly but vulnerable to wind.",
+    }
+  candles_5:
+    {
+      name: "Candle",
+      qty: 5,
+      cost: 5,
+      tags: [light],
+      description: "A bundle of five wax candles. Each provides dim light for several hours. Useful for extended exploration.",
+    }
+  lantern:
+    {
+      name: "Lantern",
+      cost: 30,
+      tags: [light],
+      description: "A sturdy metal lantern with glass panels. Requires oil to function but provides bright, steady light resistant to wind.",
+    }
+  lamp_oil:
+    {
+      name: "Lamp Oil",
+      cost: 5,
+      tags: [light],
+      description: "A flask of combustible oil for lanterns and lamps. Burns cleanly with minimal smoke. One flask provides hours of light.",
+    }
+  tinderbox:
+    {
+      name: "Tinderbox",
+      cost: 10,
+      tags: [light],
+      description: "A metal box containing flint, steel, and tinder. Essential for starting fires and lighting torches, candles, or lanterns.",
+    }
+  torch:
+    {
+      name: "Torch",
+      weight: 1,
+      cost: 1,
+      tags: [light],
+      description: "A wooden stick wrapped with oil-soaked cloth. Burns brightly for about an hour and can be used as an improvised weapon.",
+    }
+  torches_5:
+    {
+      name: "Torch",
+      qty: 5,
+      cost: 5,
+      tags: [light],
+      description: "A bundle of five torches. Each burns brightly for about an hour. Essential for dungeon exploration.",
+    }

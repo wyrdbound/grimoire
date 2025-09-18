@@ -1,0 +1,12 @@
+id: character_abilities
+kind: model
+name: "Character Abilities"
+description: "Character Abilities model for Knave (1st Edition)"
+version: 1
+attributes:
+  strength: { type: character_ability }
+  dexterity: { type: character_ability }
+  constitution: { type: character_ability }
+  intelligence: { type: character_ability }
+  wisdom: { type: character_ability }
+  charisma: { type: character_ability }

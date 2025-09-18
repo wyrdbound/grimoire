@@ -1,0 +1,63 @@
+id: generate_character_description
+kind: prompt
+name: "Character Description Generator"
+description: "Generates descriptive text for newly created Knave characters"
+version: 1
+
+llm:
+  provider: ollama
+  model: gemma2
+
+prompt_template: |
+  Please generate me a paragraph description (~125 words) for a character for the tabletop role-playing game Knave (1st edition) who has the following traits:
+
+  Name: {{ name }}
+  Gender: {{ gender }}
+  Physique: {{ traits.physique }}
+  Face: {{ traits.face }}
+  Skin: {{ traits.skin }}
+  Hair: {{ traits.hair }}
+  Clothing: {{ traits.clothing }}
+  Virtue: {{ traits.virtue }}
+  Vice: {{ traits.vice }}
+  Speech: {{ traits.speech }}
+  Background: {{ traits.background }}
+  Misfortunes: {{ traits.misfortunes }}
+  Alignment: {{ traits.alignment }}
+
+  Please use the below examples as guidance for your output and refrain from adding lore or unnecessarily specific world locations. In addition, be sure to use correct pronouns for the specified gender.
+  =============================
+  EXAMPLE 1:
+  Name: Silas "Moss" Blackwood
+  Gender: Male
+  Physique: Scrawny
+  Face: Square
+  Skin: Oily
+  Hair: Wispy
+  Clothing: Undersized
+  Virtue: Cautious
+  Vice: Cowardly
+  Speech: Precise
+  Background: Herbalist
+  Misfortunes: Mutilated
+  Alignment: Neutrality
+
+  Silas “Moss” Blackwood is a unsettling figure - a wisp of a man perpetually slick with an unnatural oiliness clinging to his square face. His wispy, dark hair drifts around him, a constant reminder of the accident that shattered his confidence. Once a promising apprentice herbalist, a misfired concoction left him grotesquely mutilated and profoundly cautious. Now, his undersized clothing hangs on his lean frame, reflecting his shrinking world. He speaks with unnerving precision, a habit from his training, often in a hushed tone. Driven by crippling cowardice, Silas avoids confrontation, seeking only to drift through the world. His meticulous observation is born of fear, a desperate attempt to control a world that feels overwhelmingly dangerous.
+
+  =============================
+  EXAMPLE 2
+  Name: Zimia
+  Gender: Female
+  Physique: Ripped
+  Face: Chiseled
+  Skin: Birthmark
+  Hair: Cropped
+  Clothing: Bloody
+  Virtue: Ambitious
+  Vice: Lazy
+  Speech: Quaint
+  Background: Mariner
+  Misfortunes: Haunted
+  Alignment: Law
+
+  Zimia cuts a striking, almost intimidating figure - a woman of formidable muscle beneath worn, bloody clothing. Her face is a landscape of sharp angles and a prominent birthmark, framing eyes that hold a disconcerting mix of steel and weariness. A former mariner, she now drifts through the world, restless and ambitious, driven by a desire to rise above her circumstances. Despite her lofty goals, a fundamental laziness often undermines her efforts, a frustrating paradox. Her speech is oddly quaint, a curious blend of archaic phrasing and blunt honesty. Haunted by a past she rarely speaks of, she clings to a rigid sense of law, seeking order in a chaotic world - though her methods are frequently unorthodox and her commitment wavering.

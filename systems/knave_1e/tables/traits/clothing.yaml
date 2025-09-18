@@ -1,0 +1,27 @@
+kind: table
+id: clothing
+name: "Clothing"
+version: 1
+roll: 1d20
+description: "Types and styles of clothing"
+entries:
+  1: Antique
+  2: Bloody
+  3: Ceremonial
+  4: Decorated
+  5: Eccentric
+  6: Elegant
+  7: Fashionable
+  8: Filthy
+  9: Flamboyant
+  10: Stained
+  11: Foreign
+  12: Frayed
+  13: Frumpy
+  14: Livery
+  15: Oversized
+  16: Patched
+  17: Perfumed
+  18: Rancid
+  19: Torn
+  20: Undersized

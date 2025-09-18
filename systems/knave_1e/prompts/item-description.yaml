@@ -1,0 +1,31 @@
+id: item_description
+kind: prompt
+name: "Item Description Generator"
+description: "Generates descriptive text for items in the Knave game world"
+version: 1
+
+llm:
+  provider: ollama
+  model: gemma3
+
+prompt_template: |
+  Please generate a description for an item called "{{ display_name }}" for use in a text-based RPG based on the Tabletop RPG game Knave 1st edition.
+  The setting is a gritty, medieval world. 
+  Please include a short description of the item and a few potential uses. Please keep the description under 50 words.
+
+  Here are some example good inputs and outputs:
+
+  Input: Black Grease
+  Output: A thick, sticky substance with an oily sheen. Used to silence hinges, lubricate locks, or as weapon-black to conceal stealthy strikes.
+
+  Input: Mirror (small, silver)
+  Output: A polished silver mirror small enough to carry. Useful for seeing around corners or signaling with reflected light.
+
+  Input: Helmet
+  Output: A metal helm that protects the head from blows. Essential protection against crushing attacks and falling debris.
+
+  Input: Cudgel
+  Output: A heavy wooden club. Simple but effective, requiring no skill to use and cheap to replace if broken.
+
+  Input: Arrows
+  Output: A quiver of twenty straight wooden arrows with iron points. Well-balanced for accurate shooting with any bow.

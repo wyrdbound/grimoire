@@ -1,0 +1,17 @@
+id: character_traits
+kind: model
+name: "Character Traits"
+description: "Character Traits model for Knave (1st Edition)"
+version: 1
+attributes:
+  physique: { type: str }
+  face: { type: str }
+  skin: { type: str }
+  hair: { type: str }
+  clothing: { type: str }
+  virtue: { type: str }
+  vice: { type: str }
+  speech: { type: str }
+  background: { type: str }
+  misfortunes: { type: str }
+  alignment: { type: str }

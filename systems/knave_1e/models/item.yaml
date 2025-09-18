@@ -1,0 +1,13 @@
+id: item
+kind: model
+name: "Item"
+description: "Base model for items in Knave (1st Edition)"
+version: 1
+attributes:
+  name: { type: str }
+  description: { type: str, default: "" }
+  slot_cost: { type: int, default: 1 } # 1 slot unless overridden
+  qty: { type: int, default: 1 } # Default quantity is 1
+  weight: { type: float, default: 5.0 } # 5.0 lbs / item slot
+  cost: { type: int, default: 0 } # in copper pieces
+  tags: { type: list, of: str, default: [] }

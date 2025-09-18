@@ -1,0 +1,25 @@
+id: determine_npc_reaction
+kind: flow
+name: "Determine NPC Reaction"
+description: >-
+  Determines the NPC's reaction based on the context provided.
+version: 1
+outputs:
+  - type: str
+    id: npc_reaction
+    description: "The reaction of the NPC"
+
+steps:
+  - id: roll_npc_reaction
+    name: "Determine NPC Reaction"
+    type: table_roll
+    prompt: "Rolling for NPC reaction..."
+    tables:
+      - table: npc_reactions
+        actions:
+          - set_value:
+              path: "outputs.npc_reaction"
+              value: "{{ result.entry }}"
+    actions:
+      - log_message:
+          message: "NPC reaction determined: {{ result.entry }} ({{ result.roll_result.detail }})"

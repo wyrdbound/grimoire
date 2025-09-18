@@ -1,0 +1,27 @@
+kind: table
+id: vice
+name: "Vice"
+version: 1
+roll: 1d20
+description: "Vices and immoral qualities"
+entries:
+  1: Aggressive
+  2: Arrogant
+  3: Bitter
+  4: Cowardly
+  5: Cruel
+  6: Deceitful
+  7: Flippant
+  8: Gluttonous
+  9: Greedy
+  10: Irascible
+  11: Lazy
+  12: Nervous
+  13: Prejudiced
+  14: Reckless
+  15: Rude
+  16: Suspicious
+  17: Vain
+  18: Vengeful
+  19: Wasteful
+  20: Whiny

@@ -1,0 +1,480 @@
+kind: compendium
+id: tools-and-gear
+name: "Tools and Gear"
+model: item
+version: 1
+description: "A collection of various tools and gear for adventurers."
+entries:
+  air_bladder:
+    {
+      name: "Air Bladder",
+      cost: 5,
+      tags: [gear],
+      description: "An inflated animal bladder that provides buoyancy. Useful for crossing rivers or staying afloat in water.",
+    }
+  bear_trap:
+    {
+      name: "Bear Trap",
+      cost: 20,
+      tags: [gear],
+      description: "A heavy steel trap with serrated jaws. Sets with a powerful spring to clamp down on anything that steps on it.",
+    }
+  bedroll:
+    {
+      name: "Bedroll",
+      cost: 10,
+      tags: [gear],
+      description: "A thick blanket that rolls up for travel. Provides comfort and warmth when sleeping outdoors.",
+    }
+  bellows:
+    {
+      name: "Bellows",
+      cost: 10,
+      tags: [gear],
+      description: "Leather bellows for stoking fires. Forces air into flames to increase heat for forging or cooking.",
+    }
+  black_grease:
+    {
+      name: "Black Grease",
+      cost: 1,
+      tags: [gear],
+      description: "A small jar of black grease, useful for lubricating mechanisms or coating weapons for stealthy attacks.",
+    }
+  block_and_tackle:
+    {
+      name: "Block and Tackle",
+      cost: 30,
+      tags: [gear],
+      description: "A system of pulleys and rope. Allows one person to lift extremely heavy objects with mechanical advantage.",
+    }
+  book_blank:
+    {
+      name: "Book (Blank)",
+      cost: 300,
+      tags: [gear],
+      description: "A bound tome with blank parchment pages. Expensive but essential for recording spells, maps, or important information.",
+    }
+  book_reading:
+    {
+      name: "Book (Reading)",
+      cost: 600,
+      tags: [gear],
+      description: "A completed book containing knowledge on various subjects. The specific contents vary, but all books are valuable.",
+    }
+  bottle_vial:
+    {
+      name: "Bottle/Vial",
+      cost: 1,
+      weight: 0.25,
+      tags: [gear],
+      description: "A small glass container with a cork stopper. Perfect for storing potions, oils, or other liquid substances.",
+    }
+  bucket:
+    {
+      name: "Bucket",
+      cost: 5,
+      tags: [gear],
+      description: "A sturdy wooden bucket with an iron handle. Essential for carrying water, sand, or other materials.",
+    }
+  caltrops_bag:
+    {
+      name: "Caltrops (bag)",
+      cost: 10,
+      tags: [gear],
+      description: "A bag of four-pointed iron spikes. Scattered on the ground to injure feet and slow pursuing enemies.",
+    }
+  cards_extra_ace:
+    {
+      name: "Cards with an extra Ace",
+      cost: 5,
+      tags: [gear],
+      description: "A deck of playing cards with a hidden fifth ace. Useful for gambling and sleight of hand tricks.",
+    }
+  chain_10ft:
+    {
+      name: "Chain (10 ft)",
+      cost: 10,
+      tags: [gear],
+      description: "Ten feet of heavy iron chain. Strong enough to bind prisoners or secure doors, but difficult to break.",
+    }
+  chalk_10:
+    {
+      name: "Chalk",
+      qty: 10,
+      cost: 1,
+      tags: [gear],
+      description: "Ten pieces of white chalk. Used for marking walls, doors, or trails when exploring dark places.",
+    }
+  chisel:
+    {
+      name: "Chisel",
+      cost: 5,
+      tags: [gear],
+      description: "A sharp steel chisel for working stone or wood. Can carve symbols, widen cracks, or shape materials.",
+    }
+  cookpots:
+    {
+      name: "Cookpots",
+      cost: 10,
+      tags: [gear],
+      description: "Iron pots and pans for preparing meals. Essential for cooking over open fires during long journeys.",
+    }
+  crowbar:
+    {
+      name: "Crowbar",
+      cost: 10,
+      tags: [gear],
+      description: "A heavy iron bar with a curved end. Provides tremendous leverage for prying open doors or crates.",
+    }
+  drill:
+    {
+      name: "Drill",
+      cost: 10,
+      tags: [gear],
+      description: "A hand-turned steel drill with various bits. Used to bore holes in wood, stone, or metal.",
+    }
+  face_paint_makeup:
+    {
+      name: "Face Paint/Makeup",
+      cost: 10,
+      tags: [gear],
+      description: "Colored pigments and powders for altering appearance. Useful for disguises or ceremonial purposes.",
+    }
+  fake_jewels:
+    {
+      name: "Fake Jewels",
+      cost: 50,
+      tags: [gear],
+      description: "Convincing glass and paste replicas of precious gems. May fool casual observers but not expert appraisers.",
+    }
+  fishing_rod_tackle:
+    {
+      name: "Fishing Rod/Tackle",
+      cost: 10,
+      tags: [gear],
+      description: "A wooden rod with line, hooks, and weights. Provides a reliable source of food when near water.",
+    }
+  glass_marbles_bag:
+    {
+      name: "Glass Marbles (bag)",
+      cost: 5,
+      tags: [gear],
+      description: "A pouch of smooth glass marbles. Can be scattered to trip enemies or used as simple projectiles.",
+    }
+  glue_bottle:
+    {
+      name: "Glue (bottle)",
+      cost: 1,
+      tags: [gear],
+      description: "A bottle of strong adhesive made from animal bones. Bonds wood, paper, and other porous materials.",
+    }
+  grappling_hook:
+    {
+      name: "Grappling Hook",
+      cost: 10,
+      tags: [gear],
+      description: "A three-pronged iron hook attached to rope. Used for climbing walls or pulling distant objects.",
+    }
+  hammer:
+    {
+      name: "Hammer",
+      cost: 10,
+      tags: [gear],
+      description: "A sturdy iron hammer with a wooden handle. Essential for driving nails, breaking objects, or combat.",
+    }
+  holy_water:
+    {
+      name: "Holy Water",
+      cost: 25,
+      tags: [gear],
+      description: "Water blessed by a priest and contained in a sacred vial. Said to harm undead creatures and evil spirits.",
+    }
+  horn:
+    {
+      name: "Horn",
+      cost: 10,
+      tags: [gear],
+      description: "A carved animal horn used as a signaling device. Can be heard over great distances in open terrain.",
+    }
+  hourglass:
+    {
+      name: "Hourglass",
+      cost: 300,
+      tags: [gear],
+      description: "A glass timepiece filled with fine sand. Accurately measures one hour and is prized for its precision.",
+    }
+  incense_packet:
+    {
+      name: "Incense (packet)",
+      cost: 10,
+      weight: 0.5,
+      tags: [gear],
+      description: "Aromatic herbs and resins that produce fragrant smoke when burned. Used for rituals or masking odors.",
+    }
+  incense_packet_10:
+    {
+      name: "Incense (packet)",
+      cost: 100,
+      qty: 10,
+      tags: [gear],
+      description: "Ten packets of incense. Each produces fragrant smoke for rituals, ceremonies, or masking unpleasant smells.",
+    }
+  iron_tongs:
+    {
+      name: "Iron Tongs",
+      cost: 10,
+      tags: [gear],
+      description: "Long-handled iron tongs for handling hot objects. Essential for blacksmithing and working around fire.",
+    }
+  ladder_10ft:
+    {
+      name: "Ladder (10 ft)",
+      cost: 10,
+      tags: [gear],
+      description: "A sturdy wooden ladder extending ten feet. Allows access to upper floors or helps cross small gaps.",
+    }
+  large_sponge:
+    {
+      name: "Large Sponge",
+      cost: 5,
+      tags: [gear],
+      description: "A natural sea sponge capable of absorbing large amounts of liquid. Useful for cleaning or soaking up spills.",
+    }
+  lens:
+    {
+      name: "Lens",
+      cost: 100,
+      tags: [gear],
+      description: "A polished glass lens that magnifies objects. Can focus sunlight to start fires or examine small details.",
+    }
+  lockpicks:
+    {
+      name: "Lockpicks",
+      cost: 100,
+      tags: [gear],
+      description: "A set of thin metal tools for manipulating lock mechanisms. Requires skill and patience to use effectively.",
+    }
+  manacles:
+    {
+      name: "Manacles",
+      cost: 10,
+      tags: [gear],
+      description: "Heavy iron shackles with a locking mechanism. Used to restrain prisoners or secure valuable items.",
+    }
+  metal_file:
+    {
+      name: "Metal File",
+      cost: 5,
+      tags: [gear],
+      description: "A hardened steel file with a rough surface. Used to shape metal, sharpen blades, or wear through bars.",
+    }
+  mirror_small_silver:
+    {
+      name: "Mirror (small, silver)",
+      cost: 200,
+      tags: [gear],
+      description: "A polished silver mirror small enough to carry. Useful for seeing around corners or signaling with reflected light.",
+    }
+  musical_instrument:
+    {
+      name: "Musical Instrument",
+      cost: 200,
+      tags: [gear],
+      description: "A portable musical instrument such as a lute, flute, or drums. Provides entertainment and may earn coin.",
+    }
+  nails_12:
+    {
+      name: "Nails",
+      qty: 12,
+      cost: 5,
+      tags: [gear],
+      description: "A dozen iron nails of various sizes. Essential for construction, repairs, or securing doors and windows.",
+    }
+  net:
+    {
+      name: "Net",
+      cost: 10,
+      tags: [gear],
+      description: "A large rope net with weighted edges. Can entangle enemies, catch falling objects, or be used for fishing.",
+    }
+  oilskin_bag:
+    {
+      name: "Oilskin Bag",
+      cost: 5,
+      tags: [gear],
+      description: "A waterproof bag treated with oil. Keeps contents dry even when submerged or in heavy rain.",
+    }
+  oilskin_trousers:
+    {
+      name: "Oilskin Trousers",
+      cost: 10,
+      tags: [gear],
+      description: "Waterproof trousers treated with oil. Keeps the wearer dry in wet conditions or when wading through water.",
+    }
+  padlock_key:
+    {
+      name: "Padlock and Key",
+      cost: 20,
+      tags: [gear],
+      description: "A sturdy iron padlock with its matching key. Provides security for chests, doors, or other valuables.",
+    }
+  perfume:
+    {
+      name: "Perfume",
+      cost: 50,
+      tags: [gear],
+      description: "A bottle of sweet-smelling perfume. Can mask odors, attract attention, or serve as a luxury trade item.",
+    }
+  pick:
+    {
+      name: "Pick",
+      cost: 10,
+      tags: [gear],
+      description: "A heavy iron pick with a pointed end. Used for breaking through stone, ice, or hard-packed earth.",
+    }
+  pole_10ft:
+    {
+      name: "Pole (10ft)",
+      cost: 5,
+      tags: [gear],
+      description: "A sturdy wooden pole ten feet in length. Useful for testing surfaces, reaching high objects, or as a makeshift weapon.",
+    }
+  quill_ink:
+    {
+      name: "Quill and Ink",
+      cost: 1,
+      tags: [gear],
+      description: "A sharpened feather quill with a bottle of black ink. Essential for writing letters, contracts, or keeping records.",
+    }
+  rope_50ft:
+    {
+      name: "Rope (50ft)",
+      cost: 10,
+      tags: [gear],
+      description: "Fifty feet of strong hemp rope. Essential for climbing, binding, or lowering objects safely.",
+    }
+  sack:
+    {
+      name: "Sack",
+      cost: 1,
+      tags: [gear],
+      description: "A large burlap sack for carrying goods. Can hold a substantial amount of loose items or grain.",
+    }
+  saw:
+    {
+      name: "Saw",
+      cost: 10,
+      tags: [gear],
+      description: "A steel saw with sharp teeth. Cuts through wood efficiently and can slowly work through softer metals.",
+    }
+  set_loaded_dice:
+    {
+      name: "Set of Loaded Dice",
+      cost: 5,
+      tags: [gear],
+      description: "Weighted dice that favor certain numbers. Useful for gambling, though risky if discovered by other players.",
+    }
+  shovel:
+    {
+      name: "Shovel",
+      cost: 10,
+      tags: [gear],
+      description: "An iron-headed shovel with a wooden handle. Essential for digging graves, latrines, or unearthing buried treasure.",
+    }
+  small_bell:
+    {
+      name: "Small Bell",
+      cost: 20,
+      weight: 0.1,
+      tags: [gear],
+      description: "A brass bell that produces a clear ringing tone. Can be used for alarms, signals, or attached to items.",
+    }
+  soap:
+    {
+      name: "Soap",
+      cost: 1,
+      tags: [gear],
+      description: "A bar of rough soap made from animal fat and lye. Essential for personal hygiene and cleaning equipment.",
+    }
+  spike_iron:
+    {
+      name: "Spike (iron)",
+      cost: 5,
+      weight: 2.5,
+      tags: [gear],
+      description: "A heavy iron spike that can be driven into stone or wood. Useful for climbing or securing ropes.",
+    }
+  spike_wood:
+    {
+      name: "Spike (wood)",
+      qty: 1,
+      cost: 1,
+      weight: 1,
+      tags: [gear],
+      description: "A sharpened wooden spike. Lighter than iron but still useful for jamming doors or creating barriers.",
+    }
+  spikes_wood_5:
+    {
+      name: "Spike (wood)",
+      qty: 5,
+      cost: 5,
+      tags: [gear],
+      description: "Five wooden spikes. Can be used to jam doors, create makeshift barriers, or as crude weapons.",
+    }
+  spiked_boots:
+    {
+      name: "Spiked boots",
+      cost: 5,
+      tags: [gear],
+      description: "Leather boots with iron spikes in the soles. Provides better grip on ice and can be used for climbing.",
+    }
+  spyglass:
+    {
+      name: "Spyglass",
+      cost: 1000,
+      tags: [gear],
+      description: "A telescoping brass tube with lenses. Allows clear viewing of distant objects and is extremely valuable.",
+    }
+  tar_pot:
+    {
+      name: "Tar (Pot)",
+      cost: 10,
+      tags: [gear],
+      description: "A pot of thick, sticky tar. Can be used for waterproofing, as an incendiary weapon, or to coat arrows.",
+    }
+  tent_3man:
+    {
+      name: "Tent (3 man)",
+      cost: 100,
+      tags: [gear],
+      description: "A large canvas tent that comfortably shelters three people. Provides protection from weather during travel.",
+    }
+  tent_personal:
+    {
+      name: "Tent (personal)",
+      cost: 50,
+      tags: [gear],
+      description: "A small one-person tent made of oiled canvas. Lightweight shelter for solo travelers or scouts.",
+    }
+  twine_300ft:
+    {
+      name: "Twine (300 ft)",
+      cost: 5,
+      tags: [gear],
+      description: "A long spool of thin twine. Useful for setting traps, binding small objects, or marking trails.",
+    }
+  waterskin:
+    {
+      name: "Waterskin",
+      cost: 5,
+      tags: [gear],
+      description: "A leather bag designed to hold water. Essential for travel in dry regions or when clean water is scarce.",
+    }
+  whistle:
+    {
+      name: "Whistle",
+      cost: 5,
+      tags: [gear],
+      description: "A small metal whistle that produces a sharp, piercing sound. Useful for signals or calling for help.",
+    }
+  # Additional items can be added here

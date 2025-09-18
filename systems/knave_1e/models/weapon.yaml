@@ -1,0 +1,10 @@
+id: weapon
+kind: model
+name: "Weapon"
+description: "Weapon model for Knave (1st Edition)"
+extends: [item, breakable]
+version: 1
+attributes:
+  type: { type: str, enum: ["melee", "ranged"], default: "melee" }
+  damage: { type: roll } # dice roll, e.g. "1d8"
+  hands: { type: int, default: 1 }

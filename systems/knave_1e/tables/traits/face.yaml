@@ -1,0 +1,27 @@
+kind: table
+id: face
+name: "Face"
+version: 1
+roll: 1d20
+description: "Facial features and characteristics"
+entries:
+  1: Bloated
+  2: Blunt
+  3: Bony
+  4: Chiseled
+  5: Delicate
+  6: Elongated
+  7: Patrician
+  8: Pinched
+  9: Hawkish
+  10: Broken
+  11: Impish
+  12: Narrow
+  13: Ratlike
+  14: Round
+  15: Sunken
+  16: Sharp
+  17: Soft
+  18: Square
+  19: Wide
+  20: Wolfish

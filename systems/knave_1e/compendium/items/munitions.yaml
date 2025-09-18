@@ -1,0 +1,31 @@
+kind: compendium
+id: munitions
+name: "Munitions"
+model: item
+version: 1
+description: "A collection of munitions for ranged weapons."
+entries:
+  arrows_20:
+    {
+      name: "Arrows",
+      qty: 20,
+      cost: 5,
+      tags: [munition],
+      description: "A quiver of twenty straight wooden arrows with iron points. Well-balanced for accurate shooting with any bow.",
+    }
+  bolts_20:
+    {
+      name: "Bolts",
+      qty: 20,
+      cost: 5,
+      tags: [munition],
+      description: "Twenty heavy crossbow bolts with steel tips. Shorter and thicker than arrows, designed for crossbow use.",
+    }
+  stones_20:
+    {
+      name: "Stones",
+      qty: 20,
+      cost: 2,
+      tags: [munition],
+      description: "A pouch of smooth river stones. Perfect ammunition for slings, or can be thrown by hand in desperate situations.",
+    }

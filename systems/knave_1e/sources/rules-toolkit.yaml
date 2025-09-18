@@ -1,0 +1,8 @@
+version: 1
+id: toolkit
+kind: source
+name: "Knave 1.0 Rules Toolkit"
+description: "KNAVE is a rules toolkit for running old school fantasy RPGs without classes."
+edition: "Knave 1.0"
+publisher: Questing Beast Games
+source_url: "https://questingbeast.itch.io/knave"

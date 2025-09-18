@@ -1,0 +1,27 @@
+id: perform_initiative
+kind: flow
+name: "Perform Initiative"
+description: >-
+  Determines the who acts first in combat - Players or Enemies.
+version: 1
+outputs:
+  - type: str
+    id: side_with_initiative
+    enum: ["Players", "Enemies"]
+    description: "The side with the initiative"
+
+steps:
+  - id: roll_initiative
+    name: "Roll Initiative"
+    type: dice_roll
+    roll: 1d6
+    before_actions:
+      - log_message:
+          message: "Rolling initiative..."
+    after_actions:
+      - log_message:
+          message: "Rolled {{ result.detail }}"
+      - set_value:
+          path: "outputs.side_with_initiative"
+          value: "{% if result.total > 3 %}Players{% else %}Enemies{% endif %}"
+      - log_message: "{{ outputs.side_with_initiative }} have initiative"

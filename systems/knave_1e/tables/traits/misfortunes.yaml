@@ -1,0 +1,27 @@
+kind: table
+id: misfortunes
+name: "Misfortunes"
+version: 1
+roll: 1d20
+description: "Misfortunes and hardships faced by characters"
+entries:
+  1: Abandoned
+  2: Addicted
+  3: Blackmailed
+  4: Condemned
+  5: Cursed
+  6: Defrauded
+  7: Demoted
+  8: Discredited
+  9: Disowned
+  10: Exiled
+  11: Framed
+  12: Haunted
+  13: Kidnapped
+  14: Mutilated
+  15: Poor
+  16: Pursued
+  17: Rejected
+  18: Replaced
+  19: Robbed
+  20: Suspected

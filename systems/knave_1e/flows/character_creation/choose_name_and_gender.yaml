@@ -1,0 +1,117 @@
+id: choose_name_and_gender
+kind: flow
+name: "Choose Character Name and Gender"
+description: "Name and gender selection for character creation process for {{ system.name }}"
+version: 1
+
+outputs:
+  - id: character_name
+    type: str
+  - id: character_gender
+    type: str
+
+steps:
+  - id: choose_gender_method
+    name: "Choose Gender Method"
+    type: player_choice
+    prompt: "How would you like to determine your character's gender?"
+    choices:
+      - id: player_choice
+        label: "Player Choice"
+        next_step: choose_gender
+      - id: random_roll
+        label: "Randomly Choose"
+        next_step: roll_gender
+
+  - id: choose_gender
+    name: "Choose Character Gender"
+    type: player_choice
+    prompt: "Select your gender"
+    choices:
+      - id: female
+        label: Female
+        actions:
+          - set_value:
+              path: outputs.character_gender
+              value: Female
+      - id: male
+        label: Male
+        actions:
+          - set_value:
+              path: "outputs.character_gender"
+              value: Male
+      - id: non_binary
+        label: Non-binary
+        actions:
+          - set_value:
+              path: "outputs.character_gender"
+              value: Non-binary
+    actions:
+      - display_value: "outputs.character_gender"
+    next_step: choose_name_method
+
+  - id: roll_gender
+    name: "Roll Character Gender"
+    type: table_roll
+    prompt: "Rolling for your character's gender..."
+    tables:
+      - table: gender
+        actions:
+          - set_value:
+              path: "outputs.character_gender"
+              value: "{{ result.entry }}"
+          - log_message: "Rolled {{ result.roll_result.detail }}"
+          - log_message: "Character is {{ result.entry }}"
+          - display_value: "outputs.character_gender"
+
+    next_step: choose_name_method
+
+  - id: choose_name_method
+    name: "Choose Character Name Method"
+    type: player_choice
+    prompt: "How would you like to choose your character's name?"
+    choices:
+      - id: player_choice
+        label: "Input Name"
+        next_step: input_name
+      - id: random_roll
+        label: "Randomly Generate Name"
+        next_step: randomly_generate_name
+
+  - id: input_name
+    name: "Choose Character Name"
+    type: player_input
+    prompt: "What is your character's name?"
+    actions:
+      - set_value:
+          path: "outputs.character_name"
+          value: "{{ result }}"
+      - display_value: "outputs.character_name"
+    next_step: finish_flow
+
+  - id: randomly_generate_name
+    name: "Randomly Generate Character Name"
+    type: name_generation
+    prompt: "Generating a random name for your character..."
+    generator: "wyrdbound-rng"
+    settings:
+      max_length: 12
+      corpus: generic-fantasy
+      segmenter: fantasy
+      algorithm: bayesian
+      min_probability: 1e-4
+      best_of: 2
+    actions:
+      - set_value:
+          path: "outputs.character_name"
+          value: "{{ result.name }}"
+      - display_value: "outputs.character_name"
+    next_step: finish_flow
+
+  - id: finish_flow
+    name: "Finish Name and Gender Selection"
+    type: completion
+    prompt: "Selection of character gender and name complete!"
+    actions:
+      - display_value: "outputs.character_name"
+      - display_value: "outputs.character_gender"

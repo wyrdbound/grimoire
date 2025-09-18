@@ -1,0 +1,27 @@
+kind: table
+id: hair
+name: "Hair"
+version: 1
+roll: 1d20
+description: "Types and styles of hair"
+entries:
+  1: Bald
+  2: Braided
+  3: Bristly
+  4: Cropped
+  5: Curly
+  6: Disheveled
+  7: Dreadlocks
+  8: Filthy
+  9: Frizzy
+  10: Greased
+  11: Limp
+  12: Long
+  13: Luxurious
+  14: Mohawk
+  15: Oily
+  16: Ponytail
+  17: Silky
+  18: Topknot
+  19: Wavy
+  20: Wispy

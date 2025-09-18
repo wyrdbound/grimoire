@@ -1,0 +1,87 @@
+id: determine_saving_throw_type
+kind: prompt
+name: "Determine Saving Throw Type"
+description: >-
+  Determines the type (basic, advantage, disadvantage) of 
+  saving throw being made based on the context of the 
+  situation.
+version: 1
+llm:
+  provider: ollama
+  model: gemma2
+
+prompt_template: |
+  We are playing Knave 1st edition. Please help me determine which 
+  Type should be used for an Saving Throw (basic, advantage, disadvantage) 
+  based on the following context:
+
+  "{{ context_summary }} The ability being tested is {{ saving_throw_ability }}."
+
+  Be sure to consider any situational factors that may make the saving 
+  throw easier or harder. When in doubt, err on the side of a basic roll.
+
+  The possible Types are:
+  - basic
+  - advantage
+  - disadvantage
+
+  The rules for when advantage or disadvantage are applied in Knave 
+  are as follows:
+
+  "If there are situational factors that make a save significantly 
+  easier or harder, the referee may grant the roll advantage or 
+  disadvantage. If a roll has advantage, roll 2d20 and use the 
+  better of the two dice. If it has disadvantage, roll 2d20 and 
+  use the worse of the two dice."
+
+  Please provide your response in the exact JSON format below, 
+  with no other text:
+  {
+  	"type": <type>,
+  	"reason": <short justification>
+  }
+
+  Here are some example inputs and good responses:
+
+  INPUT 1:
+  Eira (half-elf) is at the entrance to an ancient ruin. She is 
+  attempting to pick an ancient lock on sturdy door using Thieves' 
+  Tools. The lock appears well-maintained, rusty hinges may make 
+  noise if disturbed. Eira is attempting to bypass the lock without 
+  triggering any traps or alarms. She has recently discovered a tome 
+  detailing ancient lock mechanisms which she is using. The ability 
+  being tested is intelligence.
+
+  GOOD RESPONSE 1:
+  {
+  	"type": "advantage",
+  	"reason": "The tome on ancient lock mechanisms provides Eira with valuable insights."
+  }
+
+  INPUT 2:
+  The party is in a dimly lit tavern, attempting to gather information 
+  about a recent string of burglaries in the nearby town. One player, 
+  attempting to strike up a conversation with a gruff-looking local 
+  blacksmith who is repairing a broken sword, leans against the 
+  workbench and asks him if he's heard anything unusual about the 
+  thefts. The blacksmith, suspicious of outsiders, glances around the 
+  room and seems wary of speaking further. A hooded figure at the end 
+  of the bar catches his eye, and the blacksmith subtly shifts his 
+  attention away from the group. The ability being tested is charisma.
+
+  GOOD RESPONSE 2:
+  {
+    "type": "disadvantage",
+    "reason": "The blacksmith is suspicious of outsiders and is aware of a hooded figure watching."
+  }
+
+  INPUT 3:
+  The player is battling a wyrm while standing on the edge of a rocky
+  cliffside. The wyrm has used its wings to blow a gust of wind at the
+  player causing him to possibly lose his footing and fall from the cliff.
+
+  GOOD RESPONSE 3:
+  {
+    "type": "basic",
+    "reason": "Although the wyrm's gust of wind is a significant threat, it is the cause for the check. There are no additional conditions that would grant advantage or disadvantage."
+  }

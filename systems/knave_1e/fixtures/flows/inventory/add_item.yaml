@@ -1,0 +1,17 @@
+knave:
+  abilities:
+    strength: { bonus: 1 }
+    dexterity: { bonus: 2 }
+    constitution: { bonus: 3 }
+    intelligence: { bonus: 4 }
+    wisdom: { bonus: 5 }
+    charisma: { bonus: 6 }
+
+  armor:
+    bonus: 1
+
+  inventory: []
+
+item:
+  name: "Lamp"
+  slot_cost: 1

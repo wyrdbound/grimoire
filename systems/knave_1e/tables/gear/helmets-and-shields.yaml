@@ -1,0 +1,12 @@
+id: helmets_and_shields
+kind: table
+name: "Helmets and Shields"
+description: "Types of helmets and shields"
+version: 1
+roll: 1d20
+entry_type: armor # Indicates the type for the entries
+entries:
+  1-13: none
+  14-16: helmet
+  17-19: shield
+  20: [helmet, shield] # Indicates both a helmet and a shield

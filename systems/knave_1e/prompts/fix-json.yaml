@@ -1,0 +1,17 @@
+id: fix_json
+kind: prompt
+name: "Fix JSON Formatting Errors"
+description: "Corrects any JSON formatting errors in the provided text"
+version: 1
+
+llm:
+  provider: ollama
+  model: qwen2.5vl
+
+prompt_template: |
+  Please fix any JSON formatting errors for this LLM response and 
+  return only the JSON data. DO NOT include the ```json (triple 
+  backticks) markdown code block notation in your response. Also, 
+  DO NOT describe the issues; simply fix them:
+
+  {{ expected_json }}

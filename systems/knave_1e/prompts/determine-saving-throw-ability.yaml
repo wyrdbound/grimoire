@@ -1,0 +1,81 @@
+id: determine_saving_throw_ability
+kind: prompt
+name: "Determine Saving Throw Ability"
+description: "Determines the appropriate ability score for a saving throw based on the context of the situation."
+version: 1
+
+llm:
+  provider: ollama
+  model: gemma2
+
+prompt_template: |
+  We are playing Knave 1st edition. Please help me determine which Ability should be used for an Saving Throw based on the following context:
+
+  CONTEXT:
+  "{{ context_summary }}"
+
+  The possible Abilities are:
+  - strength
+  - dexterity
+  - constitution
+  - intelligence
+  - wisdom
+  - charisma
+
+  The rules for what abilities apply in what situations in Knave are as follows:
+
+  Each of the six abilities is used in different circumstances.
+  * Strength: Used for melee attacks and saves requiring
+  physical power, like lifting gates, bending bars, etc.
+  * Dexterity: Used for saves requiring poise, speed, and
+  reflexes, like dodging, climbing, sneaking, balancing, etc.
+  * Constitution: Used for saves to resist poison, sickness,
+  cold, etc. The Constitution bonus is added to healing
+  rolls. A PC's number of item slots is always equal to their
+  Constitution defense.
+  * Intelligence: Used for saves requiring concentration
+  and precision, such as wielding magic, resisting magical
+  effects, recalling lore, crafting objects, tinkering with
+  machinery, picking pockets, etc.
+  * Wisdom: Used for ranged attacks and saves requiring
+  perception and intuition, such as tracking, navigating,
+  searching for secret doors, detecting illusions, etc.
+  * Charisma: Used for saves to persuade, deceive, interro-
+  gate, intimidate, charm, provoke, etc.
+
+  Please provide your response in the exact JSON format below, with no other text:
+  {
+  	"ability": <ability>,
+  	"reason": <short justification>
+  }
+
+  Here are some example inputs and good responses:
+
+  INPUT 1:
+  Eira (half-elf) is at the entrance to an ancient ruin. She is attempting to pick an ancient lock on sturdy door using Thieves' Tools. The lock appears well-maintained, rusty hinges may make noise if disturbed. Eira is attempting to bypass the lock without triggering any traps or alarms.
+
+  GOOD RESPONSE 1:
+  {
+  	"ability": "intelligence",
+  	"reason": "Intelligence should be used for actions that require precision and for tinkering with machinery."
+  }
+
+  INPUT 2:
+  The party is in a dimly lit tavern, attempting to gather information about a recent string of burglaries in the nearby town. One player, attempting to strike up a conversation with a gruff-looking local blacksmith who is repairing a broken sword, leans against the workbench and asks him if he's heard anything unusual about the thefts. The blacksmith, suspicious of outsiders, glances around the room and seems wary of speaking further. A hooded figure at the end of the bar catches his eye, and the blacksmith subtly shifts his attention away from the group.
+
+  GOOD RESPONSE 2:
+  {
+      "ability": "charisma",
+      "reason": "The party is trying to persuade and gather information from the blacksmith, making Charisma the most relevant ability."
+  }
+
+  INPUT 3:
+
+  The player is trapped within a crumbling, subterranean temple dedicated to a forgotten deity. As he cautiously proceeds through a narrow corridor, a sudden, violent tremor shakes the temple. Dust and debris rain down from the ceiling. They should roll a save for whether they are able to avoid the falling debris.
+
+  GOOD RESPONSE 3:
+
+  {
+      "ability": "dexterity",
+      "reason": "Dexterity is used for saves requiring poise, speed, and reflexes, which would be necessary to avoid falling debris."
+  }

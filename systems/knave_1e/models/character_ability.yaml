@@ -1,0 +1,8 @@
+id: character_ability
+kind: model
+name: "Character Ability"
+description: "Character Ability model for Knave (1st Edition)"
+version: 1
+attributes:
+  bonus: { type: int, range: "1..10" }
+  defense: { type: int, derived: "{{ this.bonus + 10 }}" }

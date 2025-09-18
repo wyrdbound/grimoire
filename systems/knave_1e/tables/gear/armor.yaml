@@ -1,0 +1,12 @@
+id: armor
+kind: table
+name: "Armor"
+description: "Types of armor"
+version: 1
+roll: 1d20
+entry_type: armor # Indicates the type for the entries
+entries:
+  1-3: none
+  4-14: gambeson
+  15-19: brigandine
+  20: chain

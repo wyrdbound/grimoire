@@ -1,0 +1,28 @@
+id: general_gear_1
+kind: table
+name: "General Gear 1"
+description: "Types of general gear (table 1)"
+version: 1
+roll: 1d20
+entry_type: item # Indicates the type for the entries
+entries:
+  1: air_bladder
+  2: bear_trap
+  3: shovel
+  4: bellows
+  5: black_grease
+  6: saw
+  7: bucket
+  8: caltrops_bag
+  9: chisel
+  10: drill
+  11: fishing_rod_tackle
+  12: glass_marbles_bag
+  13: glue_bottle
+  14: pick
+  15: hourglass
+  16: net
+  17: iron_tongs
+  18: lockpicks
+  19: metal_file
+  20: nails_12

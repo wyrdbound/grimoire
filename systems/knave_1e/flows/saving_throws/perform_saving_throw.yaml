@@ -1,0 +1,113 @@
+id: perform_saving_throw
+kind: flow
+name: "Perform Saving Throw"
+description: >-
+  Determines the saving throw required from a given context and performs it.
+version: 1
+inputs:
+  - type: character
+    id: actor
+    description: "The character for whom the saving throw is being performed."
+  - type: str
+    id: context_summary
+    description: "A summary of the context in which the saving throw should be being made."
+
+outputs:
+  - type: str
+    id: saving_throw_result
+    description: "The result of the saving throw determination."
+
+variables:
+  - type: str
+    id: saving_throw_ability
+    description: "The ability score used for the saving throw."
+  - type: str
+    id: saving_throw_type
+    description: "The type of saving throw being made (basic, advantage, disadvantage)."
+
+steps:
+  - id: determine_saving_throw_ability
+    name: "Determine Saving Throw Ability"
+    type: llm_generation
+    prompt_id: determine_saving_throw_ability
+    prompt_data:
+      context_summary: "{{ inputs.context_summary }}"
+    validation:
+      type: "json_schema"
+      schema:
+        type: "object"
+        properties:
+          ability:
+            type: "string"
+            enum:
+              [
+                "strength",
+                "dexterity",
+                "constitution",
+                "intelligence",
+                "wisdom",
+                "charisma",
+              ]
+          reason:
+            type: "string"
+            minLength: 10
+        required: ["ability", "reason"]
+    actions:
+      - set_value:
+          path: "variables.saving_throw_ability"
+          value: "{{ llm_result.ability }}"
+      - log_message:
+          message: "Determined Ability: {{ variables.saving_throw_ability }}"
+      - log_message:
+          message: "Justification: {{ llm_result.reason }}"
+
+  - id: determine_saving_throw_type
+    name: "Determine Saving Throw Type"
+    type: llm_generation
+    prompt_id: determine_saving_throw_type
+    prompt_data:
+      context_summary: "{{ inputs.context_summary }}"
+      saving_throw_ability: "{{ variables.saving_throw_ability }}"
+    validation:
+      type: "json_schema"
+      schema:
+        type: "object"
+        properties:
+          type:
+            type: "string"
+            enum: ["basic", "advantage", "disadvantage"]
+          reason:
+            type: "string"
+            minLength: 10
+        required: ["type", "reason"]
+    actions:
+      - set_value:
+          path: "variables.saving_throw_type"
+          value: "{{ llm_result.type }}"
+      - log_message:
+          message: "Determined Roll Type: {{ llm_result.type | capitalize }}"
+      - log_message:
+          message: "Justification: {{ llm_result.reason }}"
+
+  - id: perform_saving_throw
+    name: "Perform Saving Throw"
+    type: flow_call
+    flow: roll_saving_throw
+    inputs:
+      saving_throw_type: "{{ variables.saving_throw_type }}"
+      saving_throw_modifier: "{{ inputs.actor.abilities[variables.saving_throw_ability].bonus }}"
+      saving_throw_dc: 15
+    actions:
+      # for this step, result is the "outputs" of the sub-flow
+      - set_value:
+          path: "outputs.saving_throw_result"
+          value: "{{ result.saving_throw_result }}"
+
+  - id: Evaluate_saving_throw_result
+    name: "Evaluate Saving Throw Result"
+    type: "completion"
+    result_message: "Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"
+    # actions:
+    #   - set_value:
+    #       path: "outputs.saving_throw_result"
+    #       value: "{{ outputs.saving_throw_result }}"

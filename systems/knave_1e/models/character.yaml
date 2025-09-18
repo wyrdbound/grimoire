@@ -1,0 +1,46 @@
+kind: model
+id: character
+name: "Knave"
+description: "Character model for Knave (1st Edition)"
+version: 1
+attributes:
+  name: { type: str }
+  gender: { type: str, enum: ["female", "male", "non-binary"] }
+
+  # --- abilities ---
+  abilities: { type: character_abilities }
+
+  xp: { type: int, default: 0, range: "0..1000" }
+  level: { type: int, default: 1, range: "1..10" }
+
+  hit_points:
+    max: { type: int }
+    current: { type: int, range: "0..{{ this.hit_points.max }}" } # track current
+
+  armor:
+    bonus: { type: int, range: "0..10" }
+    defense: { type: int, derived: "{{ 10 + this.bonus }}" }
+
+  exploration_speed: { type: int, default: 120, range: "0..240" } # in feet
+  combat_speed: { type: int, default: 40, range: "0..160" } # in feet
+
+  copper: { type: int, default: 0, range: "0.." }
+
+  # --- traits ---
+  traits: { type: character_traits }
+
+  # --- inventory system ---
+  inventory_capacity:
+    { type: int, derived: "{{ this.abilities.constitution.defense }}" }
+  inventory: { type: list, of: item, default: [] }
+  slots_used:
+    {
+      type: int,
+      derived: "{{ this.inventory | map(attribute='slot_cost') | sum }}",
+    }
+
+validations:
+  - expression: "{{ this.hit_points.current <= this.hit_points.max }}"
+    message: "Current HP cannot exceed maximum HP"
+  - expression: "{{ this.slots_used <= this.inventory_capacity }}"
+    message: "Item slots used cannot exceed inventory capacity"

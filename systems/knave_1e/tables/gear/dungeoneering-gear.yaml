@@ -1,0 +1,28 @@
+id: dungeoneering_gear
+kind: table
+name: "Dungeoneering Gear"
+description: "Types of dungeoneering gear"
+version: 1
+roll: 1d20
+entry_type: item # Indicates the type for the entries
+entries:
+  1: rope_50ft
+  2: block_and_tackle
+  3: candles_5
+  4: chain_10ft
+  5: chalk_10
+  6: crowbar
+  7: tinderbox
+  8: grappling_hook
+  9: hammer
+  10: waterskin
+  11: lantern
+  12: lamp_oil
+  13: padlock_key
+  14: manacles
+  15: mirror_small_silver
+  16: pole_10ft
+  17: sack
+  18: tent_personal
+  19: spikes_wood_5
+  20: torches_5

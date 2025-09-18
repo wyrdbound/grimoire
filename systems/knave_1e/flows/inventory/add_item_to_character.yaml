@@ -1,0 +1,37 @@
+id: add_item_to_character
+kind: flow
+name: "Add Item to Character"
+description: "Add an item to a character's inventory"
+version: 1
+
+inputs:
+  - type: character
+    id: character
+    required: true
+    description: "The character to add the item to"
+  - type: item
+    id: item
+    required: true
+    description: "The item to add to the character's inventory"
+
+outputs:
+  - type: character
+    id: character
+    description: "The updated character with the new item"
+
+steps:
+  - id: add_item
+    name: "Add Item to Inventory"
+    type: completion
+    actions:
+      # Copy the input character to the output character first
+      - set_value:
+          path: "outputs.character"
+          value: "{{ inputs.character }}"
+      # Then update the output character's inventory with the new item
+      - set_value:
+          path: "outputs.character.inventory"
+          value: "{{ outputs.character.inventory + [inputs.item] }}"
+      # Log informational message about the item addition
+      - log_message:
+          message: "Item '{{ inputs.item.name }}' added to inventory of '{{ outputs.character.name or 'Unnamed Character' }}'"

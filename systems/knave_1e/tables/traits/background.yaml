@@ -1,0 +1,27 @@
+kind: table
+id: background
+name: "Background"
+version: 1
+roll: 1d20
+description: "Backgrounds and origins of characters"
+entries:
+  1: Alchemist
+  2: Beggar
+  3: Butcher
+  4: Burglar
+  5: Charlatan
+  6: Cleric
+  7: Cook
+  8: Cultist
+  9: Gambler
+  10: Herbalist
+  11: Magician
+  12: Mariner
+  13: Mercenary
+  14: Merchant
+  15: Outlaw
+  16: Performer
+  17: Pickpocket
+  18: Smuggler
+  19: Student
+  20: Tracker

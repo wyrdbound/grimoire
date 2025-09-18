@@ -1,0 +1,14 @@
+actor:
+  abilities:
+    strength: { bonus: 1 }
+    dexterity: { bonus: 2 }
+    constitution: { bonus: 3 }
+    intelligence: { bonus: 4 }
+    wisdom: { bonus: 5 }
+    charisma: { bonus: 6 }
+context_summary: |-
+  The player is trapped within a crumbling, subterranean temple 
+  dedicated to a forgotten deity. As he cautiously proceeds through a 
+  narrow corridor, a sudden, violent tremor shakes the temple. Dust 
+  and debris rain down from the ceiling. They should roll a save for 
+  whether they are able to avoid the falling debris.

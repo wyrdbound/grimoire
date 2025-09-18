@@ -1,0 +1,27 @@
+kind: table
+id: skin
+name: "Skin"
+version: 1
+roll: 1d20
+description: "Skin types and conditions"
+entries:
+  1: Battle Scar
+  2: Birthmark
+  3: Burn Scar
+  4: Dark
+  5: Makeup
+  6: Oily
+  7: Pale
+  8: Perfect
+  9: Pierced
+  10: Pockmarked
+  11: Reeking
+  12: Tattooed
+  13: Rosy
+  14: Rough
+  15: Sallow
+  16: Sunburned
+  17: Tanned
+  18: War Paint
+  19: Weathered
+  20: Whip Scar

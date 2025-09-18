@@ -1,0 +1,17 @@
+actor:
+  name: Lelarc
+  abilities:
+    strength:
+      bonus: 2
+    defense:
+      bonus: 1
+opponent:
+  name: Goblin
+  abilities:
+    strength:
+      bonus: 1
+    defense:
+      bonus: 2
+opposed_save_type: basic
+actor_ability: strength
+opponent_ability: defense

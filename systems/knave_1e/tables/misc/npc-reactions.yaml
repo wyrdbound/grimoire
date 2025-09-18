@@ -1,0 +1,12 @@
+kind: table
+id: npc_reactions
+name: "NPC Reactions"
+version: 1
+roll: 2d6
+description: "Reactions of NPCs based on context"
+entries:
+  2: Hostile
+  3-5: Unfriendly
+  6-8: Unsure
+  9-11: Talkative
+  12: Helpful

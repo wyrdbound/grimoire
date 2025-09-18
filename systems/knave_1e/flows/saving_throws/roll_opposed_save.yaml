@@ -1,0 +1,72 @@
+id: roll_opposed_save
+kind: flow
+name: "Roll Opposed Save"
+description: "Roll a saving throw vs an opponent's defense DC"
+version: 1
+
+inputs:
+  - id: actor
+    type: character
+  - id: opponent
+    type: character
+  - id: opposed_save_type
+    type: str
+    enum: ["basic", "advantage", "disadvantage"]
+  - id: actor_ability
+    type: str
+    enum:
+      [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma",
+        "defense",
+      ]
+  - id: opponent_ability
+    type: str
+    enum:
+      [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma",
+        "defense",
+      ]
+
+outputs:
+  - id: opposed_save_result
+    type: bool
+    description: "The result of the opposed save"
+
+variables:
+  - id: saving_throw_result
+    type: bool
+    description: "Whether the saving throw was successful"
+
+steps:
+  - id: roll_saving_throw
+    type: flow_call
+    name: "Roll Opposed Save"
+    flow: roll_saving_throw
+    inputs:
+      saving_throw_type: "{{ inputs.opposed_save_type }}"
+      saving_throw_modifier: "{{ inputs.actor.abilities[inputs.actor_ability].bonus }}"
+      saving_throw_dc: "{{ inputs.opponent.abilities[inputs.opponent_ability].bonus + 10 }}"
+    actions:
+      # for this step, result is the "outputs" of the sub-flow
+      - set_value:
+          path: "variables.saving_throw_result"
+          value: "{{ result.saving_throw_result }}"
+
+  - id: evaluate_opposed_save_result
+    name: "Evaluate Opposed Save Result"
+    type: "completion"
+    result_message: "Opposed save complete - {% if outputs.opposed_save_result %}Success{% else %}Failure{% endif %}"
+    actions:
+      - set_value:
+          path: "outputs.opposed_save_result"
+          value: "{{ variables.saving_throw_result }}"

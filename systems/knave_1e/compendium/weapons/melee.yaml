@@ -1,0 +1,133 @@
+kind: compendium
+id: melee
+name: "Melee Weapons"
+model: weapon
+version: 1
+description: "A collection of melee weapons for close combat."
+entries:
+  dagger:
+    {
+      name: "Dagger",
+      damage: "1d6",
+      quality: 3,
+      cost: 5,
+      description: "A short, double-edged blade. Easily concealed and quick to draw, useful for both combat and utility tasks.",
+    }
+  cudgel:
+    {
+      name: "Cudgel",
+      damage: "1d6",
+      quality: 3,
+      cost: 5,
+      description: "A heavy wooden club. Simple but effective, requiring no skill to use and cheap to replace if broken.",
+    }
+  sickle:
+    {
+      name: "Sickle",
+      damage: "1d6",
+      quality: 3,
+      cost: 5,
+      description: "A curved blade on a short handle. Originally a farming tool, but the hooked edge can catch and disarm enemies.",
+    }
+  staff:
+    {
+      name: "Staff",
+      damage: "1d6",
+      quality: 3,
+      cost: 5,
+      description: "A long wooden pole. Provides reach in combat and appears innocent to casual observers.",
+    }
+  spear:
+    {
+      name: "Spear",
+      damage: "1d8",
+      slot_cost: 2,
+      weight: 10,
+      quality: 3,
+      cost: 10,
+      description: "A long wooden shaft with a sharp metal point. Excellent reach allows striking before enemies can close distance.",
+    }
+  sword:
+    {
+      name: "Sword",
+      damage: "1d8",
+      slot_cost: 2,
+      weight: 10,
+      quality: 3,
+      cost: 10,
+      description: "A straight, double-edged blade with a crossguard. Well-balanced for both cutting and thrusting attacks.",
+    }
+  mace:
+    {
+      name: "Mace",
+      damage: "1d8",
+      slot_cost: 2,
+      weight: 10,
+      quality: 3,
+      cost: 10,
+      description: "A heavy metal head on a wooden shaft. Designed to crush armor and bones with devastating blunt force.",
+    }
+  axe:
+    {
+      name: "Axe",
+      damage: "1d8",
+      slot_cost: 2,
+      weight: 10,
+      quality: 3,
+      cost: 10,
+      description: "A sharp metal blade mounted on a handle. Can cleave through armor and also serves as a useful tool.",
+    }
+  flail:
+    {
+      name: "Flail",
+      damage: "1d8",
+      slot_cost: 2,
+      weight: 10,
+      quality: 3,
+      cost: 10,
+      description: "A weighted head connected to a handle by chain. Difficult to parry and can wrap around shields.",
+    }
+  halberd:
+    {
+      name: "Halberd",
+      damage: "1d10",
+      slot_cost: 3,
+      hands: 2,
+      weight: 15,
+      quality: 3,
+      cost: 20,
+      description: "A spear tip with an axe blade and hook. Versatile polearm that can thrust, chop, or pull mounted enemies from their steeds.",
+    }
+  war_hammer:
+    {
+      name: "War Hammer",
+      damage: "1d10",
+      slot_cost: 3,
+      hands: 2,
+      weight: 15,
+      quality: 3,
+      cost: 20,
+      description: "A massive hammer designed for war. The heavy head delivers crushing blows that can dent even the finest armor.",
+    }
+  long_sword:
+    {
+      name: "Long Sword",
+      damage: "1d10",
+      slot_cost: 3,
+      hands: 2,
+      weight: 15,
+      quality: 3,
+      cost: 20,
+      description: "A large, two-handed sword with extended reach. Requires both hands but delivers powerful slashing attacks.",
+    }
+  battle_axe:
+    {
+      name: "Battle Axe",
+      damage: "1d10",
+      slot_cost: 3,
+      hands: 2,
+      weight: 15,
+      quality: 3,
+      cost: 20,
+      description: "A massive two-handed axe with a broad blade. Designed for war, it can cleave through multiple enemies in one swing.",
+    }

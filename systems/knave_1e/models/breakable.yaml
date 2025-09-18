@@ -1,0 +1,7 @@
+id: breakable
+kind: model
+name: Breakable
+description: "Base model for breakable items in Knave (1st Edition)"
+version: 1
+attributes:
+  quality: { type: int, range: "0.." }

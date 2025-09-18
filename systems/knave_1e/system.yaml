@@ -1,0 +1,14 @@
+id: knave_1e
+kind: system
+name: "Knave (1st Edition)"
+description: "A rules toolkit for running old school fantasy RPGs without classes."
+version: 1
+default_source: toolkit
+currency:
+  base_unit: copper
+  denominations:
+    # weight in lbs; 100 copper coins = 5 lbs
+    cp: { name: copper, symbol: "cp", value: 1, weight: 0.05 }
+credits:
+  author: "Ben Milton"
+  license: "CC BY 4.0"

@@ -1,0 +1,27 @@
+kind: table
+id: virtue
+name: "Virtue"
+version: 1
+roll: 1d20
+description: "Virtues and moral qualities"
+entries:
+  1: Ambitious
+  2: Cautious
+  3: Courageous
+  4: Courteous
+  5: Curious
+  6: Disciplined
+  7: Focused
+  8: Generous
+  9: Gregarious
+  10: Honest
+  11: Honorable
+  12: Humble
+  13: Idealistic
+  14: Just
+  15: Loyal
+  16: Merciful
+  17: Righteous
+  18: Serene
+  19: Stoic
+  20: Tolerant

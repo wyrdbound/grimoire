@@ -1,0 +1,140 @@
+id: character_creation
+kind: flow
+name: "Character Creation"
+description: "Character creation process for {{ system.name }}"
+version: 1
+
+outputs:
+  - type: character
+    id: knave
+    validate: true
+
+variables:
+  - type: str
+    id: hp_dice_roll
+    description: "The dice roll used to determine hit points."
+
+steps:
+  - id: invoke_roll_abilities
+    name: "Invoke Roll Abilities"
+    type: flow_call
+    flow: roll_abilities
+    actions:
+      # for this step, result is the "outputs" of the sub-flow
+      - set_value:
+          path: "outputs.knave.abilities"
+          value: "{{ result.abilities }}"
+    next_step: invoke_roll_hit_points
+
+  - id: invoke_roll_hit_points
+    name: "Invoke Roll Hit Points"
+    type: flow_call
+    flow: roll_hit_points
+    actions:
+      - set_value:
+          path: "outputs.knave.hit_points"
+          value: "{{ result.hit_points }}"
+    next_step: invoke_choose_starting_weapon
+
+  - id: invoke_choose_starting_weapon
+    name: "Invoke Choose Starting Weapon"
+    type: flow_call
+    flow: choose_starting_weapon
+    inputs:
+      character: "{{ outputs.knave }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result }}"
+    next_step: invoke_determine_traits # TODO: Put this back to invoke_roll_starting_gear
+
+  # - id: invoke_roll_starting_gear
+  #   name: "Invoke Roll Starting Gear"
+  #   type: flow_call
+  #   flow: roll_starting_gear
+  #   inputs:
+  #     character: "{{ outputs.knave }}"
+  #   actions:
+  #     - set_value:
+  #         path: "outputs.knave"
+  #         value: "{{ result }}"
+  #   next_step: generate_traits
+
+  - id: invoke_determine_traits
+    name: "Invoke Determine Traits"
+    type: flow_call
+    flow: determine_traits
+    actions:
+      - set_value:
+          path: "outputs.knave.traits"
+          value: "{{ result.traits }}"
+    next_step: invoke_choose_name_and_gender
+
+  - id: invoke_choose_name_and_gender
+    name: "Invoke Choose Name and Gender"
+    type: flow_call
+    flow: choose_name_and_gender
+    actions:
+      - set_value:
+          path: "outputs.knave.name"
+          value: "{{ result.character_name }}"
+      - set_value:
+          path: "outputs.knave.gender"
+          value: "{{ result.character_gender }}"
+    next_step: generate_character_description
+
+  - id: generate_character_description
+    name: "Generate Character Description"
+    type: llm_generation
+    condition: "llm_enabled"
+    prompt_id: generate_character_description
+    prompt_data:
+      name: "{{ outputs.knave.name }}"
+      gender: "{{ outputs.knave.gender }}"
+      traits: "{{ outputs.knave.traits }}"
+    llm_settings:
+      provider: ollama
+      model: gemma3
+      max_tokens: 200
+    actions:
+      - set_value:
+          path: "outputs.knave.description"
+          value: "{{ result }}"
+    next_step: review_character
+
+  - id: review_character
+    name: "Review and Confirm Character"
+    type: player_choice
+    prompt: "Here is your completed character:"
+    pre_actions:
+      - display_value: "outputs.knave"
+    choices:
+      - id: accept
+        label: "Accept this character"
+        next_step: finalize_character
+      - id: reroll
+        label: "Start over with a new character"
+        next_step: invoke_roll_abilities
+        reset_outputs: true
+
+  - id: finalize_character
+    name: "Character Creation Complete"
+    type: completion
+    prompt: "Your Knave is ready for adventure!"
+    actions:
+      - validate_value: "outputs.knave"
+      # - set_value:
+      #     path: "outputs.knave.level"
+      #     value: 1
+      - log_event:
+          type: "character_created"
+          data: "{{ outputs.knave.name or 'Unnamed Knave' }}"
+
+# Flow control
+resume_points:
+  [
+    "invoke_roll_abilities",
+    "invoke_choose_starting_weapon",
+    "invoke_determine_traits",
+    "review_character",
+  ]

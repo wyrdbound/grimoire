@@ -1,0 +1,47 @@
+id: roll_hit_points
+kind: flow
+name: "Roll Hit Points for a Character"
+description: "Rolling hit points during Character Creation for {{ system.name }}"
+version: 1
+
+outputs:
+  - type: int
+    id: hit_points
+
+variables:
+  - type: str
+    id: hp_dice_roll
+    description: "The dice roll used to determine hit points."
+
+steps:
+  - id: hit_points_choice
+    name: "Choose Hit Points Rolling Method"
+    type: player_choice
+    prompt: "Choose how to roll your starting hit points:"
+    choices:
+      - id: standard_roll
+        label: "Standard roll (1d8)"
+        actions:
+          - set_value:
+              path: "variables.hp_dice_roll"
+              value: "1d8"
+        next_step: "roll_hit_points"
+      - id: house_rule
+        label: "House rule: Reroll results below 5"
+        actions:
+          - set_value:
+              path: "variables.hp_dice_roll"
+              value: "1d8r<5"
+        next_step: "roll_hit_points"
+
+  - id: roll_hit_points
+    name: "Roll Hit Points"
+    type: dice_roll
+    prompt: "Rolling for hit points..."
+    roll: "{{ variables.hp_dice_roll }}"
+    actions:
+      - set_value:
+          path: "outputs.hit_points"
+          value: "{{ result.total }}"
+      - log_message: "Rolled {{ result.detail }}"
+      - log_message: "Hit Points are {{ result.total }}"

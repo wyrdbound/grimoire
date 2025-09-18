@@ -1,0 +1,28 @@
+id: general_gear_2
+kind: table
+name: "General Gear 2"
+description: "Types of general gear (table 2)"
+version: 1
+roll: 1d20
+entry_type: item # Indicates the type for the entries
+entries:
+  1: incense_packet
+  2: large_sponge
+  3: lens
+  4: perfume
+  5: horn
+  6: bottle_vial
+  7: soap
+  8: spyglass
+  9: tar_pot
+  10: twine_300ft
+  11: fake_jewels
+  12: book_blank
+  13: cards_extra_ace
+  14: set_loaded_dice
+  15: cookpots
+  16: face_paint_makeup
+  17: whistle
+  18: musical_instrument
+  19: quill_ink
+  20: small_bell

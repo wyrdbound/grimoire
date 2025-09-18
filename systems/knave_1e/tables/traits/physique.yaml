@@ -1,0 +1,27 @@
+kind: table
+id: physique
+name: "Physique"
+version: 1
+roll: 1d20
+description: "Physical build and characteristics"
+entries:
+  1: Athletic
+  2: Brawny
+  3: Corpulent
+  4: Delicate
+  5: Flabby
+  6: Gaunt
+  7: Hulking
+  8: Lanky
+  9: Ripped
+  10: Rugged
+  11: Scrawny
+  12: Short
+  13: Sinewy
+  14: Slender
+  15: Statuesque
+  16: Stout
+  17: Tiny
+  18: Towering
+  19: Willowy
+  20: Wiry

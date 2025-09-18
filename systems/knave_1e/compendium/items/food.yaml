@@ -1,0 +1,141 @@
+kind: compendium
+id: food
+name: "Food"
+model: item
+version: 1
+description: "A variety of food items for sustenance and survival."
+entries:
+  travel_rations_1_day:
+    {
+      name: "Travel rations (1 day)",
+      cost: 5,
+      tags: [food],
+      description: "Dried meat, hardtack, and preserved fruit. Lightweight and nutritious enough to sustain a person for one day.",
+    }
+  animal_feed_1_day:
+    {
+      name: "Animal Feed (1 day)",
+      cost: 2,
+      tags: [food],
+      description: "Oats, hay, and grain suitable for horses, mules, and other beasts of burden. One day's worth of feed.",
+    }
+  bacon_side:
+    {
+      name: "Bacon, side of",
+      cost: 10,
+      tags: [food],
+      description: "A whole side of salt-cured pork. Rich in fat and flavor, keeps well without refrigeration for weeks.",
+    }
+  bread_1_loaf:
+    {
+      name: "Bread, 1 loaf",
+      cost: 1,
+      tags: [food],
+      description: "A crusty loaf of wheat bread. Fresh baked and filling, though it will go stale within a few days.",
+    }
+  cheese_1_lb:
+    {
+      name: "Cheese, 1 lb",
+      cost: 2,
+      tags: [food],
+      description: "A wheel of hard aged cheese. Keeps well on long journeys and provides substantial nourishment.",
+    }
+  cider_4_gallons:
+    {
+      name: "Cider, 4 gallons",
+      cost: 1,
+      tags: [food],
+      description: "Four gallons of fermented apple cider in a clay jug. Mildly alcoholic and safer to drink than most water.",
+    }
+  cod_whole:
+    {
+      name: "Cod, whole",
+      cost: 20,
+      tags: [food],
+      description: "A whole salted cod, dried and preserved. Provides enough protein for many meals when properly prepared.",
+    }
+  eggs_24:
+    {
+      name: "Eggs, 24",
+      cost: 1,
+      tags: [food],
+      description: "Two dozen fresh chicken eggs packed in straw. Fragile but highly nutritious and versatile for cooking.",
+    }
+  flour_5_lbs:
+    {
+      name: "Flour, 5 lbs",
+      cost: 1,
+      tags: [food],
+      description: "Five pounds of finely ground wheat flour in a cloth sack. Essential for baking bread and other staples.",
+    }
+  fruit_1_lb:
+    {
+      name: "Fruit, 1 lb",
+      cost: 1,
+      tags: [food],
+      description: "A pound of seasonal fresh fruit. Provides vitamins and natural sugars, though spoils quickly.",
+    }
+  garlic_bunch:
+    {
+      name: "Garlic, bunch",
+      cost: 1,
+      tags: [food],
+      description: "A braided bunch of garlic bulbs. Adds flavor to meals and folklore claims it wards off supernatural creatures.",
+    }
+  grain_1_bushel:
+    {
+      name: "Grain, 1 bushel (8 gal.)",
+      cost: 4,
+      tags: [food],
+      description: "Eight gallons of mixed grain including wheat, barley, and oats. Can be ground into flour or cooked as porridge.",
+    }
+  herbs_1_bunch:
+    {
+      name: "Herbs, 1 bunch",
+      cost: 1,
+      tags: [food],
+      description: "A bundle of culinary herbs like thyme, rosemary, and sage. Improves the taste of otherwise bland travel fare.",
+    }
+  lard_5_lbs:
+    {
+      name: "Lard, 5 lbs",
+      cost: 1,
+      tags: [food],
+      description: "Five pounds of rendered pig fat in a clay pot. Essential for cooking and preserving food, also waterproofs leather.",
+    }
+  onions_1_bushel:
+    {
+      name: "Onions, 1 bushel",
+      cost: 8,
+      tags: [food],
+      description: "A bushel of yellow onions. Keep well in storage and add essential flavor to stews and roasted meats.",
+    }
+  salt_1_bushel:
+    {
+      name: "Salt, 1 bushel",
+      cost: 3,
+      tags: [food],
+      description: "Coarse sea salt for preserving meat and flavoring food. Essential for long journeys and winter storage.",
+    }
+  spices_1_lb:
+    {
+      name: "Spices, 1 lb",
+      cost: 100,
+      tags: [food],
+      description: "Exotic spices from distant lands including pepper, cinnamon, and cloves. Extremely valuable and highly sought after.",
+    }
+  sugar_1_lb:
+    {
+      name: "Sugar, 1 lb",
+      cost: 12,
+      tags: [food],
+      description: "Refined white sugar, a luxury item. Used to sweeten food and preserve fruit, worth its weight in silver.",
+    }
+  wine_ale_bottle:
+    {
+      name: "Wine/ale, bottle",
+      cost: 1,
+      tags: [food],
+      description: "A bottle of fermented drink, either grape wine or grain ale. Safer than water and lifts spirits on long journeys.",
+    }
+  # Additional food items can be added here

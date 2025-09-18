@@ -1,0 +1,71 @@
+id: roll_starting_gear
+kind: "flow"
+name: "Determine Starting Equipment"
+description: "Determine the starting equipment for a Character"
+version: 1
+
+inputs:
+  - type: character
+    id: knave
+    required: true
+    description: "The character to add starting gear to"
+outputs:
+  - type: character
+    id: knave
+    description: "The updated character with starting gear"
+
+variables:
+  - type: armor
+    id: starting_armor
+    description: "The armor rolled for the character"
+
+steps:
+  - id: roll_starting_gear
+    name: "Determine Starting Equipment"
+    type: table_roll
+    prompt: "Rolling for your starting equipment..."
+    parallel: true
+    tables:
+      - table: armor
+        actions:
+          - flow_call:
+              flow: add_item_to_character
+              inputs:
+                character: "{{ outputs.knave }}"
+                item: "{{ result.entry }}"
+      # - table: helmets_and_shields
+      #   actions:
+      #     - flow_call:
+      #         flow: add_item_to_character
+      #         inputs:
+      #           character: "{{ outputs.knave }}"
+      #           item: "{{ result.entry }}"
+      # - table: dungeoneering_gear
+      #   count: 2
+      #   actions:
+      #     - flow_call:
+      #         flow: add_items_to_character
+      #         inputs:
+      #           character: "{{ outputs.knave }}"
+      #           items: "{{ results | map(attribute='entry') | list }}"
+      # - table: general_gear_1
+      #   actions:
+      #     - flow_call:
+      #         flow: add_item_to_character
+      #         inputs:
+      #           character: "{{ outputs.knave }}"
+      #           item: "{{ result.entry }}"
+      # - table: general_gear_2
+      #   actions:
+      #     - flow_call:
+      #         flow: add_item_to_character
+      #         inputs:
+      #           character: "{{ outputs.knave }}"
+      #           item: "{{ result.entry }}"
+    # additional_actions:
+    #   - flow_call:
+    #       flow: add_item_to_character
+    #       inputs:
+    #         character: "{{ outputs.knave }}"
+    #         item: rations
+    #         quantity: 2

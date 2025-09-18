@@ -1,0 +1,60 @@
+kind: compendium
+id: suits
+name: "Suits"
+model: armor
+version: 1
+description: "A collection of armor suits providing various levels of protection."
+entries:
+  gambeson:
+    {
+      name: "Gambeson",
+      armor_defense: 12,
+      cost: 60,
+      quality: 3,
+      tags: [armor],
+      description: "A thick, quilted jacket stuffed with padding. Provides basic protection against cuts and blunt impacts while remaining flexible.",
+    }
+  brigandine:
+    {
+      name: "Brigandine",
+      armor_defense: 13,
+      cost: 500,
+      slot_cost: 2,
+      weight: 10,
+      quality: 4,
+      tags: [armor],
+      description: "Leather or cloth backing studded with small metal plates. Offers good protection while maintaining mobility and stealth.",
+    }
+  chain:
+    {
+      name: "Chain",
+      armor_defense: 14,
+      cost: 1200,
+      slot_cost: 3,
+      weight: 15,
+      quality: 5,
+      tags: [armor],
+      description: "Interlocking metal rings forming a flexible mesh. Excellent against slashing attacks but vulnerable to piercing weapons.",
+    }
+  half_plate:
+    {
+      name: "Half Plate",
+      armor_defense: 15,
+      cost: 4000,
+      slot_cost: 4,
+      weight: 20,
+      quality: 6,
+      tags: [armor],
+      description: "Solid metal plates covering the torso and limbs. Provides excellent protection but limits movement and is extremely heavy.",
+    }
+  full_plate:
+    {
+      name: "Full Plate",
+      armor_defense: 16,
+      cost: 8000,
+      slot_cost: 5,
+      weight: 25,
+      quality: 7,
+      tags: [armor],
+      description: "Complete suit of articulated steel plates. The pinnacle of protection but requires great strength and wealth to use effectively.",
+    }
