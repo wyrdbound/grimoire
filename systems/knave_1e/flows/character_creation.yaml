@@ -48,6 +48,8 @@ steps:
           value: "{{ result }}"
     next_step: invoke_determine_traits # TODO: Put this back to invoke_roll_starting_gear
 
+  # TBD: This step does not work yet because starting gear flow is not completed.
+  #   We need to figure out how to handle tables with multiple values in an entry.
   # - id: invoke_roll_starting_gear
   #   name: "Invoke Roll Starting Gear"
   #   type: flow_call
@@ -115,7 +117,6 @@ steps:
       - id: reroll
         label: "Start over with a new character"
         next_step: invoke_roll_abilities
-        reset_outputs: true
 
   - id: finalize_character
     name: "Character Creation Complete"
@@ -123,9 +124,6 @@ steps:
     prompt: "Your Knave is ready for adventure!"
     actions:
       - validate_value: "outputs.knave"
-      # - set_value:
-      #     path: "outputs.knave.level"
-      #     value: 1
       - log_event:
           type: "character_created"
           data: "{{ outputs.knave.name or 'Unnamed Knave' }}"

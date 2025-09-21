@@ -9,7 +9,7 @@ outputs:
     id: hit_points
 
 variables:
-  - type: str
+  - type: roll
     id: hp_dice_roll
     description: "The dice roll used to determine hit points."
 
@@ -25,14 +25,14 @@ steps:
           - set_value:
               path: "variables.hp_dice_roll"
               value: "1d8"
-        next_step: "roll_hit_points"
+        next_step: roll_hit_points
       - id: house_rule
         label: "House rule: Reroll results below 5"
         actions:
           - set_value:
               path: "variables.hp_dice_roll"
               value: "1d8r<5"
-        next_step: "roll_hit_points"
+        next_step: roll_hit_points
 
   - id: roll_hit_points
     name: "Roll Hit Points"

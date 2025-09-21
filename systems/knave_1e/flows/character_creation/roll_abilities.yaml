@@ -54,8 +54,8 @@ steps:
     prompt: "Choose two abilities to swap:"
     choice_source:
       table_from_values: "outputs.abilities"
-      selection_count: 2
       display_format: "{{ key|title }}: +{{ value.bonus }}"
+      selection_count: 2
     actions:
       - swap_values:
           path1: "outputs.abilities.{{ results[0] }}.bonus"
