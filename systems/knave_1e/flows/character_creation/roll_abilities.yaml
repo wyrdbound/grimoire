@@ -8,11 +8,6 @@ outputs:
   - type: character_abilities
     id: abilities
 
-variables:
-  - id: hp_dice_roll
-    type: str
-    description: "The dice roll used to determine hit points."
-
 steps:
   - id: roll_abilities
     name: "Roll Abilities"
@@ -33,7 +28,7 @@ steps:
         - set_value:
             path: "outputs.abilities.{{ item }}.bonus"
             value: "{{ result.total }}"
-        - log_message:
+        - display_message:
             message: "{{ item[0:3]|upper }}: bonus +{{ result.total }}, defense {{ result.total + 10 }} ({{ result.detail }})"
 
   - id: ability_swap_choice
@@ -57,6 +52,7 @@ steps:
       display_format: "{{ key|title }}: +{{ value.bonus }}"
       selection_count: 2
     actions:
+      - display_message: "Swapping {{ results[0] | title }} and {{ results[1] | title }}."
       - swap_values:
           path1: "outputs.abilities.{{ results[0] }}.bonus"
           path2: "outputs.abilities.{{ results[1] }}.bonus"

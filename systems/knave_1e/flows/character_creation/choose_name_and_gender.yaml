@@ -20,7 +20,7 @@ steps:
         label: "Player Choice"
         next_step: choose_gender
       - id: random_roll
-        label: "Randomly Choose"
+        label: "Random Choice"
         next_step: roll_gender
 
   - id: choose_gender
@@ -48,6 +48,7 @@ steps:
               value: Non-binary
     actions:
       - display_value: "outputs.character_gender"
+      - display_message: "Character gender is {{ outputs.character_gender }}"
     next_step: choose_name_method
 
   - id: roll_gender
@@ -60,8 +61,8 @@ steps:
           - set_value:
               path: "outputs.character_gender"
               value: "{{ result.entry }}"
-          - log_message: "Rolled {{ result.roll_result.detail }}"
-          - log_message: "Character is {{ result.entry }}"
+          - display_message: "Rolled {{ result.roll_result.detail }}"
+          - display_message: "Character is {{ result.entry }}"
           - display_value: "outputs.character_gender"
 
     next_step: choose_name_method
@@ -79,14 +80,14 @@ steps:
         next_step: randomly_generate_name
 
   - id: input_name
-    name: "Choose Character Name"
+    name: "Input Character Name"
     type: player_input
     prompt: "What is your character's name?"
     actions:
       - set_value:
           path: "outputs.character_name"
           value: "{{ result }}"
-      - display_value: "outputs.character_name"
+      - display_message: "Character name is {{ outputs.character_name }}"
     next_step: finish_flow
 
   - id: randomly_generate_name
@@ -105,7 +106,7 @@ steps:
       - set_value:
           path: "outputs.character_name"
           value: "{{ result.name }}"
-      - display_value: "outputs.character_name"
+      - display_message: "Character name is {{ outputs.character_name }}"
     next_step: finish_flow
 
   - id: finish_flow

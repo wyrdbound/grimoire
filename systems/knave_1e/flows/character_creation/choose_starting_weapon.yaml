@@ -5,16 +5,17 @@ description: "Starting weapon for character creation process for {{ system.name 
 version: 1
 
 inputs:
-  - type: character
-    id: knave
-outputs:
-  - type: character
-    id: knave
+  - id: character
+    type: character
 
 variables:
   - id: selected_weapon
     type: weapon
   - id: character_with_weapon
+    type: character
+
+outputs:
+  - id: knave
     type: character
 
 steps:
@@ -35,7 +36,7 @@ steps:
     type: flow_call
     flow: add_item_to_character
     inputs:
-      character: "{{ inputs.knave }}"
+      character: "{{ inputs.character }}"
       item: "{{ variables.selected_weapon }}"
     actions:
       - set_value:

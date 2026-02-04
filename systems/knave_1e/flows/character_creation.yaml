@@ -5,13 +5,13 @@ description: "Character creation process for {{ system.name }}"
 version: 1
 
 outputs:
-  - type: character
-    id: knave
+  - id: knave
+    type: character
     validate: true
 
 variables:
-  - type: str
-    id: hp_dice_roll
+  - id: hp_dice_roll
+    type: str
     description: "The dice roll used to determine hit points."
 
 steps:
@@ -32,7 +32,10 @@ steps:
     flow: roll_hit_points
     actions:
       - set_value:
-          path: "outputs.knave.hit_points"
+          path: "outputs.knave.hit_points.max"
+          value: "{{ result.hit_points }}"
+      - set_value:
+          path: "outputs.knave.hit_points.current"
           value: "{{ result.hit_points }}"
     next_step: invoke_choose_starting_weapon
 
@@ -97,7 +100,6 @@ steps:
     llm_settings:
       provider: ollama
       model: gemma3
-      max_tokens: 200
     actions:
       - set_value:
           path: "outputs.knave.description"
@@ -123,6 +125,7 @@ steps:
     type: completion
     prompt: "Your Knave is ready for adventure!"
     actions:
+      - display_value: "outputs.knave"
       - validate_value: "outputs.knave"
       - log_event:
           type: "character_created"

@@ -43,5 +43,5 @@ steps:
       - set_value:
           path: "outputs.hit_points"
           value: "{{ result.total }}"
-      - log_message: "Rolled {{ result.detail }}"
-      - log_message: "Hit Points are {{ result.total }}"
+      - display_message: "Rolled {{ result.detail }}"
+      - display_message: "Hit Points are {{ result.total }}"

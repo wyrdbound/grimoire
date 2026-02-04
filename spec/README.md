@@ -82,7 +82,7 @@ Key features:
 
 #### [Compendium Definition](compendium_spec.md)
 
-**Files**: `compendium/**/*.yaml`  
+**Files**: `compendiums/**/*.yaml`  
 **Purpose**: Contains collections of concrete game content (items, spells, monsters, etc.) based on defined models.
 
 Key features:
@@ -120,7 +120,7 @@ systems/{system_id}/
 │   ├── item.yaml
 │   ├── weapon.yaml
 │   └── armor.yaml
-├── compendium/                 # Content libraries
+├── compendiums/                # Content libraries
 │   ├── items/
 │   │   ├── weapons.yaml
 │   │   ├── armor.yaml

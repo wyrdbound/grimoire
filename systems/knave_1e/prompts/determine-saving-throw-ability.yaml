@@ -45,8 +45,8 @@ prompt_template: |
 
   Please provide your response in the exact JSON format below, with no other text:
   {
-  	"ability": <ability>,
-  	"reason": <short justification>
+    	"ability": <ability>,
+  	  "reason": <short justification>
   }
 
   Here are some example inputs and good responses:

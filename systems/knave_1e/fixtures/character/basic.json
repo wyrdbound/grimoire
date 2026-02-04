@@ -1,0 +1,30 @@
+{
+  "name": "Bjorn",
+  "gender": "Male",
+  "abilities": {
+    "strength": {
+      "bonus": 1
+    },
+    "dexterity": {
+      "bonus": 2
+    },
+    "constitution": {
+      "bonus": 3
+    },
+    "intelligence": {
+      "bonus": 4
+    },
+    "wisdom": {
+      "bonus": 5
+    },
+    "charisma": {
+      "bonus": 6
+    }
+  },
+  "hit_points": 7,
+  "armor": {
+    "bonus": 1
+  },
+  "traits": {},
+  "inventory": []
+}

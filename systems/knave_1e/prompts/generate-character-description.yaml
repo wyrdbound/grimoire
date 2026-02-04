@@ -27,7 +27,7 @@ prompt_template: |
 
   Please use the below examples as guidance for your output and refrain from adding lore or unnecessarily specific world locations. In addition, be sure to use correct pronouns for the specified gender.
   =============================
-  EXAMPLE 1:
+  EXAMPLE INPUT 1:
   Name: Silas "Moss" Blackwood
   Gender: Male
   Physique: Scrawny
@@ -42,10 +42,11 @@ prompt_template: |
   Misfortunes: Mutilated
   Alignment: Neutrality
 
+  EXAMPLE OUTPUT 1:
   Silas “Moss” Blackwood is a unsettling figure - a wisp of a man perpetually slick with an unnatural oiliness clinging to his square face. His wispy, dark hair drifts around him, a constant reminder of the accident that shattered his confidence. Once a promising apprentice herbalist, a misfired concoction left him grotesquely mutilated and profoundly cautious. Now, his undersized clothing hangs on his lean frame, reflecting his shrinking world. He speaks with unnerving precision, a habit from his training, often in a hushed tone. Driven by crippling cowardice, Silas avoids confrontation, seeking only to drift through the world. His meticulous observation is born of fear, a desperate attempt to control a world that feels overwhelmingly dangerous.
 
   =============================
-  EXAMPLE 2
+  EXAMPLE INPUT 2:
   Name: Zimia
   Gender: Female
   Physique: Ripped
@@ -60,4 +61,5 @@ prompt_template: |
   Misfortunes: Haunted
   Alignment: Law
 
+  EXAMPLE OUTPUT 2:
   Zimia cuts a striking, almost intimidating figure - a woman of formidable muscle beneath worn, bloody clothing. Her face is a landscape of sharp angles and a prominent birthmark, framing eyes that hold a disconcerting mix of steel and weariness. A former mariner, she now drifts through the world, restless and ambitious, driven by a desire to rise above her circumstances. Despite her lofty goals, a fundamental laziness often undermines her efforts, a frustrating paradox. Her speech is oddly quaint, a curious blend of archaic phrasing and blunt honesty. Haunted by a past she rarely speaks of, she clings to a rigid sense of law, seeking order in a chaotic world - though her methods are frequently unorthodox and her commitment wavering.

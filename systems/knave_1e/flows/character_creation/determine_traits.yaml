@@ -5,8 +5,8 @@ description: "Determine the physical and personality traits for character creati
 version: 1
 
 outputs:
-  - type: character_traits
-    id: traits
+  - id: traits
+    type: character_traits
 
 steps:
   - id: generate_traits
@@ -20,66 +20,65 @@ steps:
           - set_value:
               path: "outputs.traits.physique"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.physique"
       - table: face
         actions:
           - set_value:
               path: "outputs.traits.face"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.face"
       - table: skin
         actions:
           - set_value:
               path: "outputs.traits.skin"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.skin"
       - table: hair
         actions:
           - set_value:
               path: "outputs.traits.hair"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.hair"
       - table: clothing
         actions:
           - set_value:
               path: "outputs.traits.clothing"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.clothing"
       - table: virtue
         actions:
           - set_value:
               path: "outputs.traits.virtue"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.virtue"
       - table: vice
         actions:
           - set_value:
               path: "outputs.traits.vice"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.vice"
       - table: speech
         actions:
           - set_value:
               path: "outputs.traits.speech"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.speech"
       - table: background
         actions:
           - set_value:
               path: "outputs.traits.background"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.background"
       - table: misfortunes
         actions:
           - set_value:
               path: "outputs.traits.misfortunes"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.misfortunes"
       - table: alignment
         actions:
           - set_value:
               path: "outputs.traits.alignment"
               value: "{{ result.entry }}"
-          # - display_value: "outputs.traits.alignment"
     actions:
-      - display_value: "outputs.traits"
+      - display_message: "Physique: {{ outputs.traits.physique }}"
+      - display_message: "Face: {{ outputs.traits.face }}"
+      - display_message: "Skin: {{ outputs.traits.skin }}"
+      - display_message: "Hair: {{ outputs.traits.hair }}"
+      - display_message: "Clothing: {{ outputs.traits.clothing }}"
+      - display_message: "Virtue: {{ outputs.traits.virtue }}"
+      - display_message: "Vice: {{ outputs.traits.vice }}"
+      - display_message: "Speech: {{ outputs.traits.speech }}"
+      - display_message: "Background: {{ outputs.traits.background }}"
+      - display_message: "Misfortunes: {{ outputs.traits.misfortunes }}"
+      - display_message: "Alignment: {{ outputs.traits.alignment }}"

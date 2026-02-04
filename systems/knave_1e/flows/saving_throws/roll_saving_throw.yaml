@@ -30,7 +30,7 @@ variables:
 steps:
   - id: "determine_dice_roll"
     name: "Determine Saving Throw Type"
-    type: "conditional"
+    type: "conditional_branch"
     if: "{{ inputs.saving_throw_type == 'basic' }}"
     then:
       # Basic
@@ -49,24 +49,25 @@ steps:
         - set_value:
             path: "variables.base_dice_roll"
             value: 2d20kl1
-    result_message: "Selected {{ inputs.saving_throw_type }} dice ({{ variables.base_dice_roll }})"
+    actions:
+      - display_message: "Selected {{ inputs.saving_throw_type }} dice ({{ variables.base_dice_roll }})"
 
   - id: execute_saving_throw_roll
+    name: "Execute Saving Throw Roll"
     type: dice_roll
     roll: "{{ variables.base_dice_roll }} + {{ inputs.saving_throw_modifier }}"
     actions:
       - set_value:
           path: "variables.saving_throw_result"
           value: "{{ result }}"
-      - log_message:
-          message: "Rolled {{ result.description }} for saving throw"
-    result_message: "Rolled {{ result.total }} vs DC {{ inputs.saving_throw_dc }}"
+      - log_message: "Rolled {{ result.description }} for saving throw"
+      - display_message: "Rolled {{ result.total }} vs DC {{ inputs.saving_throw_dc }}"
 
   - id: evaluate_saving_throw_result
     name: "Evaluate Saving Throw Result"
     type: "completion"
-    result_message: "Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"
     actions:
       - set_value:
           path: "outputs.saving_throw_result"
           value: "{{ variables.saving_throw_result.total > inputs.saving_throw_dc }}"
+      - display_message: "Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"

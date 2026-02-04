@@ -319,6 +319,51 @@ Marks the end of a flow. Useful when there are conditional branches in the flow 
         data: "{{ outputs.new_character.name }}"
 ```
 
+#### `conditional_branch`
+
+Provides conditional logic with if-then-else branching within a flow step. Allows for dynamic execution paths based on evaluated conditions.
+
+```yaml
+- id: determine_dice_roll
+  name: "Determine Saving Throw Type"
+  type: conditional_branch
+  if: "{{ inputs.saving_throw_type == 'basic' }}"
+  then:
+    # Basic saving throw
+    - set_value:
+        path: "variables.base_dice_roll"
+        value: "1d20"
+  else:
+    if: "{{ inputs.saving_throw_type == 'advantage' }}"
+    then:
+      # Advantage - roll twice, keep highest
+      - set_value:
+          path: "variables.base_dice_roll"
+          value: "2d20kh1"
+    else:
+      # Disadvantage - roll twice, keep lowest
+      - set_value:
+          path: "variables.base_dice_roll"
+          value: "2d20kl1"
+  actions:
+    - display_message: "Selected {{ inputs.saving_throw_type }} dice ({{ variables.base_dice_roll }})"
+```
+
+**Conditional Structure**:
+
+- **`if`**: Template expression that evaluates to a boolean condition
+- **`then`**: Array of actions to execute if the condition is true
+- **`else`**: Optional clause that can contain either:
+  - Array of actions to execute if the condition is false
+  - Another nested `if-then-else` structure for chaining conditions
+
+**Key Features**:
+
+- Supports nested conditional logic for complex branching scenarios
+- All conditions use Jinja2 template syntax for dynamic evaluation
+- Actions within `then` and `else` blocks follow the same syntax as regular step actions
+- The step's main `actions` array executes after the conditional logic completes
+
 #### `flow_call`
 
 Invokes another flow as a sub-flow. The sub-flow's outputs are available as `result` in subsequent actions.
@@ -368,6 +413,19 @@ Displays a model or object to the user.
 
 ```yaml
 - display_value: "outputs.character"
+```
+
+#### `display_message`
+
+Display a simple message to the user to be output with the information about the flow's execution. Supports templating. Also supports passing the message template as a string or dict.
+
+```yaml
+# Passing as a dict
+- display_message:
+    message: "{{ item|title }}: {{ result.total }} ({{ result.detail }})"
+
+# Shorthand: passing as a string
+- display_message: "{{ item|title }}: {{ result.total }} ({{ result.detail }})"
 ```
 
 #### `validate_value`

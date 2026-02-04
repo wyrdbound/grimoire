@@ -15,13 +15,13 @@ steps:
     name: "Roll Initiative"
     type: dice_roll
     roll: 1d6
-    before_actions:
-      - log_message:
+    pre_actions:
+      - display_message:
           message: "Rolling initiative..."
-    after_actions:
-      - log_message:
+    actions:
+      - display_message:
           message: "Rolled {{ result.detail }}"
       - set_value:
           path: "outputs.side_with_initiative"
           value: "{% if result.total > 3 %}Players{% else %}Enemies{% endif %}"
-      - log_message: "{{ outputs.side_with_initiative }} have initiative"
+      - display_message: "{{ outputs.side_with_initiative }} have initiative"
