@@ -1,5 +1,6 @@
 """Compendium definition models for GRIMOIRE runner."""
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -22,7 +23,9 @@ class CompendiumDefinition:
         """Get a list of all entry IDs."""
         return list(self.entries.keys())
 
-    def filter_entries(self, filter_func) -> dict[str, dict[str, Any]]:
+    def filter_entries(
+        self, filter_func: Callable[[dict[str, Any]], bool]
+    ) -> dict[str, dict[str, Any]]:
         """Filter entries based on a function."""
         return {
             entry_id: entry_data

@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
+
 class StepType(Enum):
     """Types of flow steps."""
 
@@ -16,7 +17,8 @@ class StepType(Enum):
     NAME_GENERATION = "name_generation"
     COMPLETION = "completion"
     FLOW_CALL = "flow_call"
-    CONDITIONAL = "conditional"
+    CONDITIONAL = "conditional_branch"
+
 
 @dataclass
 class VariableDefinition:
@@ -97,6 +99,7 @@ class LLMValidationDefinition:
     on_failure: str = "continue"  # "continue", "fail", or "fallback"
     fallback_value: Any = None  # Value to use when validation fails
 
+
 @dataclass
 class StepDefinitionBase:
     """Base class for all step definitions."""
@@ -107,12 +110,14 @@ class StepDefinitionBase:
     actions: list[dict[str, Any]] = field(default_factory=list)
     next_step: str | None = None
 
+
 @dataclass
 class DiceRollStepDefinition(StepDefinitionBase):
     """Dice roll step definition."""
 
-    roll: str
+    roll: str | None = None
     modifiers: dict[str, Any] | None = None
+
 
 class DiceSequenceStepDefinition(StepDefinitionBase):
     """Dice sequence step definition."""
@@ -135,7 +140,10 @@ class StepDefinition(StepDefinitionBase):
     output: str | None = None  # Variable name to store step result
 
     # Step-specific fields
-     # For dice_sequence
+    # For dice_roll
+    roll: str | None = None
+
+    # For dice_sequence
     sequence: DiceSequenceDefinition | None = None
 
     # For player_choice
@@ -158,8 +166,8 @@ class StepDefinition(StepDefinitionBase):
     then_actions: list[dict[str, Any]] = field(
         default_factory=list
     )  # Actions to execute if condition is true
-    else_actions: dict[str, Any] | None = (
-        None  # Actions to execute if condition is false (can be nested conditional)
+    else_actions: list[dict[str, Any]] | dict[str, Any] | None = (
+        None  # Actions (list) or nested conditional (dict) if condition is false
     )
 
     # For flow_call
@@ -169,9 +177,13 @@ class StepDefinition(StepDefinitionBase):
 
     # For name_generation
     generator: str | None = None  # Name generator identifier
-    settings: dict[str, Any] = field(default_factory=dict)  # Generator settings (corpus, segmenter, max_length)
+    settings: dict[str, Any] = field(
+        default_factory=dict
+    )  # Generator settings (corpus, segmenter, max_length)
     generator_file: str | None = None  # Path to name generator file (legacy)
-    generator_params: dict[str, Any] = field(default_factory=dict)  # Parameters for name generation (legacy)
+    generator_params: dict[str, Any] = field(
+        default_factory=dict
+    )  # Parameters for name generation (legacy)
 
 
 @dataclass
@@ -248,16 +260,16 @@ class FlowDefinition:
                 variables_dict[var_def.id] = ""
         return variables_dict
 
-    def resolve_description(self, context) -> str:
+    def resolve_description(self, context: Any) -> str:
         """Resolve the flow description using the provided context."""
         if not self.description:
             return ""
 
         try:
-            return context.resolve_template(self.description)
+            return str(context.resolve_template(self.description))
         except Exception:
             # If template resolution fails, return the original description
-            return self.description
+            return self.description or ""
 
     def validate(self) -> list[str]:
         """Validate the flow definition and return any errors."""
@@ -284,13 +296,15 @@ class FlowDefinition:
                 errors.append(
                     f"Step '{step.id}' references unknown next_step '{step.next_step}'"
                 )
-            
+
             # Validate choice next_step references
-            if hasattr(step, 'choices') and step.choices:
+            if hasattr(step, "choices") and step.choices:
                 for choice in step.choices:
                     if choice.next_step and choice.next_step not in step_ids:
                         errors.append(
-                            f"Step '{step.id}' choice '{choice.id}' references unknown next_step '{choice.next_step}'"
+                            f"Step '{step.id}' choice '{choice.id}' "
+                            f"references unknown next_step "
+                            f"'{choice.next_step}'"
                         )
 
         # Validate resume points

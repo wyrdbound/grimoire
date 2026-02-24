@@ -17,42 +17,42 @@ outputs:
 steps:
   - id: roll_power
     name: "Roll Power"
-    type: roll_dice
-    expression: "3d6"
+    type: dice_roll
+    roll: "3d6"
     actions:
       - set_value:
           path: "outputs.power"
-          value: "{{ roll.total }}"
+          value: "{{ result.total }}"
     next_step: roll_agility
 
   - id: roll_agility
     name: "Roll Agility"
-    type: roll_dice
-    expression: "3d6"
+    type: dice_roll
+    roll: "3d6"
     actions:
       - set_value:
           path: "outputs.agility"
-          value: "{{ roll.total }}"
+          value: "{{ result.total }}"
     next_step: roll_mind
 
   - id: roll_mind
     name: "Roll Mind"
-    type: roll_dice
-    expression: "3d6"
+    type: dice_roll
+    roll: "3d6"
     actions:
       - set_value:
           path: "outputs.mind"
-          value: "{{ roll.total }}"
+          value: "{{ result.total }}"
     next_step: roll_charm
 
   - id: roll_charm
     name: "Roll Charm"
-    type: roll_dice
-    expression: "3d6"
+    type: dice_roll
+    roll: "3d6"
     actions:
       - set_value:
           path: "outputs.charm"
-          value: "{{ roll.total }}"
+          value: "{{ result.total }}"
     next_step: display_results
 
   - id: display_results

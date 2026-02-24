@@ -3,9 +3,9 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .compendium import CompendiumDefinition
-from .flow.flow import FlowDefinition
-from .model import ModelDefinition
+from .compendium_definition import CompendiumDefinition
+from .flow import FlowDefinition
+from .model_definition import ModelDefinition
 from .prompt import PromptDefinition
 from .source import SourceDefinition
 from .table import TableDefinition

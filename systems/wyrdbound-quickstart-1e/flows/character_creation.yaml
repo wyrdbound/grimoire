@@ -82,12 +82,12 @@ steps:
 
   - id: roll_starting_gold
     name: "Roll Starting Gold"
-    type: roll_dice
-    expression: "3d6 * 10"
+    type: dice_roll
+    roll: "3d6 * 10"
     actions:
       - set_value:
           path: "outputs.character.gold"
-          value: "{{ roll.total }}"
+          value: "{{ result.total }}"
     next_step: choose_name
 
   - id: choose_name
