@@ -1,0 +1,113 @@
+id: character_creation
+kind: flow
+name: "Character Creation"
+description: "Character creation process for Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+outputs:
+  - id: character
+    type: character
+    validate: true
+
+steps:
+  - id: roll_attributes
+    name: "Roll Attributes"
+    type: flow_call
+    flow: roll_attributes
+    actions:
+      - set_value:
+          path: "outputs.character.power.score"
+          value: "{{ result.power }}"
+      - set_value:
+          path: "outputs.character.agility.score"
+          value: "{{ result.agility }}"
+      - set_value:
+          path: "outputs.character.mind.score"
+          value: "{{ result.mind }}"
+      - set_value:
+          path: "outputs.character.charm.score"
+          value: "{{ result.charm }}"
+    next_step: choose_class
+
+  - id: choose_class
+    name: "Choose Class"
+    type: player_choice
+    prompt: "Choose your class:"
+    choices:
+      - value: warrior
+        label: "Warrior — Frontline fighter, high survivability (+1 melee attacks)"
+      - value: rogue
+        label: "Rogue — Sneaky scout, high mobility (+1 stealth/ranged, Sneak Attack)"
+      - value: mage
+        label: "Mage — Spellcaster, versatile magic (+1 magic checks, casts spells)"
+      - value: bard
+        label: "Bard — Social leader, support (+1 social checks, Inspire ability)"
+    actions:
+      - set_value:
+          path: "outputs.character.character_class"
+          value: "{{ choice }}"
+    next_step: calculate_starting_hp
+
+  - id: calculate_starting_hp
+    name: "Calculate Starting HP"
+    type: flow_call
+    flow: calculate_starting_hp
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+      power_modifier: "{{ outputs.character.power.modifier }}"
+      agility_modifier: "{{ outputs.character.agility.modifier }}"
+      mind_modifier: "{{ outputs.character.mind.modifier }}"
+      charm_modifier: "{{ outputs.character.charm.modifier }}"
+    actions:
+      - set_value:
+          path: "outputs.character.hit_points.max"
+          value: "{{ result.max_hp }}"
+      - set_value:
+          path: "outputs.character.hit_points.current"
+          value: "{{ result.max_hp }}"
+    next_step: calculate_spell_slots
+
+  - id: calculate_spell_slots
+    name: "Calculate Spell Slots (Mage only)"
+    type: completion
+    condition: "{{ outputs.character.character_class == 'mage' }}"
+    actions:
+      - set_value:
+          path: "outputs.character.spell_slots.max"
+          value: "{{ 3 + outputs.character.mind.modifier }}"
+      - set_value:
+          path: "outputs.character.spell_slots.current"
+          value: "{{ outputs.character.spell_slots.max }}"
+    next_step: roll_starting_gold
+
+  - id: roll_starting_gold
+    name: "Roll Starting Gold"
+    type: roll_dice
+    expression: "3d6 * 10"
+    actions:
+      - set_value:
+          path: "outputs.character.gold"
+          value: "{{ roll.total }}"
+    next_step: choose_name
+
+  - id: choose_name
+    name: "Choose Character Name"
+    type: player_choice
+    prompt: "Enter your character's name:"
+    choices: []  # Free-form text input
+    actions:
+      - set_value:
+          path: "outputs.character.name"
+          value: "{{ choice }}"
+    next_step: done
+
+  - id: done
+    name: "Character Created"
+    type: completion
+    actions:
+      - display_message:
+          text: "Character {{ outputs.character.name }} ({{ outputs.character.character_class }}) created successfully!"
+      - display_message:
+          text: "HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
+      - display_message:
+          text: "Gold: {{ outputs.character.gold }} gp"

@@ -1,0 +1,60 @@
+id: calculate_starting_hp
+kind: flow
+name: "Calculate Starting HP"
+description: "Determine starting HP based on class and attributes"
+version: 1
+
+inputs:
+  - id: character_class
+    type: str
+  - id: power_modifier
+    type: int
+  - id: agility_modifier
+    type: int
+  - id: mind_modifier
+    type: int
+  - id: charm_modifier
+    type: int
+
+outputs:
+  - id: max_hp
+    type: int
+
+steps:
+  - id: calculate_hp
+    name: "Calculate HP"
+    type: completion
+    actions:
+      - set_value:
+          path: "variables.base_hp"
+          value: >
+            {% if inputs.character_class == 'warrior' %}
+              12
+            {% elif inputs.character_class == 'rogue' %}
+              8
+            {% elif inputs.character_class == 'mage' %}
+              6
+            {% elif inputs.character_class == 'bard' %}
+              8
+            {% else %}
+              8
+            {% endif %}
+      - set_value:
+          path: "variables.modifier"
+          value: >
+            {% if inputs.character_class == 'warrior' %}
+              {{ inputs.power_modifier }}
+            {% elif inputs.character_class == 'rogue' %}
+              {{ inputs.agility_modifier }}
+            {% elif inputs.character_class == 'mage' %}
+              {{ inputs.mind_modifier }}
+            {% elif inputs.character_class == 'bard' %}
+              {{ inputs.charm_modifier }}
+            {% else %}
+              0
+            {% endif %}
+      - set_value:
+          path: "outputs.max_hp"
+          value: "{{ variables.base_hp + variables.modifier }}"
+      - display_message:
+          text: "Starting HP: {{ outputs.max_hp }} ({{ variables.base_hp }} base + {{ variables.modifier }} modifier)"

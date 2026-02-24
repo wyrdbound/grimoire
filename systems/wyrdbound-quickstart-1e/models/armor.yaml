@@ -1,0 +1,10 @@
+id: armor
+kind: model
+name: "Armor"
+description: "Armor model for Wyrdbound Quickstart (1st Edition)"
+extends: [item]
+version: 1
+
+attributes:
+  armor_class_bonus: { type: int, range: "0..5", description: "AC bonus provided by this armor" }
+  armor_type: { type: str, enum: ["light", "medium", "heavy"], default: "light" }

@@ -1,0 +1,63 @@
+kind: model
+id: character
+name: "Quickstart Character"
+description: "Character model for Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+attributes:
+  name: { type: str }
+  
+  # --- Core Attributes (4) ---
+  power:
+    score: { type: int, range: "3..20", description: "Physical strength, melee combat" }
+    modifier: { type: int, derived: "{{ (power.score - 10) // 2 }}", description: "Attribute modifier" }
+  
+  agility:
+    score: { type: int, range: "3..20", description: "Speed, reflexes, ranged combat" }
+    modifier: { type: int, derived: "{{ (agility.score - 10) // 2 }}" }
+  
+  mind:
+    score: { type: int, range: "3..20", description: "Intelligence, magical ability, perception" }
+    modifier: { type: int, derived: "{{ (mind.score - 10) // 2 }}" }
+  
+  charm:
+    score: { type: int, range: "3..20", description: "Persuasion, leadership, social influence" }
+    modifier: { type: int, derived: "{{ (charm.score - 10) // 2 }}" }
+  
+  # --- Class ---
+  character_class:
+    { type: str, enum: ["warrior", "rogue", "mage", "bard"], description: "Character class" }
+  
+  # --- Level & Experience ---
+  level: { type: int, default: 1, range: "1..10" }
+  xp: { type: int, default: 0, range: "0.." }
+  
+  # --- Hit Points ---
+  hit_points:
+    max: { type: int, range: "1.." }
+    current: { type: int, range: "0..{{ hit_points.max }}" }
+  
+  # --- Armor Class ---
+  armor_class: { type: int, default: 0, range: "0..5", description: "AC bonus from armor" }
+  
+  # --- Spell Slots (Mage only) ---
+  spell_slots:
+    max: { type: int, default: 0, range: "0.." }
+    current: { type: int, range: "0..{{ spell_slots.max }}" }
+  
+  # --- Currency ---
+  gold: { type: int, default: 0, range: "0.." }
+  
+  # --- Inventory ---
+  inventory: { type: list, of: item, default: [] }
+  
+  # --- Status Effects ---
+  status_effects: { type: list, of: str, default: [] }
+
+validations:
+  - expression: "{{ hit_points.current <= hit_points.max }}"
+    message: "Current HP cannot exceed maximum HP"
+  - expression: "{{ spell_slots.current <= spell_slots.max }}"
+    message: "Current spell slots cannot exceed maximum"
+  - expression: "{{ level >= 1 and level <= 10 }}"
+    message: "Character level must be between 1 and 10"

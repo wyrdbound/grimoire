@@ -1,0 +1,75 @@
+id: roll_attributes
+kind: flow
+name: "Roll Attributes"
+description: "Roll 3d6 for each of the four attributes"
+version: 1
+
+outputs:
+  - id: power
+    type: int
+  - id: agility
+    type: int
+  - id: mind
+    type: int
+  - id: charm
+    type: int
+
+steps:
+  - id: roll_power
+    name: "Roll Power"
+    type: roll_dice
+    expression: "3d6"
+    actions:
+      - set_value:
+          path: "outputs.power"
+          value: "{{ roll.total }}"
+    next_step: roll_agility
+
+  - id: roll_agility
+    name: "Roll Agility"
+    type: roll_dice
+    expression: "3d6"
+    actions:
+      - set_value:
+          path: "outputs.agility"
+          value: "{{ roll.total }}"
+    next_step: roll_mind
+
+  - id: roll_mind
+    name: "Roll Mind"
+    type: roll_dice
+    expression: "3d6"
+    actions:
+      - set_value:
+          path: "outputs.mind"
+          value: "{{ roll.total }}"
+    next_step: roll_charm
+
+  - id: roll_charm
+    name: "Roll Charm"
+    type: roll_dice
+    expression: "3d6"
+    actions:
+      - set_value:
+          path: "outputs.charm"
+          value: "{{ roll.total }}"
+    next_step: display_results
+
+  - id: display_results
+    name: "Display Attribute Rolls"
+    type: completion
+    actions:
+      - display_message:
+          text: "Attributes rolled:"
+      - display_value:
+          label: "Power"
+          value: "{{ outputs.power }}"
+      - display_value:
+          label: "Agility"
+          value: "{{ outputs.agility }}"
+      - display_value:
+          label: "Mind"
+          value: "{{ outputs.mind }}"
+      - display_value:
+          label: "Charm"
+          value: "{{ outputs.charm }}"

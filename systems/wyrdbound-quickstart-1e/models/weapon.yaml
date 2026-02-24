@@ -1,0 +1,11 @@
+id: weapon
+kind: model
+name: "Weapon"
+description: "Weapon model for Wyrdbound Quickstart (1st Edition)"
+extends: [item]
+version: 1
+
+attributes:
+  weapon_type: { type: str, enum: ["melee", "ranged"], default: "melee" }
+  damage_die: { type: str, description: "Damage die (e.g., '1d6', '1d8')" }
+  size: { type: str, enum: ["light", "medium", "heavy", "two-handed"], default: "medium" }
