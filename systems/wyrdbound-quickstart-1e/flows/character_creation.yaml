@@ -27,6 +27,8 @@ steps:
       - set_value:
           path: "outputs.character.charm.score"
           value: "{{ result.charm }}"
+    # Modifiers (power.modifier, etc.) are derived fields — auto-computed
+    # by ModelInstance when the score is written. No manual set_value needed.
     next_step: choose_class
 
   - id: choose_class
@@ -34,13 +36,13 @@ steps:
     type: player_choice
     prompt: "Choose your class:"
     choices:
-      - value: warrior
+      - id: warrior
         label: "Warrior — Frontline fighter, high survivability (+1 melee attacks)"
-      - value: rogue
+      - id: rogue
         label: "Rogue — Sneaky scout, high mobility (+1 stealth/ranged, Sneak Attack)"
-      - value: mage
+      - id: mage
         label: "Mage — Spellcaster, versatile magic (+1 magic checks, casts spells)"
-      - value: bard
+      - id: bard
         label: "Bard — Social leader, support (+1 social checks, Inspire ability)"
     actions:
       - set_value:
@@ -69,9 +71,9 @@ steps:
 
   - id: calculate_spell_slots
     name: "Calculate Spell Slots (Mage only)"
-    type: completion
-    condition: "{{ outputs.character.character_class == 'mage' }}"
-    actions:
+    type: conditional_branch
+    if: "{{ outputs.character.character_class == 'mage' }}"
+    then:
       - set_value:
           path: "outputs.character.spell_slots.max"
           value: "{{ 3 + outputs.character.mind.modifier }}"
@@ -83,22 +85,21 @@ steps:
   - id: roll_starting_gold
     name: "Roll Starting Gold"
     type: dice_roll
-    roll: "3d6 * 10"
+    roll: "3d6"
     actions:
       - set_value:
           path: "outputs.character.gold"
-          value: "{{ result.total }}"
+          value: "{{ result.total * 10 }}"
     next_step: choose_name
 
   - id: choose_name
     name: "Choose Character Name"
-    type: player_choice
+    type: player_input
     prompt: "Enter your character's name:"
-    choices: []  # Free-form text input
     actions:
       - set_value:
           path: "outputs.character.name"
-          value: "{{ choice }}"
+          value: "{{ result }}"
     next_step: done
 
   - id: done
@@ -106,8 +107,10 @@ steps:
     type: completion
     actions:
       - display_message:
-          text: "Character {{ outputs.character.name }} ({{ outputs.character.character_class }}) created successfully!"
+          text: "✅ {{ outputs.character.name }} ({{ outputs.character.character_class }}) is ready for adventure!"
       - display_message:
-          text: "HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
+          text: "   HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
       - display_message:
-          text: "Gold: {{ outputs.character.gold }} gp"
+          text: "   Gold: {{ outputs.character.gold }} gp"
+      - display_message:
+          text: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
