@@ -7,9 +7,6 @@ version: 1
 outputs:
   - id: traits
     type: character_traits
-  - id: description
-    type: str
-    default: ""
 
 steps:
   # ── Step 1: Roll or Choose? ───────────────────────────────────────────────
@@ -63,7 +60,7 @@ steps:
       - display_message: "Disposition: {{ outputs.traits.disposition }}"
       - display_message: "Speech: {{ outputs.traits.speech }}"
       - display_message: "Background: {{ outputs.traits.background }}"
-    next_step: generate_description
+    next_step: done
 
   # ── Choose path ───────────────────────────────────────────────────────────
   - id: choose_bearing
@@ -129,27 +126,9 @@ steps:
       - set_value:
           path: "outputs.traits.background"
           value: "{{ choice }}"
-    next_step: generate_description
-
-  # ── LLM Description ───────────────────────────────────────────────────────
-  - id: generate_description
-    name: "Generate Character Description"
-    type: llm_generation
-    condition: llm_enabled
-    prompt_id: generate_character_description
-    prompt_data:
-      traits: "{{ outputs.traits }}"
-    llm_settings:
-      provider: ollama
-      model: gemma2
-      max_tokens: 200
-    actions:
-      - set_value:
-          path: "outputs.description"
-          value: "{{ result }}"
-      - display_message: "{{ outputs.description }}"
     next_step: done
 
   - id: done
     name: "Traits Determined"
     type: completion
+

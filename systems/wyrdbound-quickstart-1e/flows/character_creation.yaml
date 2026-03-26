@@ -68,9 +68,6 @@ steps:
       - set_value:
           path: "outputs.character.traits.background"
           value: "{{ result.traits.background }}"
-      - set_value:
-          path: "outputs.character.description"
-          value: "{{ result.description }}"
     next_step: calculate_starting_hp
 
   - id: calculate_starting_hp
@@ -122,6 +119,25 @@ steps:
     actions:
       - set_value:
           path: "outputs.character.name"
+          value: "{{ result }}"
+    next_step: generate_description
+
+  - id: generate_description
+    name: "Generate Character Description"
+    type: llm_generation
+    condition: llm_enabled
+    prompt_id: generate_character_description
+    prompt_data:
+      name: "{{ outputs.character.name }}"
+      character_class: "{{ outputs.character.character_class }}"
+      traits: "{{ outputs.character.traits }}"
+    llm_settings:
+      provider: ollama
+      model: gemma2
+      max_tokens: 200
+    actions:
+      - set_value:
+          path: "outputs.character.description"
           value: "{{ result }}"
     next_step: done
 
