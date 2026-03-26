@@ -54,14 +54,14 @@ steps:
     flow: determine_traits
     actions:
       - set_value:
-          path: "outputs.character.traits.physique"
-          value: "{{ result.traits.physique }}"
+          path: "outputs.character.traits.bearing"
+          value: "{{ result.traits.bearing }}"
       - set_value:
-          path: "outputs.character.traits.virtue"
-          value: "{{ result.traits.virtue }}"
+          path: "outputs.character.traits.manner"
+          value: "{{ result.traits.manner }}"
       - set_value:
-          path: "outputs.character.traits.vice"
-          value: "{{ result.traits.vice }}"
+          path: "outputs.character.traits.disposition"
+          value: "{{ result.traits.disposition }}"
       - set_value:
           path: "outputs.character.traits.speech"
           value: "{{ result.traits.speech }}"
@@ -138,6 +138,6 @@ steps:
       - display_message:
           text: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
       - display_message:
-          text: "   Physique: {{ outputs.character.traits.physique }} | Virtue: {{ outputs.character.traits.virtue }} | Vice: {{ outputs.character.traits.vice }}"
+          text: "   Bearing: {{ outputs.character.traits.bearing }} | Manner: {{ outputs.character.traits.manner }} | Disposition: {{ outputs.character.traits.disposition }}"
       - display_message:
           text: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"

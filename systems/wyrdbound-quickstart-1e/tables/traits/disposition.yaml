@@ -1,0 +1,27 @@
+kind: table
+id: disposition
+name: "Disposition"
+version: 1
+roll: 1d20
+description: "The character's inner personality and general outlook on the world"
+entries:
+  1: Ambitious
+  2: Bitter
+  3: Brooding
+  4: Cheerful
+  5: Cynical
+  6: Curious
+  7: Earnest
+  8: Eccentric
+  9: Fatalistic
+  10: Idealistic
+  11: Irreverent
+  12: Melancholy
+  13: Optimistic
+  14: Pragmatic
+  15: Protective
+  16: Reckless
+  17: Sardonic
+  18: Stoic
+  19: Suspicious
+  20: Warm

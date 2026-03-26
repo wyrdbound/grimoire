@@ -1,0 +1,27 @@
+kind: table
+id: bearing
+name: "Bearing"
+version: 1
+roll: 1d20
+description: "The character's physical presence and how they carry themselves"
+entries:
+  1: Athletic
+  2: Brawny
+  3: Commanding
+  4: Delicate
+  5: Gaunt
+  6: Graceful
+  7: Hulking
+  8: Lanky
+  9: Lithe
+  10: Regal
+  11: Rugged
+  12: Scrawny
+  13: Slender
+  14: Statuesque
+  15: Stocky
+  16: Stout
+  17: Towering
+  18: Weathered
+  19: Willowy
+  20: Wiry

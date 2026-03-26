@@ -5,8 +5,8 @@ description: "Roleplay-guiding traits for a Wyrdbound Quickstart character"
 version: 1
 
 attributes:
-  physique: { type: str, description: "Physical build and bearing" }
-  virtue:   { type: str, description: "A defining moral strength" }
-  vice:     { type: str, description: "A defining flaw or weakness" }
-  speech:   { type: str, description: "Distinctive manner of speaking" }
-  background: { type: str, description: "Life before adventure" }
+  bearing:     { type: str, description: "Physical presence and how they carry themselves" }
+  manner:      { type: str, description: "Behavioral style — how they move and act" }
+  disposition: { type: str, description: "Inner personality and general outlook" }
+  speech:      { type: str, description: "Distinctive manner of speaking" }
+  background:  { type: str, description: "Life before adventure" }

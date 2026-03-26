@@ -22,7 +22,7 @@ steps:
         next_step: roll_traits
       - id: choose
         label: "✍️  Choose — pick from each table yourself"
-        next_step: choose_physique
+        next_step: choose_bearing
 
   # ── Roll path ─────────────────────────────────────────────────────────────
   - id: roll_traits
@@ -31,20 +31,20 @@ steps:
     prompt: "Rolling for your character's traits..."
     parallel: true
     tables:
-      - table: physique
+      - table: bearing
         actions:
           - set_value:
-              path: "outputs.traits.physique"
+              path: "outputs.traits.bearing"
               value: "{{ result.entry }}"
-      - table: virtue
+      - table: manner
         actions:
           - set_value:
-              path: "outputs.traits.virtue"
+              path: "outputs.traits.manner"
               value: "{{ result.entry }}"
-      - table: vice
+      - table: disposition
         actions:
           - set_value:
-              path: "outputs.traits.vice"
+              path: "outputs.traits.disposition"
               value: "{{ result.entry }}"
       - table: speech
         actions:
@@ -57,50 +57,50 @@ steps:
               path: "outputs.traits.background"
               value: "{{ result.entry }}"
     actions:
-      - display_message: "Physique: {{ outputs.traits.physique }}"
-      - display_message: "Virtue: {{ outputs.traits.virtue }}"
-      - display_message: "Vice: {{ outputs.traits.vice }}"
+      - display_message: "Bearing: {{ outputs.traits.bearing }}"
+      - display_message: "Manner: {{ outputs.traits.manner }}"
+      - display_message: "Disposition: {{ outputs.traits.disposition }}"
       - display_message: "Speech: {{ outputs.traits.speech }}"
       - display_message: "Background: {{ outputs.traits.background }}"
     next_step: generate_description
 
   # ── Choose path ───────────────────────────────────────────────────────────
-  - id: choose_physique
-    name: "Choose Physique"
+  - id: choose_bearing
+    name: "Choose Bearing"
     type: player_choice
-    prompt: "Choose your character's physique:"
+    prompt: "Choose your character's bearing (physical presence):"
     choice_source:
-      table: physique
+      table: bearing
       display_format: "{{ entry }}"
     actions:
       - set_value:
-          path: "outputs.traits.physique"
+          path: "outputs.traits.bearing"
           value: "{{ choice }}"
-    next_step: choose_virtue
+    next_step: choose_manner
 
-  - id: choose_virtue
-    name: "Choose Virtue"
+  - id: choose_manner
+    name: "Choose Manner"
     type: player_choice
-    prompt: "Choose your character's defining virtue:"
+    prompt: "Choose your character's manner (behavioral style):"
     choice_source:
-      table: virtue
+      table: manner
       display_format: "{{ entry }}"
     actions:
       - set_value:
-          path: "outputs.traits.virtue"
+          path: "outputs.traits.manner"
           value: "{{ choice }}"
-    next_step: choose_vice
+    next_step: choose_disposition
 
-  - id: choose_vice
-    name: "Choose Vice"
+  - id: choose_disposition
+    name: "Choose Disposition"
     type: player_choice
-    prompt: "Choose your character's defining vice:"
+    prompt: "Choose your character's disposition (personality and outlook):"
     choice_source:
-      table: vice
+      table: disposition
       display_format: "{{ entry }}"
     actions:
       - set_value:
-          path: "outputs.traits.vice"
+          path: "outputs.traits.disposition"
           value: "{{ choice }}"
     next_step: choose_speech
 

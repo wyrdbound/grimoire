@@ -13,35 +13,35 @@ prompt_template: |
 
   Name: {{ name }}
   Class: {{ character_class }}
-  Physique: {{ traits.physique }}
-  Virtue: {{ traits.virtue }}
-  Vice: {{ traits.vice }}
+  Bearing: {{ traits.bearing }}
+  Manner: {{ traits.manner }}
+  Disposition: {{ traits.disposition }}
   Speech: {{ traits.speech }}
   Background: {{ traits.background }}
 
-  Please use the examples below as guidance. Keep the description grounded and character-focused — avoid specific world locations or invented lore. Use clear, evocative language that helps a player picture and roleplay the character.
+  Please use the examples below as guidance. Keep the description grounded and character-focused — avoid specific world locations or invented lore. Use clear, evocative language that helps a player picture and roleplay this character.
   =============================
   EXAMPLE INPUT 1:
   Name: Maren Ashford
   Class: Warrior
-  Physique: Rugged
-  Virtue: Loyal
-  Vice: Bitter
+  Bearing: Rugged
+  Manner: Guarded
+  Disposition: Bitter
   Speech: Blunt
   Background: Mercenary
 
   EXAMPLE OUTPUT 1:
-  Maren Ashford is built like someone who has taken a hundred hard knocks and kept walking — rugged, weathered, with the kind of posture that says she expects trouble and isn't afraid of it. A former mercenary, she's seen enough contracts go wrong to leave a permanent edge to her voice. She speaks in short, direct sentences with little patience for decoration. Loyal to those who earn it, she'd take a blade for a trusted companion without hesitation — but she carries old wounds that make trust slow to give. The bitterness is always there, just beneath the surface.
+  Maren Ashford looks like someone who has taken a hundred hard knocks and kept walking — rugged, weathered, with a posture that says she expects trouble and isn't afraid of it. She keeps her distance until she's sure of a situation, watching from behind careful eyes. A former mercenary, she's seen enough contracts go wrong to leave a permanent edge to her voice. She speaks in short, direct sentences with little patience for decoration, and the bitterness she carries runs deep — though it hasn't yet swallowed the loyalty she still offers, slowly, to those who earn it.
 
   =============================
   EXAMPLE INPUT 2:
   Name: Tobias Venn
   Class: Mage
-  Physique: Scrawny
-  Virtue: Curious
-  Vice: Reckless
+  Bearing: Scrawny
+  Manner: Distracted
+  Disposition: Curious
   Speech: Rambling
   Background: Scholar
 
   EXAMPLE OUTPUT 2:
-  Tobias Venn is a lean, bespectacled figure who looks more at home in a library than on a road — which is, until recently, exactly where he was. A former scholar with a passion for arcane theory, his curiosity has a way of overriding his judgment. He launches into topics with enthusiasm and rarely finds a clean ending to any sentence. His recklessness isn't born of bravado but of forgetting to consider consequences mid-thought. When something catches his interest — a strange ruin, an unfamiliar spell diagram, an unexpected reaction — the rest of the world tends to disappear.
+  Tobias Venn is a lean, slightly disheveled figure who always looks like he's working through a problem in his head — which he usually is. A former scholar whose curiosity eventually outgrew the library, he drifts through conversations and rooms alike, easily pulled off-track by anything that catches his interest. He speaks in long, winding sentences that rarely find a clean ending, circling back to points already made and forward to conclusions not yet reached. There's a genuine warmth to him, and an enthusiasm that's hard not to find infectious, even when you have no idea what he's actually talking about.
