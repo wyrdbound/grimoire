@@ -9,6 +9,7 @@ outputs:
     type: character_traits
   - id: description
     type: str
+    default: ""
 
 steps:
   # ── Step 1: Roll or Choose? ───────────────────────────────────────────────
