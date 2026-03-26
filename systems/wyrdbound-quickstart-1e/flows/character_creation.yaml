@@ -27,8 +27,6 @@ steps:
       - set_value:
           path: "outputs.character.charm.score"
           value: "{{ result.charm }}"
-    # Modifiers (power.modifier, etc.) are derived fields — auto-computed
-    # by ModelInstance when the score is written. No manual set_value needed.
     next_step: choose_class
 
   - id: choose_class
@@ -48,6 +46,31 @@ steps:
       - set_value:
           path: "outputs.character.character_class"
           value: "{{ choice }}"
+    next_step: determine_traits
+
+  - id: determine_traits
+    name: "Determine Character Traits"
+    type: flow_call
+    flow: determine_traits
+    actions:
+      - set_value:
+          path: "outputs.character.traits.physique"
+          value: "{{ result.traits.physique }}"
+      - set_value:
+          path: "outputs.character.traits.virtue"
+          value: "{{ result.traits.virtue }}"
+      - set_value:
+          path: "outputs.character.traits.vice"
+          value: "{{ result.traits.vice }}"
+      - set_value:
+          path: "outputs.character.traits.speech"
+          value: "{{ result.traits.speech }}"
+      - set_value:
+          path: "outputs.character.traits.background"
+          value: "{{ result.traits.background }}"
+      - set_value:
+          path: "outputs.character.description"
+          value: "{{ result.description }}"
     next_step: calculate_starting_hp
 
   - id: calculate_starting_hp
@@ -114,3 +137,7 @@ steps:
           text: "   Gold: {{ outputs.character.gold }} gp"
       - display_message:
           text: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
+      - display_message:
+          text: "   Physique: {{ outputs.character.traits.physique }} | Virtue: {{ outputs.character.traits.virtue }} | Vice: {{ outputs.character.traits.vice }}"
+      - display_message:
+          text: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"

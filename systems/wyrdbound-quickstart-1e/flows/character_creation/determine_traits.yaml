@@ -1,0 +1,154 @@
+id: determine_traits
+kind: flow
+name: "Determine Character Traits"
+description: "Determine the roleplay traits for a Wyrdbound Quickstart character — by roll or player choice"
+version: 1
+
+outputs:
+  - id: traits
+    type: character_traits
+  - id: description
+    type: str
+
+steps:
+  # ── Step 1: Roll or Choose? ───────────────────────────────────────────────
+  - id: traits_method
+    name: "How would you like to determine your traits?"
+    type: player_choice
+    prompt: "Your traits will guide how you roleplay your character. Would you like to roll randomly or choose your own?"
+    choices:
+      - id: roll
+        label: "🎲 Roll randomly — let fate decide"
+        next_step: roll_traits
+      - id: choose
+        label: "✍️  Choose — pick from each table yourself"
+        next_step: choose_physique
+
+  # ── Roll path ─────────────────────────────────────────────────────────────
+  - id: roll_traits
+    name: "Rolling Traits"
+    type: table_roll
+    prompt: "Rolling for your character's traits..."
+    parallel: true
+    tables:
+      - table: physique
+        actions:
+          - set_value:
+              path: "outputs.traits.physique"
+              value: "{{ result.entry }}"
+      - table: virtue
+        actions:
+          - set_value:
+              path: "outputs.traits.virtue"
+              value: "{{ result.entry }}"
+      - table: vice
+        actions:
+          - set_value:
+              path: "outputs.traits.vice"
+              value: "{{ result.entry }}"
+      - table: speech
+        actions:
+          - set_value:
+              path: "outputs.traits.speech"
+              value: "{{ result.entry }}"
+      - table: background
+        actions:
+          - set_value:
+              path: "outputs.traits.background"
+              value: "{{ result.entry }}"
+    actions:
+      - display_message: "Physique: {{ outputs.traits.physique }}"
+      - display_message: "Virtue: {{ outputs.traits.virtue }}"
+      - display_message: "Vice: {{ outputs.traits.vice }}"
+      - display_message: "Speech: {{ outputs.traits.speech }}"
+      - display_message: "Background: {{ outputs.traits.background }}"
+    next_step: generate_description
+
+  # ── Choose path ───────────────────────────────────────────────────────────
+  - id: choose_physique
+    name: "Choose Physique"
+    type: player_choice
+    prompt: "Choose your character's physique:"
+    choice_source:
+      table: physique
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.physique"
+          value: "{{ choice }}"
+    next_step: choose_virtue
+
+  - id: choose_virtue
+    name: "Choose Virtue"
+    type: player_choice
+    prompt: "Choose your character's defining virtue:"
+    choice_source:
+      table: virtue
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.virtue"
+          value: "{{ choice }}"
+    next_step: choose_vice
+
+  - id: choose_vice
+    name: "Choose Vice"
+    type: player_choice
+    prompt: "Choose your character's defining vice:"
+    choice_source:
+      table: vice
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.vice"
+          value: "{{ choice }}"
+    next_step: choose_speech
+
+  - id: choose_speech
+    name: "Choose Speech"
+    type: player_choice
+    prompt: "Choose your character's manner of speech:"
+    choice_source:
+      table: speech
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.speech"
+          value: "{{ choice }}"
+    next_step: choose_background
+
+  - id: choose_background
+    name: "Choose Background"
+    type: player_choice
+    prompt: "Choose your character's background:"
+    choice_source:
+      table: background
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.background"
+          value: "{{ choice }}"
+    next_step: generate_description
+
+  # ── LLM Description ───────────────────────────────────────────────────────
+  - id: generate_description
+    name: "Generate Character Description"
+    type: llm_generation
+    condition: llm_enabled
+    prompt_id: generate_character_description
+    prompt_data:
+      traits: "{{ outputs.traits }}"
+    llm_settings:
+      provider: ollama
+      model: gemma2
+      max_tokens: 200
+    actions:
+      - set_value:
+          path: "outputs.description"
+          value: "{{ result }}"
+      - display_message: "{{ outputs.description }}"
+    next_step: done
+
+  - id: done
+    name: "Traits Determined"
+    type: completion

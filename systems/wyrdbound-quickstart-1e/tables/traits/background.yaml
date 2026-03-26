@@ -1,0 +1,27 @@
+kind: table
+id: background
+name: "Background"
+version: 1
+roll: 1d20
+description: "The character's life before adventure — their trade, calling, or origin"
+entries:
+  1: Alchemist
+  2: Beggar
+  3: Blacksmith
+  4: Charlatan
+  5: Cook
+  6: Cultist
+  7: Farmer
+  8: Gambler
+  9: Herbalist
+  10: Hunter
+  11: Mercenary
+  12: Merchant
+  13: Miner
+  14: Outlaw
+  15: Performer
+  16: Sailor
+  17: Scholar
+  18: Shepherd
+  19: Soldier
+  20: Tracker

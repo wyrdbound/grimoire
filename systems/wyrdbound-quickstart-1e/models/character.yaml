@@ -51,6 +51,17 @@ attributes:
   # --- Inventory ---
   inventory: { type: list, of: item, default: [] }
   
+  # --- Traits (roleplay guides) ---
+  traits:
+    physique:   { type: str, description: "Physical build and bearing" }
+    virtue:     { type: str, description: "A defining moral strength" }
+    vice:       { type: str, description: "A defining flaw or weakness" }
+    speech:     { type: str, description: "Distinctive manner of speaking" }
+    background: { type: str, description: "Life before adventure" }
+
+  # --- Character Description ---
+  description: { type: str, default: "", description: "LLM-generated character description" }
+
   # --- Status Effects ---
   status_effects: { type: list, of: str, default: [] }
 
