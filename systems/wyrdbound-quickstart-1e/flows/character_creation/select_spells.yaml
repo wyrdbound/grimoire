@@ -1,0 +1,83 @@
+id: select_spells
+kind: flow
+name: "Select Starting Spells"
+description: "Mages choose 2 starting spells; Bards choose 1 from the Tier 1 spell list"
+version: 1
+
+inputs:
+  - id: character_class
+    type: str
+
+outputs:
+  - id: spell_1
+    type: str
+    default: ""
+  - id: spell_2
+    type: str
+    default: ""
+
+steps:
+  - id: intro_mage
+    name: "Mage Spell Intro"
+    type: conditional_branch
+    condition: "{{ inputs.character_class == 'mage' }}"
+    if: "{{ inputs.character_class == 'mage' }}"
+    then:
+      - display_message: "🔮 As a Mage, choose 2 starting spells."
+    next_step: intro_bard
+
+  - id: intro_bard
+    name: "Bard Spell Intro"
+    type: conditional_branch
+    condition: "{{ inputs.character_class == 'bard' }}"
+    if: "{{ inputs.character_class == 'bard' }}"
+    then:
+      - display_message: "🎵 As a Bard, choose 1 starting spell."
+    next_step: spell_pick_1
+
+  - id: spell_pick_1
+    name: "Choose First Spell"
+    type: player_choice
+    prompt: "Choose your first spell:"
+    choices:
+      - id: bolt
+        label: "Bolt — Magic projectile, 1d6 damage at 60 ft"
+      - id: shield
+        label: "Shield — +2 AC for 1 minute (touch)"
+      - id: heal
+        label: "Heal — Restore 1d6+MND HP (touch)"
+      - id: light
+        label: "Light — Object glows 30-ft radius, 1 hour"
+      - id: detect_magic
+        label: "Detect Magic — Sense magic within 30 ft for 10 min"
+    actions:
+      - set_value:
+          path: "outputs.spell_1"
+          value: "{{ choice }}"
+    next_step: spell_pick_2
+
+  - id: spell_pick_2
+    name: "Choose Second Spell (Mage only)"
+    type: player_choice
+    condition: "{{ inputs.character_class == 'mage' }}"
+    prompt: "Choose your second spell:"
+    choices:
+      - id: bolt
+        label: "Bolt — Magic projectile, 1d6 damage at 60 ft"
+      - id: shield
+        label: "Shield — +2 AC for 1 minute (touch)"
+      - id: heal
+        label: "Heal — Restore 1d6+MND HP (touch)"
+      - id: light
+        label: "Light — Object glows 30-ft radius, 1 hour"
+      - id: detect_magic
+        label: "Detect Magic — Sense magic within 30 ft for 10 min"
+    actions:
+      - set_value:
+          path: "outputs.spell_2"
+          value: "{{ choice }}"
+    next_step: done
+
+  - id: done
+    name: "Spells Selected"
+    type: completion

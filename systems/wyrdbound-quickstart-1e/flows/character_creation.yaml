@@ -46,6 +46,25 @@ steps:
       - set_value:
           path: "outputs.character.character_class"
           value: "{{ choice }}"
+    next_step: choose_gender
+
+  - id: choose_gender
+    name: "Choose Gender"
+    type: player_choice
+    prompt: "Choose your gender:"
+    choices:
+      - id: male
+        label: "Male"
+      - id: female
+        label: "Female"
+      - id: nonbinary
+        label: "Nonbinary"
+      - id: none
+        label: "None"
+    actions:
+      - set_value:
+          path: "outputs.character.gender"
+          value: "{{ choice }}"
     next_step: determine_traits
 
   - id: determine_traits
@@ -130,6 +149,7 @@ steps:
     prompt_data:
       name: "{{ outputs.character.name }}"
       character_class: "{{ outputs.character.character_class }}"
+      gender: "{{ outputs.character.gender }}"
       traits: "{{ outputs.character.traits }}"
     llm_settings:
       provider: ollama
@@ -139,6 +159,41 @@ steps:
       - set_value:
           path: "outputs.character.description"
           value: "{{ result }}"
+    next_step: purchase_equipment
+
+  - id: purchase_equipment
+    name: "Purchase Starting Equipment"
+    type: flow_call
+    flow: purchase_equipment
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+      current_gold: "{{ outputs.character.gold }}"
+    actions:
+      - set_value:
+          path: "outputs.character.equipped.main_hand"
+          value: "{{ result.equipped_weapon }}"
+      - set_value:
+          path: "outputs.character.equipped.body"
+          value: "{{ result.equipped_armor }}"
+      - set_value:
+          path: "outputs.character.gold"
+          value: "{{ result.remaining_gold }}"
+      - set_value:
+          path: "outputs.character.armor_class"
+          value: "{{ 10 + {'leather_armor': 1, 'chainmail': 2, 'plate_armor': 3, '': 0}.get(result.equipped_armor, 0) }}"
+    next_step: select_spells
+
+  - id: select_spells
+    name: "Select Starting Spells"
+    type: flow_call
+    flow: select_spells
+    condition: "{{ outputs.character.character_class in ['mage', 'bard'] }}"
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+    actions:
+      - set_value:
+          path: "outputs.character.spells"
+          value: "{{ [result.spell_1, result.spell_2] | reject('equalto', '') | list | tojson }}"
     next_step: done
 
   - id: done
@@ -157,3 +212,9 @@ steps:
           text: "   Bearing: {{ outputs.character.traits.bearing }} | Manner: {{ outputs.character.traits.manner }} | Disposition: {{ outputs.character.traits.disposition }}"
       - display_message:
           text: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"
+      - display_message:
+          text: "   Weapon: {{ outputs.character.equipped.main_hand or 'none' }} | Armor: {{ outputs.character.equipped.body or 'none' }} | AC: {{ outputs.character.armor_class }}"
+      - display_message:
+          text: "   Spells: {{ outputs.character.spells | join(', ') or 'none' }}"
+      - display_message:
+          text: "   Description: {{ outputs.character.description }}"

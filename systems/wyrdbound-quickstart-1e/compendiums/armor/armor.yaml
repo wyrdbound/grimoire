@@ -10,24 +10,27 @@ entries:
     description: "Light armor made from treated leather"
     cost: 10
     weight: 10.0
+    equippable_type: body
     armor_class_bonus: 1
     armor_type: light
     tags: [armor, light]
-  
+
   - id: chainmail
     name: "Chainmail"
     description: "Medium armor made of interlocking metal rings"
     cost: 50
     weight: 40.0
+    equippable_type: body
     armor_class_bonus: 2
     armor_type: medium
     tags: [armor, medium]
-  
+
   - id: plate_armor
     name: "Plate Armor"
     description: "Heavy armor made of shaped metal plates"
     cost: 500
     weight: 65.0
+    equippable_type: body
     armor_class_bonus: 3
     armor_type: heavy
     tags: [armor, heavy]

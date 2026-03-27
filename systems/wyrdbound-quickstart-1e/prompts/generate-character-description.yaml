@@ -13,6 +13,7 @@ prompt_template: |
 
   Name: {{ name }}
   Class: {{ character_class }}
+  Gender: {{ gender }}
   Bearing: {{ traits.bearing }}
   Manner: {{ traits.manner }}
   Disposition: {{ traits.disposition }}
@@ -24,6 +25,7 @@ prompt_template: |
   EXAMPLE INPUT 1:
   Name: Maren Ashford
   Class: Warrior
+  Gender: Female
   Bearing: Rugged
   Manner: Guarded
   Disposition: Bitter
@@ -37,6 +39,7 @@ prompt_template: |
   EXAMPLE INPUT 2:
   Name: Tobias Venn
   Class: Mage
+  Gender: Male
   Bearing: Scrawny
   Manner: Distracted
   Disposition: Curious
@@ -45,3 +48,32 @@ prompt_template: |
 
   EXAMPLE OUTPUT 2:
   Tobias Venn is a lean, slightly disheveled figure who always looks like he's working through a problem in his head — which he usually is. A former scholar whose curiosity eventually outgrew the library, he drifts through conversations and rooms alike, easily pulled off-track by anything that catches his interest. He speaks in long, winding sentences that rarely find a clean ending, circling back to points already made and forward to conclusions not yet reached. There's a genuine warmth to him, and an enthusiasm that's hard not to find infectious, even when you have no idea what he's actually talking about.
+
+  =============================
+  EXAMPLE INPUT 3:
+  Name: Lirael Thorne
+  Class: Rogue
+  Gender: Nonbinary
+  Bearing: Graceful
+  Manner: Confident
+  Disposition: Charming
+  Speech: Witty
+  Background: Noble
+
+  EXAMPLE OUTPUT 3:
+  Lirael Thorne carries themself with a natural grace that turns heads, whether they're walking into a room or just leaning casually against a wall. There's a quiet confidence in the way they move and speak, a sense that they know exactly who they are and what they want. Born into nobility, they've learned to navigate social situations with a charming ease, using wit and a sharp tongue to disarm and engage in equal measure. They have a way of making people feel like the most interesting person in the world, even as they subtly steer conversations to serve their own ends.
+
+  =============================
+  EXAMPLE INPUT 4:
+  Name: C3PO
+  Class: Bard
+  Gender: None
+  Bearing: Stiff
+  Manner: Formal
+  Disposition: Anxious
+  Speech: Polite
+  Background: Protocol Droid
+
+  EXAMPLE OUTPUT 4:
+  C3PO is a humanoid figure with a stiff, mechanical bearing that immediately marks them as something other than human. They move with a precise, deliberate formality, as if every motion has been carefully programmed and rehearsed. Their disposition is anxious, often expressing worry about potential dangers or social faux pas, and they speak in a polite, overly formal manner that can come across as both endearing and exasperating. As a protocol droid, they are designed to assist with etiquette and translation, and their background as a servant to various masters has given them a unique perspective on the world — one that is often tinged with a mix of loyalty, frustration, and a desire to be helpful, even when their efforts don't always go as planned.
+  =============================
