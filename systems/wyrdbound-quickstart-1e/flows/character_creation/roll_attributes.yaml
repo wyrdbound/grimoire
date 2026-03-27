@@ -1,7 +1,7 @@
 id: roll_attributes
 kind: flow
 name: "Roll Attributes"
-description: "Roll 3d6 for each of the four attributes"
+description: "Roll 4d6 keep highest 3 (reroll < 2) for each of the four attributes"
 version: 1
 
 outputs:
@@ -18,58 +18,65 @@ steps:
   - id: roll_power
     name: "Roll Power"
     type: dice_roll
-    roll: "3d6"
+    roll: "4d6kh3r<2"
     actions:
       - set_value:
           path: "outputs.power"
           value: "{{ result.total }}"
+      - display_message:
+          text: "  Power:  {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
     next_step: roll_agility
 
   - id: roll_agility
     name: "Roll Agility"
     type: dice_roll
-    roll: "3d6"
+    roll: "4d6kh3r<2"
     actions:
       - set_value:
           path: "outputs.agility"
           value: "{{ result.total }}"
+      - display_message:
+          text: "  Agility: {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
     next_step: roll_mind
 
   - id: roll_mind
     name: "Roll Mind"
     type: dice_roll
-    roll: "3d6"
+    roll: "4d6kh3r<2"
     actions:
       - set_value:
           path: "outputs.mind"
           value: "{{ result.total }}"
+      - display_message:
+          text: "  Mind:   {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
     next_step: roll_charm
 
   - id: roll_charm
     name: "Roll Charm"
     type: dice_roll
-    roll: "3d6"
+    roll: "4d6kh3r<2"
     actions:
       - set_value:
           path: "outputs.charm"
           value: "{{ result.total }}"
-    next_step: display_results
+      - display_message:
+          text: "  Charm:  {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
+    next_step: confirm_attributes
 
-  - id: display_results
-    name: "Display Attribute Rolls"
+  - id: confirm_attributes
+    name: "Confirm Attributes"
+    type: player_choice
+    prompt: "Keep these attributes?"
+    choices:
+      - id: keep
+        label: "✅ Keep — looks good!"
+        next_step: done
+      - id: reroll
+        label: "🎲 Reroll — try again"
+        next_step: roll_power
+
+  - id: done
+    name: "Attributes Confirmed"
     type: completion
     actions:
-      - display_message:
-          text: "Attributes rolled:"
-      - display_value:
-          label: "Power"
-          value: "{{ outputs.power }}"
-      - display_value:
-          label: "Agility"
-          value: "{{ outputs.agility }}"
-      - display_value:
-          label: "Mind"
-          value: "{{ outputs.mind }}"
-      - display_value:
-          label: "Charm"
-          value: "{{ outputs.charm }}"
+      - display_message: "Attributes locked in."

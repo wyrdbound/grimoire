@@ -60,7 +60,19 @@ steps:
       - display_message: "Disposition: {{ outputs.traits.disposition }}"
       - display_message: "Speech: {{ outputs.traits.speech }}"
       - display_message: "Background: {{ outputs.traits.background }}"
-    next_step: done
+    next_step: confirm_traits
+
+  - id: confirm_traits
+    name: "Confirm Traits"
+    type: player_choice
+    prompt: "Keep these traits?"
+    choices:
+      - id: keep
+        label: "✅ Keep — I like them!"
+        next_step: done
+      - id: reroll
+        label: "🎲 Reroll — try again"
+        next_step: roll_traits
 
   # ── Choose path ───────────────────────────────────────────────────────────
   - id: choose_bearing

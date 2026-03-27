@@ -139,6 +139,15 @@ steps:
       - set_value:
           path: "outputs.character.name"
           value: "{{ result }}"
+    next_step: generating_description_notice
+
+  - id: generating_description_notice
+    name: "Generating Description Notice"
+    type: conditional_branch
+    condition: llm_enabled
+    if: "{{ true }}"
+    then:
+      - display_message: "✍️  Generating character description..."
     next_step: generate_description
 
   - id: generate_description
@@ -159,7 +168,29 @@ steps:
       - set_value:
           path: "outputs.character.description"
           value: "{{ result }}"
-    next_step: purchase_equipment
+    next_step: show_description
+
+  - id: show_description
+    name: "Show Generated Description"
+    type: conditional_branch
+    condition: llm_enabled
+    if: "{{ true }}"
+    then:
+      - display_message: "{{ outputs.character.description }}"
+    next_step: confirm_description
+
+  - id: confirm_description
+    name: "Confirm Description"
+    type: player_choice
+    condition: llm_enabled
+    prompt: "How does this description feel?"
+    choices:
+      - id: keep
+        label: "✅ Keep it — that's my character"
+        next_step: purchase_equipment
+      - id: regenerate
+        label: "🔄 Regenerate — try another"
+        next_step: generating_description_notice
 
   - id: purchase_equipment
     name: "Purchase Starting Equipment"
