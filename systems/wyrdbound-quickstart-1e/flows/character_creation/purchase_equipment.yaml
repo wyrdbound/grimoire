@@ -17,6 +17,9 @@ outputs:
   - id: equipped_armor
     type: str
     default: ""
+  - id: equipped_ac_bonus
+    type: int
+    default: 0
   - id: remaining_gold
     type: int
     default: 0
@@ -50,7 +53,7 @@ steps:
           value: "{{ choice }}"
       - set_value:
           path: "variables.weapon_cost"
-          value: "{{ choice_entry.cost_gp | int }}"
+          value: "{{ choice_entry.cost | int }}"
     next_step: choose_armor
 
   - id: choose_armor
@@ -64,8 +67,11 @@ steps:
           path: "outputs.equipped_armor"
           value: "{{ choice }}"
       - set_value:
+          path: "outputs.equipped_ac_bonus"
+          value: "{{ choice_entry.armor_class_bonus | int }}"
+      - set_value:
           path: "variables.armor_cost"
-          value: "{{ choice_entry.cost_gp | int }}"
+          value: "{{ choice_entry.cost | int }}"
     next_step: finalize_gold
 
   - id: finalize_gold

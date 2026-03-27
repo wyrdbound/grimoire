@@ -211,7 +211,7 @@ steps:
           value: "{{ result.remaining_gold }}"
       - set_value:
           path: "outputs.character.armor_class"
-          value: "{{ 10 + {'leather_armor': 1, 'chainmail': 2, 'plate_armor': 3, '': 0}.get(result.equipped_armor, 0) }}"
+          value: "{{ 10 + result.equipped_ac_bonus | int }}"
     next_step: select_spells
 
   - id: select_spells

@@ -4,33 +4,7 @@ name: "Bard Weapons"
 version: 1
 description: "Weapons available to Bards — simple and light/finesse weapons"
 entries:
-  1:
-    id: dagger
-    name: "Dagger"
-    damage: "1d4"
-    tags: "light, simple"
-    cost_gp: 2
-  2:
-    id: shortsword
-    name: "Shortsword"
-    damage: "1d6"
-    tags: "one-handed"
-    cost_gp: 10
-  3:
-    id: rapier
-    name: "Rapier"
-    damage: "1d6"
-    tags: "finesse"
-    cost_gp: 25
-  4:
-    id: quarterstaff
-    name: "Quarterstaff"
-    damage: "1d6"
-    tags: "two-handed, simple"
-    cost_gp: 2
-  5:
-    id: ""
-    name: "No weapon"
-    damage: "—"
-    tags: ""
-    cost_gp: 0
+  1: dagger
+  2: shortsword
+  3: rapier
+  4: quarterstaff
