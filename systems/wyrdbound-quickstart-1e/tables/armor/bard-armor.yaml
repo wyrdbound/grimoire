@@ -1,0 +1,18 @@
+kind: table
+id: bard-armor
+name: "Bard Armor"
+version: 1
+description: "Armor available to Bards — light armor only"
+entries:
+  1:
+    id: leather_armor
+    name: "Leather Armor"
+    ac_bonus: 1
+    tags: "light"
+    cost_gp: 10
+  2:
+    id: ""
+    name: "No armor"
+    ac_bonus: 0
+    tags: ""
+    cost_gp: 0

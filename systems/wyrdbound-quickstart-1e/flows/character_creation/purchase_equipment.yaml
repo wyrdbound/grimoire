@@ -1,8 +1,8 @@
 id: purchase_equipment
 kind: flow
 name: "Purchase Starting Equipment"
-description: "Select starting weapons and armor for your Wyrdbound Quickstart character"
-version: 1
+description: "Select starting weapons and armor using class-specific tables"
+version: 2
 
 inputs:
   - id: character_class
@@ -36,212 +36,37 @@ steps:
     if: "{{ true }}"
     then:
       - display_message: "⚔️  Equipment Shop — You have {{ inputs.current_gold }} gp to spend."
-    next_step: weapon_warrior
+    next_step: choose_weapon
 
-  # ── Weapon selection — one step per class, others skipped via condition ──────
-
-  - id: weapon_warrior
-    name: "Warrior Weapon Selection"
+  - id: choose_weapon
+    name: "Choose Weapon"
     type: player_choice
-    condition: "{{ inputs.character_class == 'warrior' }}"
     prompt: "Choose your weapon:"
-    choices:
-      - id: longsword
-        label: "Longsword — 1d8 damage (15 gp)"
-      - id: greataxe
-        label: "Greataxe — 1d10 damage, two-handed (30 gp)"
-      - id: shortsword
-        label: "Shortsword — 1d6 damage (10 gp)"
-      - id: mace
-        label: "Mace — 1d6 damage (5 gp)"
-      - id: dagger
-        label: "Dagger — 1d4 damage (2 gp)"
-      - id: shortbow
-        label: "Shortbow — 1d6 ranged (25 gp)"
-      - id: longbow
-        label: "Longbow — 1d10 ranged, two-handed (50 gp)"
-      - id: hand_axe
-        label: "Hand Axe — 1d4 throwable (5 gp)"
-      - id: rapier
-        label: "Rapier — 1d6 finesse (25 gp)"
-      - id: quarterstaff
-        label: "Quarterstaff — 1d6 two-handed, simple (2 gp)"
-      - id: no_weapon
-        label: "No weapon (0 gp)"
+    choice_source:
+      table: "{{ inputs.character_class }}-weapons"
     actions:
       - set_value:
           path: "outputs.equipped_weapon"
           value: "{{ choice }}"
       - set_value:
           path: "variables.weapon_cost"
-          value: "{{ {'longsword': 15, 'greataxe': 30, 'shortsword': 10, 'mace': 5, 'dagger': 2, 'shortbow': 25, 'longbow': 50, 'hand_axe': 5, 'rapier': 25, 'quarterstaff': 2, 'no_weapon': 0}[choice] }}"
-    next_step: weapon_rogue
+          value: "{{ choice_entry.cost_gp | int }}"
+    next_step: choose_armor
 
-  - id: weapon_rogue
-    name: "Rogue Weapon Selection"
+  - id: choose_armor
+    name: "Choose Armor"
     type: player_choice
-    condition: "{{ inputs.character_class == 'rogue' }}"
-    prompt: "Choose your weapon:"
-    choices:
-      - id: shortsword
-        label: "Shortsword — 1d6 damage (10 gp)"
-      - id: dagger
-        label: "Dagger — 1d4 damage (2 gp)"
-      - id: rapier
-        label: "Rapier — 1d6 finesse (25 gp)"
-      - id: hand_axe
-        label: "Hand Axe — 1d4 throwable (5 gp)"
-      - id: mace
-        label: "Mace — 1d6 damage (5 gp)"
-      - id: shortbow
-        label: "Shortbow — 1d6 ranged (25 gp)"
-      - id: longbow
-        label: "Longbow — 1d10 ranged (50 gp)"
-      - id: no_weapon
-        label: "No weapon (0 gp)"
-    actions:
-      - set_value:
-          path: "outputs.equipped_weapon"
-          value: "{{ choice }}"
-      - set_value:
-          path: "variables.weapon_cost"
-          value: "{{ {'shortsword': 10, 'dagger': 2, 'rapier': 25, 'hand_axe': 5, 'mace': 5, 'shortbow': 25, 'longbow': 50, 'no_weapon': 0}[choice] }}"
-    next_step: weapon_mage
-
-  - id: weapon_mage
-    name: "Mage Weapon Selection"
-    type: player_choice
-    condition: "{{ inputs.character_class == 'mage' }}"
-    prompt: "Choose your weapon (simple weapons only):"
-    choices:
-      - id: dagger
-        label: "Dagger — 1d4 damage (2 gp)"
-      - id: quarterstaff
-        label: "Quarterstaff — 1d6 two-handed (2 gp)"
-      - id: no_weapon
-        label: "No weapon (0 gp)"
-    actions:
-      - set_value:
-          path: "outputs.equipped_weapon"
-          value: "{{ choice }}"
-      - set_value:
-          path: "variables.weapon_cost"
-          value: "{{ {'dagger': 2, 'quarterstaff': 2, 'no_weapon': 0}[choice] }}"
-    next_step: weapon_bard
-
-  - id: weapon_bard
-    name: "Bard Weapon Selection"
-    type: player_choice
-    condition: "{{ inputs.character_class == 'bard' }}"
-    prompt: "Choose your weapon:"
-    choices:
-      - id: shortsword
-        label: "Shortsword — 1d6 damage (10 gp)"
-      - id: dagger
-        label: "Dagger — 1d4 damage (2 gp)"
-      - id: rapier
-        label: "Rapier — 1d6 finesse (25 gp)"
-      - id: hand_axe
-        label: "Hand Axe — 1d4 throwable (5 gp)"
-      - id: mace
-        label: "Mace — 1d6 damage (5 gp)"
-      - id: shortbow
-        label: "Shortbow — 1d6 ranged (25 gp)"
-      - id: no_weapon
-        label: "No weapon (0 gp)"
-    actions:
-      - set_value:
-          path: "outputs.equipped_weapon"
-          value: "{{ choice }}"
-      - set_value:
-          path: "variables.weapon_cost"
-          value: "{{ {'shortsword': 10, 'dagger': 2, 'rapier': 25, 'hand_axe': 5, 'mace': 5, 'shortbow': 25, 'no_weapon': 0}[choice] }}"
-    next_step: normalize_weapon
-
-  - id: normalize_weapon
-    name: "Normalize Weapon"
-    type: conditional_branch
-    if: "{{ outputs.equipped_weapon == 'no_weapon' }}"
-    then:
-      - set_value:
-          path: "outputs.equipped_weapon"
-          value: ""
-    next_step: armor_warrior
-
-  # ── Armor selection ─────────────────────────────────────────────────────────
-
-  - id: armor_warrior
-    name: "Warrior Armor Selection"
-    type: player_choice
-    condition: "{{ inputs.character_class == 'warrior' }}"
     prompt: "Choose your armor:"
-    choices:
-      - id: plate_armor
-        label: "Plate Armor — AC +3, heavy (500 gp)"
-      - id: chainmail
-        label: "Chainmail — AC +2, medium (50 gp)"
-      - id: leather_armor
-        label: "Leather Armor — AC +1, light (10 gp)"
-      - id: no_armor
-        label: "No armor (0 gp)"
+    choice_source:
+      table: "{{ inputs.character_class }}-armor"
     actions:
       - set_value:
           path: "outputs.equipped_armor"
           value: "{{ choice }}"
       - set_value:
           path: "variables.armor_cost"
-          value: "{{ {'plate_armor': 500, 'chainmail': 50, 'leather_armor': 10, 'no_armor': 0}[choice] }}"
-    next_step: armor_rogue
-
-  - id: armor_rogue
-    name: "Rogue Armor Selection"
-    type: player_choice
-    condition: "{{ inputs.character_class == 'rogue' }}"
-    prompt: "Choose your armor (light only):"
-    choices:
-      - id: leather_armor
-        label: "Leather Armor — AC +1, light (10 gp)"
-      - id: no_armor
-        label: "No armor (0 gp)"
-    actions:
-      - set_value:
-          path: "outputs.equipped_armor"
-          value: "{{ choice }}"
-      - set_value:
-          path: "variables.armor_cost"
-          value: "{{ {'leather_armor': 10, 'no_armor': 0}[choice] }}"
-    next_step: armor_bard
-
-  - id: armor_bard
-    name: "Bard Armor Selection"
-    type: player_choice
-    condition: "{{ inputs.character_class == 'bard' }}"
-    prompt: "Choose your armor (light only):"
-    choices:
-      - id: leather_armor
-        label: "Leather Armor — AC +1, light (10 gp)"
-      - id: no_armor
-        label: "No armor (0 gp)"
-    actions:
-      - set_value:
-          path: "outputs.equipped_armor"
-          value: "{{ choice }}"
-      - set_value:
-          path: "variables.armor_cost"
-          value: "{{ {'leather_armor': 10, 'no_armor': 0}[choice] }}"
-    next_step: normalize_armor
-
-  - id: normalize_armor
-    name: "Normalize Armor"
-    type: conditional_branch
-    if: "{{ outputs.equipped_armor == 'no_armor' }}"
-    then:
-      - set_value:
-          path: "outputs.equipped_armor"
-          value: ""
+          value: "{{ choice_entry.cost_gp | int }}"
     next_step: finalize_gold
-
-  # ── Finalize ────────────────────────────────────────────────────────────────
 
   - id: finalize_gold
     name: "Finalize Remaining Gold"

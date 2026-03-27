@@ -1,0 +1,12 @@
+kind: table
+id: mage-armor
+name: "Mage Armor"
+version: 1
+description: "Armor available to Mages — unarmored only"
+entries:
+  1:
+    id: ""
+    name: "No armor (mages rely on spells)"
+    ac_bonus: 0
+    tags: ""
+    cost_gp: 0

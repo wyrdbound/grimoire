@@ -1,0 +1,72 @@
+kind: table
+id: warrior-weapons
+name: "Warrior Weapons"
+version: 1
+description: "Weapons available to Warriors during character creation"
+entries:
+  1:
+    id: longsword
+    name: "Longsword"
+    damage: "1d8"
+    tags: "one-handed"
+    cost_gp: 15
+  2:
+    id: greataxe
+    name: "Greataxe"
+    damage: "1d10"
+    tags: "two-handed"
+    cost_gp: 30
+  3:
+    id: shortsword
+    name: "Shortsword"
+    damage: "1d6"
+    tags: "one-handed"
+    cost_gp: 10
+  4:
+    id: mace
+    name: "Mace"
+    damage: "1d6"
+    tags: "bludgeoning"
+    cost_gp: 5
+  5:
+    id: dagger
+    name: "Dagger"
+    damage: "1d4"
+    tags: "light"
+    cost_gp: 2
+  6:
+    id: shortbow
+    name: "Shortbow"
+    damage: "1d6"
+    tags: "ranged"
+    cost_gp: 25
+  7:
+    id: longbow
+    name: "Longbow"
+    damage: "1d10"
+    tags: "ranged, two-handed"
+    cost_gp: 50
+  8:
+    id: hand_axe
+    name: "Hand Axe"
+    damage: "1d4"
+    tags: "throwable"
+    cost_gp: 5
+  9:
+    id: rapier
+    name: "Rapier"
+    damage: "1d6"
+    tags: "finesse"
+    cost_gp: 25
+  10:
+    id: quarterstaff
+    name: "Quarterstaff"
+    damage: "1d6"
+    tags: "two-handed, simple"
+    cost_gp: 2
+  11:
+    id: ""
+    name: "No weapon"
+    damage: "—"
+    tags: ""
+    cost_gp: 0

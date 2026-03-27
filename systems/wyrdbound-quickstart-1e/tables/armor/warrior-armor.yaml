@@ -1,0 +1,30 @@
+kind: table
+id: warrior-armor
+name: "Warrior Armor"
+version: 1
+description: "Armor available to Warriors — all armor types"
+entries:
+  1:
+    id: plate_armor
+    name: "Plate Armor"
+    ac_bonus: 3
+    tags: "heavy"
+    cost_gp: 500
+  2:
+    id: chainmail
+    name: "Chainmail"
+    ac_bonus: 2
+    tags: "medium"
+    cost_gp: 50
+  3:
+    id: leather_armor
+    name: "Leather Armor"
+    ac_bonus: 1
+    tags: "light"
+    cost_gp: 10
+  4:
+    id: ""
+    name: "No armor"
+    ac_bonus: 0
+    tags: ""
+    cost_gp: 0

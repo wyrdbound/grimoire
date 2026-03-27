@@ -1,0 +1,24 @@
+kind: table
+id: mage-weapons
+name: "Mage Weapons"
+version: 1
+description: "Weapons available to Mages — simple weapons only"
+entries:
+  1:
+    id: dagger
+    name: "Dagger"
+    damage: "1d4"
+    tags: "light, simple"
+    cost_gp: 2
+  2:
+    id: quarterstaff
+    name: "Quarterstaff"
+    damage: "1d6"
+    tags: "two-handed, simple"
+    cost_gp: 2
+  3:
+    id: ""
+    name: "No weapon"
+    damage: "—"
+    tags: ""
+    cost_gp: 0
