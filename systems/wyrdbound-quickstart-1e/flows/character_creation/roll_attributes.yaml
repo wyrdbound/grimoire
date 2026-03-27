@@ -1,8 +1,8 @@
 id: roll_attributes
 kind: flow
 name: "Roll Attributes"
-description: "Roll 4d6 keep highest 3 (reroll < 2) for each of the four attributes"
-version: 1
+description: "Roll 4d6 keep highest 3 (reroll < 2) for Power, Agility, Mind, and Charm"
+version: 2
 
 outputs:
   - id: power
@@ -15,52 +15,19 @@ outputs:
     type: int
 
 steps:
-  - id: roll_power
-    name: "Roll Power"
-    type: dice_roll
-    roll: "4d6kh3r<2"
-    actions:
-      - set_value:
-          path: "outputs.power"
-          value: "{{ result.total }}"
-      - display_message:
-          text: "  Power:   {{ result.description }}"
-    next_step: roll_agility
-
-  - id: roll_agility
-    name: "Roll Agility"
-    type: dice_roll
-    roll: "4d6kh3r<2"
-    actions:
-      - set_value:
-          path: "outputs.agility"
-          value: "{{ result.total }}"
-      - display_message:
-          text: "  Agility: {{ result.description }}"
-    next_step: roll_mind
-
-  - id: roll_mind
-    name: "Roll Mind"
-    type: dice_roll
-    roll: "4d6kh3r<2"
-    actions:
-      - set_value:
-          path: "outputs.mind"
-          value: "{{ result.total }}"
-      - display_message:
-          text: "  Mind:    {{ result.description }}"
-    next_step: roll_charm
-
-  - id: roll_charm
-    name: "Roll Charm"
-    type: dice_roll
-    roll: "4d6kh3r<2"
-    actions:
-      - set_value:
-          path: "outputs.charm"
-          value: "{{ result.total }}"
-      - display_message:
-          text: "  Charm:   {{ result.description }}"
+  - id: roll_attributes
+    name: "Roll Attributes"
+    type: dice_sequence
+    sequence:
+      items:
+        ["power", "agility", "mind", "charm"]
+      roll: "4d6kh3r<2"
+      actions:
+        - set_value:
+            path: "outputs.{{ item }}"
+            value: "{{ result.total }}"
+        - display_message:
+            message: "  {{ item | capitalize }}: {{ result.description }}"
     next_step: confirm_attributes
 
   - id: confirm_attributes
@@ -73,7 +40,7 @@ steps:
         next_step: done
       - id: reroll
         label: "🎲 Reroll — try again"
-        next_step: roll_power
+        next_step: roll_attributes
 
   - id: done
     name: "Attributes Confirmed"
