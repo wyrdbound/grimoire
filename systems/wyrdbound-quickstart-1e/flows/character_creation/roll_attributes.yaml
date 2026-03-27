@@ -24,7 +24,7 @@ steps:
           path: "outputs.power"
           value: "{{ result.total }}"
       - display_message:
-          text: "  Power:  {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
+          text: "  Power:   {{ result.description }}"
     next_step: roll_agility
 
   - id: roll_agility
@@ -36,7 +36,7 @@ steps:
           path: "outputs.agility"
           value: "{{ result.total }}"
       - display_message:
-          text: "  Agility: {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
+          text: "  Agility: {{ result.description }}"
     next_step: roll_mind
 
   - id: roll_mind
@@ -48,7 +48,7 @@ steps:
           path: "outputs.mind"
           value: "{{ result.total }}"
       - display_message:
-          text: "  Mind:   {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
+          text: "  Mind:    {{ result.description }}"
     next_step: roll_charm
 
   - id: roll_charm
@@ -60,7 +60,7 @@ steps:
           path: "outputs.charm"
           value: "{{ result.total }}"
       - display_message:
-          text: "  Charm:  {{ result.total }}  — rolled {{ result.rolls }}, kept {{ result.kept }}{% if result.dropped %}, dropped {{ result.dropped }}{% endif %}"
+          text: "  Charm:   {{ result.description }}"
     next_step: confirm_attributes
 
   - id: confirm_attributes
