@@ -113,12 +113,13 @@ steps:
     type: conditional_branch
     if: "{{ outputs.character.character_class == 'mage' }}"
     then:
-      - set_value:
-          path: "outputs.character.spell_slots.max"
-          value: "{{ 3 + outputs.character.mind.modifier }}"
-      - set_value:
-          path: "outputs.character.spell_slots.current"
-          value: "{{ outputs.character.spell_slots.max }}"
+      actions:
+        - set_value:
+            path: "outputs.character.spell_slots.max"
+            value: "{{ 3 + outputs.character.mind.modifier }}"
+        - set_value:
+            path: "outputs.character.spell_slots.current"
+            value: "{{ outputs.character.spell_slots.max }}"
     next_step: roll_starting_gold
 
   - id: roll_starting_gold
@@ -143,10 +144,9 @@ steps:
 
   - id: generating_description_notice
     name: "Generating Description Notice"
-    type: conditional_branch
+    type: action
     condition: llm_enabled
-    if: "{{ true }}"
-    then:
+    actions:
       - display_message: "✍️  Generating character description..."
     next_step: generate_description
 
@@ -172,10 +172,9 @@ steps:
 
   - id: show_description
     name: "Show Generated Description"
-    type: conditional_branch
+    type: action
     condition: llm_enabled
-    if: "{{ true }}"
-    then:
+    actions:
       - display_message: "{{ outputs.character.description }}"
     next_step: confirm_description
 

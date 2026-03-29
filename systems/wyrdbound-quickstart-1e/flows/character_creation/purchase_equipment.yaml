@@ -5,7 +5,7 @@ description: >
   Continuous equipment shop. Player chooses a category (weapons, armor, gear),
   browses items, gets an affordability check, then optionally equips the item.
   Loop continues until the player chooses "Done shopping".
-version: 3
+version: 4
 
 inputs:
   - id: character_class
@@ -78,9 +78,8 @@ steps:
 
   - id: init_gold
     name: "Initialize Gold"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - set_value:
           path: "variables.gold"
           value: "{{ inputs.current_gold | int }}"
@@ -114,11 +113,22 @@ steps:
   # ── Route to the right browse step ────────────────────────────────────────
 
   - id: route_category
-    name: "Route Category"
+    name: "Route to Weapons or Armor/Gear"
     type: conditional_branch
-    if: "{{ true }}"
-    then: []
-    next_step: "{{ 'browse_weapons' if variables.shop_category == 'weapons' else ('browse_armor' if variables.shop_category == 'armor' else 'browse_gear') }}"
+    if: "{{ variables.shop_category == 'weapons' }}"
+    then:
+      next_step: browse_weapons
+    else:
+      next_step: route_armor_or_gear
+
+  - id: route_armor_or_gear
+    name: "Route to Armor or Gear"
+    type: conditional_branch
+    if: "{{ variables.shop_category == 'armor' }}"
+    then:
+      next_step: browse_armor
+    else:
+      next_step: browse_gear
 
   # ── Browse steps (one per category) ───────────────────────────────────────
 
@@ -227,8 +237,10 @@ steps:
     name: "Skip or Check Afford"
     type: conditional_branch
     if: "{{ variables.last_item_id == '' }}"
-    then: []
-    next_step: "{{ 'shop_menu' if variables.last_item_id == '' else 'check_afford' }}"
+    then:
+      next_step: shop_menu
+    else:
+      next_step: check_afford
 
   # ── Affordability check ────────────────────────────────────────────────────
 
@@ -237,16 +249,18 @@ steps:
     type: conditional_branch
     if: "{{ variables.gold < variables.last_item_cost }}"
     then:
-      - display_message: "❌ You can't afford {{ variables.last_item_name }} (costs {{ variables.last_item_cost }} gp — you only have {{ variables.gold }} gp)."
-    next_step: "{{ 'shop_menu' if variables.gold < variables.last_item_cost else 'deduct_gold' }}"
+      actions:
+        - display_message: "❌ You can't afford {{ variables.last_item_name }} (costs {{ variables.last_item_cost }} gp — you only have {{ variables.gold }} gp)."
+      next_step: shop_menu
+    else:
+      next_step: deduct_gold
 
   # ── Purchase ───────────────────────────────────────────────────────────────
 
   - id: deduct_gold
     name: "Deduct Gold"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - set_value:
           path: "variables.gold"
           value: "{{ variables.gold - variables.last_item_cost }}"
@@ -254,9 +268,8 @@ steps:
 
   - id: record_gold_and_notify
     name: "Record Gold and Notify"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - set_value:
           path: "outputs.remaining_gold"
           value: "{{ variables.gold }}"
@@ -272,8 +285,10 @@ steps:
     name: "Check if Equippable"
     type: conditional_branch
     if: "{{ variables.last_item_equippable_type == '' }}"
-    then: []
-    next_step: "{{ 'shop_menu' if variables.last_item_equippable_type == '' else 'ask_equip' }}"
+    then:
+      next_step: shop_menu
+    else:
+      next_step: ask_equip
 
   - id: ask_equip
     name: "Ask to Equip"
@@ -293,21 +308,24 @@ steps:
     name: "Validate Equip Slot"
     type: conditional_branch
     if: "{{ variables.last_item_equippable_type == 'body' }}"
-    then: []
-    next_step: "{{ 'do_equip_armor' if variables.last_item_equippable_type == 'body' else 'validate_weapon_slot' }}"
+    then:
+      next_step: do_equip_armor
+    else:
+      next_step: validate_weapon_slot
 
   - id: validate_weapon_slot
     name: "Validate Weapon Slot"
     type: conditional_branch
     if: "{{ variables.last_item_equippable_type in ['melee_1h', 'melee_2h', 'ranged_1h', 'ranged_2h'] }}"
-    then: []
-    next_step: "{{ 'do_equip_weapon' if variables.last_item_equippable_type in ['melee_1h', 'melee_2h', 'ranged_1h', 'ranged_2h'] else 'invalid_slot' }}"
+    then:
+      next_step: do_equip_weapon
+    else:
+      next_step: invalid_slot
 
   - id: invalid_slot
     name: "Invalid Slot"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - display_message: "❌ {{ variables.last_item_name }} ({{ variables.last_item_equippable_type }}) cannot be equipped in any available slot. It stays in your pack."
     next_step: shop_menu
 
@@ -315,9 +333,8 @@ steps:
 
   - id: do_equip_armor
     name: "Equip Armor"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - set_value:
           path: "outputs.equipped_armor.name"
           value: "{{ variables.last_item_entry_name }}"
@@ -338,9 +355,8 @@ steps:
 
   - id: do_equip_weapon
     name: "Equip Weapon"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - set_value:
           path: "outputs.equipped_weapon.name"
           value: "{{ variables.last_item_entry_name }}"
@@ -363,9 +379,8 @@ steps:
 
   - id: finalize
     name: "Finalize Equipment"
-    type: conditional_branch
-    if: "{{ true }}"
-    then:
+    type: action
+    actions:
       - display_message: "🎒 Shopping complete! Remaining gold: {{ variables.gold }} gp."
     next_step: done
 

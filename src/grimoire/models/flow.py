@@ -18,6 +18,7 @@ class StepType(Enum):
     COMPLETION = "completion"
     FLOW_CALL = "flow_call"
     CONDITIONAL = "conditional_branch"
+    ACTION = "action"  # Run actions and proceed; no branching, no termination
 
 
 @dataclass
