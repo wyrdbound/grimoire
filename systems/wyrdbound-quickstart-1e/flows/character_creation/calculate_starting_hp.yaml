@@ -32,60 +32,64 @@ steps:
     type: conditional_branch
     if: "{{ inputs.character_class == 'warrior' }}"
     then:
-      - set_value:
-          path: "variables.base_hp"
-          value: "12"
-          type: int
-      - set_value:
-          path: "variables.relevant_modifier"
-          value: "{{ inputs.power_modifier }}"
-          type: int
-    next_step: set_base_hp_rogue
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "12"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.power_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_rogue
 
   - id: set_base_hp_rogue
     name: "Set Base HP (Rogue)"
     type: conditional_branch
     if: "{{ inputs.character_class == 'rogue' }}"
     then:
-      - set_value:
-          path: "variables.base_hp"
-          value: "8"
-          type: int
-      - set_value:
-          path: "variables.relevant_modifier"
-          value: "{{ inputs.agility_modifier }}"
-          type: int
-    next_step: set_base_hp_mage
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "8"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.agility_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_mage
 
   - id: set_base_hp_mage
     name: "Set Base HP (Mage)"
     type: conditional_branch
     if: "{{ inputs.character_class == 'mage' }}"
     then:
-      - set_value:
-          path: "variables.base_hp"
-          value: "6"
-          type: int
-      - set_value:
-          path: "variables.relevant_modifier"
-          value: "{{ inputs.mind_modifier }}"
-          type: int
-    next_step: set_base_hp_bard
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "6"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.mind_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_bard
 
   - id: set_base_hp_bard
     name: "Set Base HP (Bard or default)"
     type: conditional_branch
     if: "{{ inputs.character_class == 'bard' or variables.base_hp == 0 }}"
     then:
-      - set_value:
-          path: "variables.base_hp"
-          value: "8"
-          type: int
-      - set_value:
-          path: "variables.relevant_modifier"
-          value: "{{ inputs.charm_modifier }}"
-          type: int
-    next_step: compute_hp
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "8"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.charm_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: compute_hp
 
   - id: compute_hp
     name: "Compute Max HP"

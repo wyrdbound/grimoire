@@ -163,12 +163,11 @@ class StepDefinition(StepDefinitionBase):
 
     # For conditional
     if_condition: str | None = None  # Condition to evaluate (alias for condition)
-    then_actions: list[dict[str, Any]] = field(
-        default_factory=list
-    )  # Actions to execute if condition is true
-    else_actions: list[dict[str, Any]] | dict[str, Any] | None = (
-        None  # Actions (list) or nested conditional (dict) if condition is false
-    )
+    # then/else accept either:
+    #   - a list of action dicts (legacy: treated as actions only)
+    #   - a dict with optional 'actions' list and optional 'next_step' str
+    then_actions: list[dict[str, Any]] | dict[str, Any] = field(default_factory=list)
+    else_actions: list[dict[str, Any]] | dict[str, Any] | None = None
 
     # For flow_call
     flow: str | None = None  # Target flow ID to call
