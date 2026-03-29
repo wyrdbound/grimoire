@@ -1,8 +1,11 @@
 id: purchase_equipment
 kind: flow
 name: "Purchase Starting Equipment"
-description: "Select starting weapons and armor using class-specific tables"
-version: 2
+description: >
+  Continuous equipment shop. Player chooses a category (weapons, armor, gear),
+  browses items, gets an affordability check, then optionally equips the item.
+  Loop continues until the player chooses "Done shopping".
+version: 3
 
 inputs:
   - id: character_class
@@ -25,66 +28,242 @@ outputs:
     default: 0
 
 variables:
-  - id: weapon_cost
+  - id: gold
     type: int
     default: 0
-  - id: armor_cost
+  - id: shop_category
+    type: str
+    default: ""
+  - id: last_item_id
+    type: str
+    default: ""
+  - id: last_item_name
+    type: str
+    default: ""
+  - id: last_item_cost
+    type: int
+    default: 0
+  - id: last_item_equippable_type
+    type: str
+    default: ""
+  - id: last_item_ac_bonus
     type: int
     default: 0
 
 steps:
-  - id: show_gold
-    name: "Show Starting Gold"
+
+  # ── Init ──────────────────────────────────────────────────────────────────
+
+  - id: init_gold
+    name: "Initialize Gold"
     type: conditional_branch
     if: "{{ true }}"
     then:
-      - display_message: "⚔️  Equipment Shop — You have {{ inputs.current_gold }} gp to spend."
-    next_step: choose_weapon
+      - set_value:
+          path: "variables.gold"
+          value: "{{ inputs.current_gold | int }}"
+      - set_value:
+          path: "outputs.remaining_gold"
+          value: "{{ inputs.current_gold | int }}"
+    next_step: shop_menu
 
-  - id: choose_weapon
-    name: "Choose Weapon"
+  # ── Main shop menu ─────────────────────────────────────────────────────────
+
+  - id: shop_menu
+    name: "Shop Menu"
     type: player_choice
-    prompt: "Choose your weapon:"
+    prompt: "🛒 Equipment Shop — You have {{ variables.gold }} gp\n\nWhat would you like to buy?"
+    choices:
+      - id: weapons
+        label: "⚔️  Weapons"
+      - id: armor
+        label: "🛡️  Armor"
+      - id: gear
+        label: "🎒 Adventuring Gear"
+      - id: done
+        label: "✅ Done shopping"
+        next_step: finalize
+    actions:
+      - set_value:
+          path: "variables.shop_category"
+          value: "{{ choice }}"
+    next_step: route_category
+
+  # ── Route to the right browse step ────────────────────────────────────────
+
+  - id: route_category
+    name: "Route Category"
+    type: conditional_branch
+    if: "{{ true }}"
+    then: []
+    next_step: "{{ 'browse_weapons' if variables.shop_category == 'weapons' else ('browse_armor' if variables.shop_category == 'armor' else 'browse_gear') }}"
+
+  # ── Browse steps (one per category) ───────────────────────────────────────
+
+  - id: browse_weapons
+    name: "Browse Weapons"
+    type: player_choice
+    prompt: "⚔️  Weapons (you have {{ variables.gold }} gp)\nChoose a weapon, or skip:"
     choice_source:
       table: "{{ inputs.character_class }}-weapons"
     actions:
       - set_value:
-          path: "outputs.equipped_weapon"
+          path: "variables.last_item_id"
           value: "{{ choice }}"
       - set_value:
-          path: "variables.weapon_cost"
-          value: "{{ choice_entry.cost | int }}"
-    next_step: choose_armor
+          path: "variables.last_item_name"
+          value: "{{ choice_entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_cost"
+          value: "{{ choice_entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_equippable_type"
+          value: "{{ choice_entry.equippable_type | default('') }}"
+      - set_value:
+          path: "variables.last_item_ac_bonus"
+          value: "0"
+    next_step: skip_or_check
 
-  - id: choose_armor
-    name: "Choose Armor"
+  - id: browse_armor
+    name: "Browse Armor"
     type: player_choice
-    prompt: "Choose your armor:"
+    prompt: "🛡️  Armor (you have {{ variables.gold }} gp)\nChoose armor, or skip:"
     choice_source:
       table: "{{ inputs.character_class }}-armor"
     actions:
       - set_value:
-          path: "outputs.equipped_armor"
+          path: "variables.last_item_id"
           value: "{{ choice }}"
       - set_value:
-          path: "outputs.equipped_ac_bonus"
-          value: "{{ choice_entry.armor_class_bonus | int }}"
+          path: "variables.last_item_name"
+          value: "{{ choice_entry.name | default('') }}"
       - set_value:
-          path: "variables.armor_cost"
-          value: "{{ choice_entry.cost | int }}"
-    next_step: finalize_gold
+          path: "variables.last_item_cost"
+          value: "{{ choice_entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_equippable_type"
+          value: "{{ choice_entry.equippable_type | default('body') }}"
+      - set_value:
+          path: "variables.last_item_ac_bonus"
+          value: "{{ choice_entry.armor_class_bonus | default(0) | int }}"
+    next_step: skip_or_check
 
-  - id: finalize_gold
-    name: "Finalize Remaining Gold"
+  - id: browse_gear
+    name: "Browse Gear"
+    type: player_choice
+    prompt: "🎒 Adventuring Gear (you have {{ variables.gold }} gp)\nChoose an item, or skip:"
+    choice_source:
+      table: gear
+    actions:
+      - set_value:
+          path: "variables.last_item_id"
+          value: "{{ choice }}"
+      - set_value:
+          path: "variables.last_item_name"
+          value: "{{ choice_entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_cost"
+          value: "{{ choice_entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_equippable_type"
+          value: ""
+      - set_value:
+          path: "variables.last_item_ac_bonus"
+          value: "0"
+    next_step: skip_or_check
+
+  # ── Skip gate (empty choice = "No X") ─────────────────────────────────────
+
+  - id: skip_or_check
+    name: "Skip or Check Afford"
+    type: conditional_branch
+    if: "{{ variables.last_item_id == '' }}"
+    then: []
+    next_step: "{{ 'shop_menu' if variables.last_item_id == '' else 'check_afford' }}"
+
+  # ── Affordability check ────────────────────────────────────────────────────
+
+  - id: check_afford
+    name: "Check Affordability"
+    type: conditional_branch
+    if: "{{ variables.gold < variables.last_item_cost }}"
+    then:
+      - display_message: "❌ You can't afford {{ variables.last_item_name }} (costs {{ variables.last_item_cost }} gp — you only have {{ variables.gold }} gp)."
+    next_step: "{{ 'shop_menu' if variables.gold < variables.last_item_cost else 'deduct_gold' }}"
+
+  # ── Purchase ───────────────────────────────────────────────────────────────
+
+  - id: deduct_gold
+    name: "Deduct Gold"
+    type: conditional_branch
+    if: "{{ true }}"
+    then:
+      - set_value:
+          path: "variables.gold"
+          value: "{{ variables.gold - variables.last_item_cost }}"
+    next_step: record_gold_and_notify
+
+  - id: record_gold_and_notify
+    name: "Record Gold and Notify"
     type: conditional_branch
     if: "{{ true }}"
     then:
       - set_value:
           path: "outputs.remaining_gold"
-          value: "{{ (inputs.current_gold | int) - variables.weapon_cost - variables.armor_cost }}"
-      - display_message: "Remaining gold: {{ outputs.remaining_gold }} gp"
+          value: "{{ variables.gold }}"
+      - display_message: "✅ Purchased {{ variables.last_item_name }} for {{ variables.last_item_cost }} gp. Remaining: {{ variables.gold }} gp."
+    next_step: prompt_equip
+
+  # ── Equip prompt (only for equippable items) ───────────────────────────────
+
+  - id: prompt_equip
+    name: "Check if Equippable"
+    type: conditional_branch
+    if: "{{ variables.last_item_equippable_type == '' }}"
+    then: []
+    next_step: "{{ 'shop_menu' if variables.last_item_equippable_type == '' else 'ask_equip' }}"
+
+  - id: ask_equip
+    name: "Ask to Equip"
+    type: player_choice
+    prompt: "Would you like to equip {{ variables.last_item_name }}?"
+    choices:
+      - id: yes
+        label: "Yes, equip it now"
+        next_step: do_equip
+      - id: no
+        label: "No, keep it in my pack"
+        next_step: shop_menu
+
+  - id: do_equip
+    name: "Equip Item"
+    type: conditional_branch
+    if: "{{ variables.last_item_equippable_type == 'body' }}"
+    then:
+      - set_value:
+          path: "outputs.equipped_armor"
+          value: "{{ variables.last_item_id }}"
+      - set_value:
+          path: "outputs.equipped_ac_bonus"
+          value: "{{ variables.last_item_ac_bonus }}"
+      - display_message: "🛡️  {{ variables.last_item_name }} equipped to body slot."
+    else:
+      - set_value:
+          path: "outputs.equipped_weapon"
+          value: "{{ variables.last_item_id }}"
+      - display_message: "⚔️  {{ variables.last_item_name }} equipped to weapon slot."
+    next_step: shop_menu
+
+  # ── Finalize ───────────────────────────────────────────────────────────────
+
+  - id: finalize
+    name: "Finalize Equipment"
+    type: conditional_branch
+    if: "{{ true }}"
+    then:
+      - display_message: "🎒 Shopping complete! Remaining gold: {{ variables.gold }} gp."
     next_step: done
 
   - id: done
-    name: "Equipment Selected"
+    name: "Equipment Purchased"
     type: completion
