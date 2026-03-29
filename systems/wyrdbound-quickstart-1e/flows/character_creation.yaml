@@ -210,8 +210,11 @@ steps:
           path: "outputs.character.gold"
           value: "{{ result.remaining_gold }}"
       - set_value:
+          path: "outputs.character.inventory"
+          value: "{{ result.purchased_items }}"
+      - set_value:
           path: "outputs.character.armor_class"
-          value: "{{ 10 + result.equipped_ac_bonus | int }}"
+          value: "{{ 10 + (result.equipped_armor.armor_class_bonus | default(0) | int) if result.equipped_armor else 10 }}"
     next_step: select_spells
 
   - id: select_spells

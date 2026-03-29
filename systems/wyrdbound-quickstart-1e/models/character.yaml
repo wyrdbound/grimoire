@@ -90,11 +90,11 @@ attributes:
 
   # --- Equipped Slots ---
   equipped:
-    main_hand: { type: str, default: "", description: "ID of equipped melee_1h or ranged_1h weapon" }
-    two_hand: { type: str, default: "", description: "ID of equipped two-handed weapon (blocks off_hand)" }
-    off_hand: { type: str, default: "", description: "ID of equipped shield (blocked by two_hand)" }
-    body: { type: str, default: "", description: "ID of equipped body armor" }
-    covering: { type: str, default: "cloak", description: "ID of equipped covering" }
+    main_hand: { type: weapon, default: null, description: "Equipped weapon (melee or ranged)" }
+    two_hand:  { type: weapon, default: null, description: "Equipped two-handed weapon (blocks off_hand)" }
+    off_hand:  { type: equippable, default: null, description: "Off-hand item (melee_1h, ranged_1h, or shield)" }
+    body:      { type: armor, default: null, description: "Equipped body armor" }
+    covering:  { type: str, default: "cloak", description: "ID of equipped covering" }
 
   # --- Spells Known ---
   spells: { type: list, of: str, default: [] }
