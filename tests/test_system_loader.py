@@ -8,7 +8,7 @@ from grimoire.loader import SystemLoader, SystemLoadError
 from grimoire.models.system import System
 
 SYSTEMS_DIR = Path(__file__).parent.parent / "systems"
-KNAVE_DIR = SYSTEMS_DIR / "knave_1e"
+KNAVE_DIR = SYSTEMS_DIR / "knave-1e"
 WYRDBOUND_DIR = SYSTEMS_DIR / "wyrdbound-quickstart-1e"
 
 
@@ -88,8 +88,8 @@ class TestSystemLoaderModels:
         assert knave.models["character"].name == "Knave"
 
     def test_wyrdbound_loads_all_models(self, wyrdbound: System) -> None:
-        # 5 model YAML files in systems/wyrdbound-quickstart-1e/models/
-        assert len(wyrdbound.models) == 5
+        # 7 model YAML files in systems/wyrdbound-quickstart-1e/models/
+        assert len(wyrdbound.models) == 7
 
     def test_wyrdbound_has_character_model(self, wyrdbound: System) -> None:
         assert "character" in wyrdbound.models
@@ -114,8 +114,9 @@ class TestSystemLoaderTables:
     def test_knave_armor_table_has_entries(self, knave: System) -> None:
         assert len(knave.tables["armor"].entries) > 0
 
-    def test_wyrdbound_has_no_tables(self, wyrdbound: System) -> None:
-        assert len(wyrdbound.tables) == 0
+    def test_wyrdbound_loads_all_tables(self, wyrdbound: System) -> None:
+        # 14 table YAML files in systems/wyrdbound-quickstart-1e/tables/ (recursive)
+        assert len(wyrdbound.tables) == 14
 
 
 # ---------------------------------------------------------------------------
@@ -140,8 +141,8 @@ class TestSystemLoaderCompendiums:
         assert "dagger" in entries
 
     def test_wyrdbound_loads_all_compendiums(self, wyrdbound: System) -> None:
-        # 4 compendium YAML files in systems/wyrdbound-quickstart-1e/compendiums/
-        assert len(wyrdbound.compendiums) == 4
+        # 5 compendium YAML files in systems/wyrdbound-quickstart-1e/compendiums/
+        assert len(wyrdbound.compendiums) == 5
 
     def test_wyrdbound_weapons_compendium_entries_keyed_by_id(
         self, wyrdbound: System
@@ -169,8 +170,8 @@ class TestSystemLoaderFlows:
         assert len(knave.flows["character_creation"].steps) > 0
 
     def test_wyrdbound_loads_all_flows(self, wyrdbound: System) -> None:
-        # 3 flow YAML files in systems/wyrdbound-quickstart-1e/flows/ (recursive)
-        assert len(wyrdbound.flows) == 3
+        # 6 flow YAML files in systems/wyrdbound-quickstart-1e/flows/ (recursive)
+        assert len(wyrdbound.flows) == 6
 
     def test_wyrdbound_has_character_creation_flow(self, wyrdbound: System) -> None:
         assert "character_creation" in wyrdbound.flows
@@ -192,8 +193,9 @@ class TestSystemLoaderPrompts:
     def test_knave_fix_json_prompt_has_template(self, knave: System) -> None:
         assert knave.prompts["fix_json"].prompt_template
 
-    def test_wyrdbound_has_no_prompts(self, wyrdbound: System) -> None:
-        assert len(wyrdbound.prompts) == 0
+    def test_wyrdbound_loads_all_prompts(self, wyrdbound: System) -> None:
+        # 1 prompt YAML file in systems/wyrdbound-quickstart-1e/prompts/
+        assert len(wyrdbound.prompts) == 1
 
 
 # ---------------------------------------------------------------------------
