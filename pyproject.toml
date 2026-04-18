@@ -1,6 +1,6 @@
 [project]
-name = "grimoire"
-version = "0.1.0"
+name = "grimoire-spec"
+version = "0.0.0"
 description = "GRIMOIRE system definition loader and validator for tabletop RPG systems"
 requires-python = ">=3.11"
 dependencies = [
