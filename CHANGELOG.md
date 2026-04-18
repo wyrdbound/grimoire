@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v0.1.0...grimoire-spec-v0.1.1) (2026-04-18)
+
+
+### Bug Fixes
+
+* publishing to PyPI ([7098477](https://github.com/wyrdbound/grimoire/commit/709847743b3291d2296a2d61b535848817ad526e))
+
 ## 0.1.0 (2026-04-18)
 
 
