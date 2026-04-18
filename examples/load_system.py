@@ -38,7 +38,7 @@ def example_load_and_validate(system_name: str) -> None:
         print("\n  ✓ System is valid")
 
 
-def example_inspect_models(system_name: str = "knave_1e") -> None:
+def example_inspect_models(system_name: str = "knave-1e") -> None:
     """Load a system and print the names of all loaded models."""
     loader = SystemLoader()
     system = loader.load(SYSTEMS_DIR / system_name)
@@ -49,7 +49,7 @@ def example_inspect_models(system_name: str = "knave_1e") -> None:
         print(f"  {model_id}: {model.name}{extends}")
 
 
-def example_inspect_flows(system_name: str = "knave_1e") -> None:
+def example_inspect_flows(system_name: str = "knave-1e") -> None:
     """Load a system and print a summary of all loaded flows."""
     loader = SystemLoader()
     system = loader.load(SYSTEMS_DIR / system_name)
@@ -60,7 +60,7 @@ def example_inspect_flows(system_name: str = "knave_1e") -> None:
         print(f"  {flow_id}: {flow.name} ({step_count} steps)")
 
 
-def example_inspect_compendiums(system_name: str = "knave_1e") -> None:
+def example_inspect_compendiums(system_name: str = "knave-1e") -> None:
     """Load a system and print compendium entry counts."""
     loader = SystemLoader()
     system = loader.load(SYSTEMS_DIR / system_name)
@@ -97,10 +97,10 @@ def example_error_handling() -> None:
 
 if __name__ == "__main__":
     # Run all examples
-    for system_dir in ["knave_1e", "wyrdbound-quickstart-1e"]:
+    for system_dir in ["knave-1e", "wyrdbound-quickstart-1e"]:
         example_load_and_validate(system_dir)
 
-    example_inspect_models("knave_1e")
-    example_inspect_flows("knave_1e")
-    example_inspect_compendiums("knave_1e")
+    example_inspect_models("knave-1e")
+    example_inspect_flows("knave-1e")
+    example_inspect_compendiums("knave-1e")
     example_error_handling()
