@@ -81,7 +81,10 @@ class System:
         return self.compendiums.get(compendium_id)
 
     def find_entry(self, entry_id: str) -> dict | None:
-        """Search all compendiums for an entry by ID. Returns first match with metadata."""
+        """Search all compendiums for an entry by ID.
+
+        Returns first match with metadata.
+        """
         for comp in self.compendiums.values():
             entry = comp.get_entry(entry_id)
             if entry is not None:
