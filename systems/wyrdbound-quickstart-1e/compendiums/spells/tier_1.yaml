@@ -1,0 +1,51 @@
+kind: compendium
+id: spells_tier_1
+name: "Tier 1 Spells"
+description: "Starting spells for Mages in Wyrdbound Quickstart (1st Edition)"
+model: spell
+
+entries:
+  - id: bolt
+    name: "Bolt"
+    description: "Magic projectile — 1d20 + MND vs. 10 + target AC. On hit: 1d6 damage."
+    spell_type: attack
+    range: "60 feet"
+    duration: "instantaneous"
+    spell_level: 1
+    slot_cost: 1
+  
+  - id: shield
+    name: "Shield"
+    description: "Target gains +2 AC for the duration."
+    spell_type: defense
+    range: "touch"
+    duration: "1 minute"
+    spell_level: 1
+    slot_cost: 1
+  
+  - id: heal
+    name: "Heal"
+    description: "Restore 1d6 + MND modifier HP to target."
+    spell_type: restoration
+    range: "touch"
+    duration: "instantaneous"
+    spell_level: 1
+    slot_cost: 1
+  
+  - id: light
+    name: "Light"
+    description: "Object glows, illuminating 30-foot radius."
+    spell_type: utility
+    range: "touch"
+    duration: "1 hour"
+    spell_level: 1
+    slot_cost: 1
+  
+  - id: detect_magic
+    name: "Detect Magic"
+    description: "Sense presence of magic within 30 feet."
+    spell_type: utility
+    range: "self"
+    duration: "10 minutes"
+    spell_level: 1
+    slot_cost: 1

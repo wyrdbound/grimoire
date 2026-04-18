@@ -3,9 +3,9 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .compendium import CompendiumDefinition
-from .flow.flow import FlowDefinition
-from .model import ModelDefinition
+from .compendium_definition import CompendiumDefinition
+from .flow import FlowDefinition
+from .model_definition import ModelDefinition
 from .prompt import PromptDefinition
 from .source import SourceDefinition
 from .table import TableDefinition
@@ -79,6 +79,14 @@ class System:
     def get_compendium(self, compendium_id: str) -> CompendiumDefinition | None:
         """Get a compendium definition by ID."""
         return self.compendiums.get(compendium_id)
+
+    def find_entry(self, entry_id: str) -> dict | None:
+        """Search all compendiums for an entry by ID. Returns first match with metadata."""
+        for comp in self.compendiums.values():
+            entry = comp.get_entry(entry_id)
+            if entry is not None:
+                return {"_compendium": comp.id, "_model": comp.model, **entry}
+        return None
 
     def get_table(self, table_id: str) -> TableDefinition | None:
         """Get a table definition by ID."""

@@ -323,46 +323,102 @@ Marks the end of a flow. Useful when there are conditional branches in the flow 
 
 Provides conditional logic with if-then-else branching within a flow step. Allows for dynamic execution paths based on evaluated conditions.
 
+Each `then` and `else` block is a **structured object** with two optional keys:
+
+- **`actions`**: List of actions to run when the branch is taken
+- **`next_step`**: Step ID to jump to after the branch executes (overrides the step-level `next_step`)
+
+Both keys are optional. An `else` block with only `next_step` and no `actions` is a pure routing branch.
+
 ```yaml
-- id: determine_dice_roll
-  name: "Determine Saving Throw Type"
+# Pattern 1: match/skip — jump directly on match, fall through on miss
+- id: set_base_hp_warrior
   type: conditional_branch
-  if: "{{ inputs.saving_throw_type == 'basic' }}"
+  if: "{{ inputs.character_class == 'warrior' }}"
   then:
-    # Basic saving throw
-    - set_value:
-        path: "variables.base_dice_roll"
-        value: "1d20"
+    actions:
+      - set_value:
+          path: "variables.base_hp"
+          value: "12"
+    next_step: compute_hp       # jump past remaining class checks
   else:
-    if: "{{ inputs.saving_throw_type == 'advantage' }}"
-    then:
-      # Advantage - roll twice, keep highest
+    next_step: set_base_hp_rogue  # check next class
+
+# Pattern 2: branch with actions on both sides
+- id: check_afford
+  type: conditional_branch
+  if: "{{ variables.gold < variables.last_item_cost }}"
+  then:
+    actions:
+      - display_message: "❌ You can't afford that."
+    next_step: shop_menu
+  else:
+    next_step: deduct_gold
+
+# Pattern 3: step-level next_step (applies when then/else don't specify one)
+- id: calculate_spell_slots
+  type: conditional_branch
+  if: "{{ outputs.character.character_class == 'mage' }}"
+  then:
+    actions:
       - set_value:
-          path: "variables.base_dice_roll"
-          value: "2d20kh1"
-    else:
-      # Disadvantage - roll twice, keep lowest
-      - set_value:
-          path: "variables.base_dice_roll"
-          value: "2d20kl1"
-  actions:
-    - display_message: "Selected {{ inputs.saving_throw_type }} dice ({{ variables.base_dice_roll }})"
+          path: "outputs.character.spell_slots.max"
+          value: "{{ 3 + outputs.character.mind.modifier }}"
+  next_step: roll_starting_gold   # reached by both branches
 ```
 
 **Conditional Structure**:
 
-- **`if`**: Template expression that evaluates to a boolean condition
-- **`then`**: Array of actions to execute if the condition is true
-- **`else`**: Optional clause that can contain either:
-  - Array of actions to execute if the condition is false
-  - Another nested `if-then-else` structure for chaining conditions
+- **`if`**: Jinja2 template expression that evaluates to a boolean
+- **`then`**: Branch block executed when condition is true
+- **`else`**: Optional branch block executed when condition is false
+- **`next_step`** (step-level): Fallback used when the taken branch does not specify its own `next_step`
+
+**Branch block fields**:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `actions` | No | List of actions to execute |
+| `next_step` | No | Step ID to jump to after this branch |
+
+**next_step priority** (highest to lowest):
+1. Branch-level `then.next_step` or `else.next_step`
+2. Step-level `next_step`
+3. Sequential (next step in flow order)
 
 **Key Features**:
 
-- Supports nested conditional logic for complex branching scenarios
 - All conditions use Jinja2 template syntax for dynamic evaluation
-- Actions within `then` and `else` blocks follow the same syntax as regular step actions
-- The step's main `actions` array executes after the conditional logic completes
+- Branches can route to different steps, enabling efficient skip-ahead patterns
+- Steps with no meaningful condition that just run actions should use `type: action` instead
+
+#### `action`
+
+Runs a list of actions and proceeds to the next step. No branching, no termination — a pure side-effect step.
+
+Use this instead of `conditional_branch` with `if: "{{ true }}"` when you only need to execute actions without a condition.
+
+```yaml
+- id: init_gold
+  type: action
+  actions:
+    - set_value:
+        path: "variables.gold"
+        value: "{{ inputs.current_gold | int }}"
+    - set_value:
+        path: "outputs.remaining_gold"
+        value: "{{ inputs.current_gold | int }}"
+  next_step: shop_menu
+
+- id: record_purchase
+  type: action
+  actions:
+    - append_value:
+        path: "outputs.purchased_items"
+        value: "{{ variables.last_item_id }}"
+    - display_message: "✅ Purchased {{ variables.last_item_name }}."
+  next_step: prompt_equip
+```
 
 #### `flow_call`
 

@@ -1,0 +1,12 @@
+id: equippable
+kind: model
+name: "Equippable"
+description: "Base model for items that can be equipped to a character slot"
+version: 1
+extends: [item]
+
+attributes:
+  equippable_type:
+    type: str
+    enum: [melee_1h, melee_2h, ranged_1h, ranged_2h, body, head, feet, hands, finger_left, finger_right, covering, shield]
+    description: "The slot type this item occupies when equipped"

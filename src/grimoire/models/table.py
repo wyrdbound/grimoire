@@ -121,17 +121,19 @@ class TableDefinition:
                     # entry_type appears to reference a model, entries should be dicts
                     if not isinstance(entry_value, dict):
                         errors.append(
-                            f"Entry '{entry_key}' has entry_type '{self.entry_type}' but contains "
-                            f"{type(entry_value).__name__} instead of model instance (dict)"
+                            f"Entry '{entry_key}' has entry_type "
+                            f"'{self.entry_type}' but contains "
+                            f"{type(entry_value).__name__} instead of "
+                            f"model instance (dict)"
                         )
 
         return errors
 
-    def validate_with_system(self, system) -> list[str]:
+    def validate_with_system(self, system: Any) -> list[str]:
         """Validate the table definition with access to system models."""
         errors = self.validate()  # Start with basic validation
 
-        # If entry_type is specified and not the default "str", validate entries against the model
+        # If entry_type is not the default "str", validate entries against model
         if self.entry_type != "str" and self.entry_type in system.models:
             model = system.models[self.entry_type]
 
@@ -145,8 +147,10 @@ class TableDefinition:
                 else:
                     # Entry is not a dictionary - this is a type mismatch
                     errors.append(
-                        f"Entry '{entry_key}' has entry_type '{self.entry_type}' but contains "
-                        f"{type(entry_value).__name__} instead of model instance"
+                        f"Entry '{entry_key}' has entry_type "
+                        f"'{self.entry_type}' but contains "
+                        f"{type(entry_value).__name__} instead of "
+                        f"model instance"
                     )
         elif self.entry_type != "str" and self.entry_type not in system.models:
             # entry_type references a model that doesn't exist

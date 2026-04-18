@@ -1,0 +1,146 @@
+id: determine_traits
+kind: flow
+name: "Determine Character Traits"
+description: "Determine the roleplay traits for a Wyrdbound Quickstart character — by roll or player choice"
+version: 1
+
+outputs:
+  - id: traits
+    type: character_traits
+
+steps:
+  # ── Step 1: Roll or Choose? ───────────────────────────────────────────────
+  - id: traits_method
+    name: "How would you like to determine your traits?"
+    type: player_choice
+    prompt: "Your traits will guide how you roleplay your character. Would you like to roll randomly or choose your own?"
+    choices:
+      - id: roll
+        label: "🎲 Roll randomly — let fate decide"
+        next_step: roll_traits
+      - id: choose
+        label: "✍️  Choose — pick from each table yourself"
+        next_step: choose_bearing
+
+  # ── Roll path ─────────────────────────────────────────────────────────────
+  - id: roll_traits
+    name: "Rolling Traits"
+    type: table_roll
+    prompt: "Rolling for your character's traits..."
+    parallel: true
+    tables:
+      - table: bearing
+        actions:
+          - set_value:
+              path: "outputs.traits.bearing"
+              value: "{{ result.entry }}"
+      - table: manner
+        actions:
+          - set_value:
+              path: "outputs.traits.manner"
+              value: "{{ result.entry }}"
+      - table: disposition
+        actions:
+          - set_value:
+              path: "outputs.traits.disposition"
+              value: "{{ result.entry }}"
+      - table: speech
+        actions:
+          - set_value:
+              path: "outputs.traits.speech"
+              value: "{{ result.entry }}"
+      - table: background
+        actions:
+          - set_value:
+              path: "outputs.traits.background"
+              value: "{{ result.entry }}"
+    actions:
+      - display_message: "Bearing: {{ outputs.traits.bearing }}"
+      - display_message: "Manner: {{ outputs.traits.manner }}"
+      - display_message: "Disposition: {{ outputs.traits.disposition }}"
+      - display_message: "Speech: {{ outputs.traits.speech }}"
+      - display_message: "Background: {{ outputs.traits.background }}"
+    next_step: confirm_traits
+
+  - id: confirm_traits
+    name: "Confirm Traits"
+    type: player_choice
+    prompt: "Keep these traits?"
+    choices:
+      - id: keep
+        label: "✅ Keep — I like them!"
+        next_step: done
+      - id: reroll
+        label: "🎲 Reroll — try again"
+        next_step: roll_traits
+
+  # ── Choose path ───────────────────────────────────────────────────────────
+  - id: choose_bearing
+    name: "Choose Bearing"
+    type: player_choice
+    prompt: "Choose your character's bearing (physical presence):"
+    choice_source:
+      table: bearing
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.bearing"
+          value: "{{ choice }}"
+    next_step: choose_manner
+
+  - id: choose_manner
+    name: "Choose Manner"
+    type: player_choice
+    prompt: "Choose your character's manner (behavioral style):"
+    choice_source:
+      table: manner
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.manner"
+          value: "{{ choice }}"
+    next_step: choose_disposition
+
+  - id: choose_disposition
+    name: "Choose Disposition"
+    type: player_choice
+    prompt: "Choose your character's disposition (personality and outlook):"
+    choice_source:
+      table: disposition
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.disposition"
+          value: "{{ choice }}"
+    next_step: choose_speech
+
+  - id: choose_speech
+    name: "Choose Speech"
+    type: player_choice
+    prompt: "Choose your character's manner of speech:"
+    choice_source:
+      table: speech
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.speech"
+          value: "{{ choice }}"
+    next_step: choose_background
+
+  - id: choose_background
+    name: "Choose Background"
+    type: player_choice
+    prompt: "Choose your character's background:"
+    choice_source:
+      table: background
+      display_format: "{{ entry }}"
+    actions:
+      - set_value:
+          path: "outputs.traits.background"
+          value: "{{ choice }}"
+    next_step: done
+
+  - id: done
+    name: "Traits Determined"
+    type: completion
+

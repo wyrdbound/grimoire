@@ -1,0 +1,68 @@
+id: roll_attributes
+kind: flow
+name: "Roll Attributes"
+description: "Roll 4d6 keep highest 3 (reroll < 2) for Power, Agility, Mind, and Charm"
+version: 2
+
+outputs:
+  - id: power
+    type: int
+  - id: agility
+    type: int
+  - id: mind
+    type: int
+  - id: charm
+    type: int
+
+variables:
+  - id: power_roll
+    type: str
+  - id: agility_roll
+    type: str
+  - id: mind_roll
+    type: str
+  - id: charm_roll
+    type: str
+
+steps:
+  - id: roll_attributes
+    name: "Roll Attributes"
+    type: dice_sequence
+    sequence:
+      items: ["power", "agility", "mind", "charm"]
+      roll: "4d6kh3r<2"
+      actions:
+        - set_value:
+            path: "outputs.{{ item }}"
+            value: "{{ result.total }}"
+        - set_value:
+            path: "variables.{{ item }}_roll"
+            value: "{{ result.description }}"
+    actions:
+      - display_message:
+          text: "  POW: {{ variables.power_roll }}"
+      - display_message:
+          text: "  AGI: {{ variables.agility_roll }}"
+      - display_message:
+          text: "  MND: {{ variables.mind_roll }}"
+      - display_message:
+          text: "  CHA: {{ variables.charm_roll }}"
+    next_step: confirm_attributes
+
+  - id: confirm_attributes
+    name: "Confirm Attributes"
+    type: player_choice
+    prompt: "Keep these attributes?"
+    choices:
+      - id: keep
+        label: "✅ Keep — looks good!"
+        next_step: done
+      - id: reroll
+        label: "🎲 Reroll — try again"
+        next_step: roll_attributes
+
+  - id: done
+    name: "Attributes Confirmed"
+    type: completion
+    actions:
+      - display_message: "Attributes locked in."

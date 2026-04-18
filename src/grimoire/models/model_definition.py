@@ -191,7 +191,8 @@ class ModelDefinition:
                     errors.append(f"Attribute '{attr_path}' must equal {expected}")
         except ValueError:
             errors.append(
-                f"Invalid range specification '{range_spec}' for attribute '{attr_path}'"
+                f"Invalid range specification '{range_spec}' "
+                f"for attribute '{attr_path}'"
             )
 
         return errors

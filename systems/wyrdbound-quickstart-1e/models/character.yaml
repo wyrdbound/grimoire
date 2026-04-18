@@ -1,0 +1,133 @@
+kind: model
+id: character
+name: "Quickstart Character"
+description: "Character model for Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+attributes:
+  name: { type: str }
+
+  # --- Core Attributes (4) ---
+  power:
+    score:
+      {
+        type: int,
+        range: "3..20",
+        description: "Physical strength, melee combat",
+      }
+    modifier:
+      {
+        type: int,
+        derived: "{{ (power.score - 10) // 2 }}",
+        description: "Attribute modifier",
+      }
+
+  agility:
+    score:
+      {
+        type: int,
+        range: "3..20",
+        description: "Speed, reflexes, ranged combat",
+      }
+    modifier: { type: int, derived: "{{ (agility.score - 10) // 2 }}" }
+
+  mind:
+    score:
+      {
+        type: int,
+        range: "3..20",
+        description: "Intelligence, magical ability, perception",
+      }
+    modifier: { type: int, derived: "{{ (mind.score - 10) // 2 }}" }
+
+  charm:
+    score:
+      {
+        type: int,
+        range: "3..20",
+        description: "Persuasion, leadership, social influence",
+      }
+    modifier: { type: int, derived: "{{ (charm.score - 10) // 2 }}" }
+
+  # --- Class ---
+  character_class:
+    {
+      type: str,
+      enum: ["warrior", "rogue", "mage", "bard"],
+      description: "Character class",
+    }
+
+  gender:
+    {
+      type: str,
+      enum: ["male", "female", "nonbinary", "none"],
+      description: "Character gender",
+    }
+
+  # --- Level & Experience ---
+  level: { type: int, default: 1, range: "1..10" }
+  xp: { type: int, default: 0, range: "0.." }
+
+  # --- Hit Points ---
+  hit_points:
+    max: { type: int, range: "1.." }
+    current: { type: int, range: "0..{{ hit_points.max }}" }
+
+  # --- Armor Class ---
+  armor_class:
+    { type: int, default: 10, range: "0..25", description: "Total armor class (base 10 + armor bonus)" }
+
+  # --- Spell Slots (Mage only) ---
+  spell_slots:
+    max: { type: int, default: 0, range: "0.." }
+    current: { type: int, range: "0..{{ spell_slots.max }}" }
+
+  # --- Currency ---
+  gold: { type: int, default: 0, range: "0.." }
+
+  # --- Inventory ---
+  inventory: { type: list, of: item, default: [] }
+
+  # --- Equipped Slots ---
+  equipped:
+    main_hand: { type: weapon, default: null, description: "Equipped weapon (melee or ranged)" }
+    two_hand:  { type: weapon, default: null, description: "Equipped two-handed weapon (blocks off_hand)" }
+    off_hand:  { type: equippable, default: null, description: "Off-hand item (melee_1h, ranged_1h, or shield)" }
+    body:      { type: armor, default: null, description: "Equipped body armor" }
+    covering:  { type: str, default: "cloak", description: "ID of equipped covering" }
+
+  # --- Spells Known ---
+  spells: { type: list, of: str, default: [] }
+
+  # --- Traits (roleplay guides) ---
+  traits:
+    bearing:
+      {
+        type: str,
+        description: "Physical presence and how they carry themselves",
+      }
+    manner:
+      { type: str, description: "Behavioral style — how they move and act" }
+    disposition:
+      { type: str, description: "Inner personality and general outlook" }
+    speech: { type: str, description: "Distinctive manner of speaking" }
+    background: { type: str, description: "Life before adventure" }
+
+  # --- Character Description ---
+  description:
+    {
+      type: str,
+      default: "",
+      description: "LLM-generated character description",
+    }
+
+  # --- Status Effects ---
+  status_effects: { type: list, of: str, default: [] }
+
+validations:
+  - expression: "{{ hit_points.current <= hit_points.max }}"
+    message: "Current HP cannot exceed maximum HP"
+  - expression: "{{ spell_slots.current <= spell_slots.max }}"
+    message: "Current spell slots cannot exceed maximum"
+  - expression: "{{ level >= 1 and level <= 10 }}"
+    message: "Character level must be between 1 and 10"

@@ -1,0 +1,13 @@
+id: item
+kind: model
+name: "Item"
+description: "Base model for items in Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+attributes:
+  name: { type: str }
+  description: { type: str, default: "" }
+  cost: { type: int, default: 0, description: "Cost in gold pieces" }
+  weight: { type: float, default: 0.0, description: "Weight in pounds" }
+  qty: { type: int, default: 1, description: "Quantity" }
+  tags: { type: list, of: str, default: [] }

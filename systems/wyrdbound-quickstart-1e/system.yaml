@@ -1,0 +1,16 @@
+id: wyrdbound-quickstart-1e
+kind: system
+name: "Wyrdbound Quickstart (1st Edition)"
+description: "Ultra-minimal fantasy TTRPG designed for Wyrdbound MVP demo. 4 attributes, 4 classes, streamlined mechanics."
+version: 1.0.0
+spec_version: "0.1"
+default_source: core_rules
+currency:
+  base_unit: gold
+  denominations:
+    gp: { name: "gold piece", symbol: "gp", value: 1, weight: 0.02 }
+credits:
+  author: "Night Owl & Justin"
+  license: "CC0 1.0 Universal (Public Domain)"
+  designed: "February 22, 2026"
+  notes: "Custom system for Wyrdbound engine demonstration. Uses only implemented GRIMOIRE primitives."

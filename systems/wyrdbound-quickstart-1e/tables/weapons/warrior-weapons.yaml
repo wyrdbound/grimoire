@@ -1,0 +1,16 @@
+kind: table
+id: warrior-weapons
+name: "Warrior Weapons"
+version: 1
+description: "Weapons available to Warriors — all weapon types"
+entries:
+  1: longsword
+  2: greataxe
+  3: shortsword
+  4: mace
+  5: dagger
+  6: shortbow
+  7: longbow
+  8: hand_axe
+  9: rapier
+  10: quarterstaff

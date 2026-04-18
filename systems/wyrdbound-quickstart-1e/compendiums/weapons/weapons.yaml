@@ -1,0 +1,106 @@
+kind: compendium
+id: weapons
+name: "Weapons"
+description: "Weapon compendium for Wyrdbound Quickstart (1st Edition)"
+model: weapon
+
+entries:
+  - id: dagger
+    name: "Dagger"
+    description: "A small, easily concealed blade"
+    cost: 2
+    weight: 1.0
+    equippable_type: melee_1h
+    damage_die: "1d4"
+    size: light
+    tags: [weapon, melee, light, simple]
+
+  - id: shortsword
+    name: "Shortsword"
+    description: "A versatile one-handed blade"
+    cost: 10
+    weight: 2.0
+    equippable_type: melee_1h
+    damage_die: "1d6"
+    size: medium
+    tags: [weapon, melee, medium]
+
+  - id: longsword
+    name: "Longsword"
+    description: "A sturdy one-handed sword"
+    cost: 15
+    weight: 3.0
+    equippable_type: melee_1h
+    damage_die: "1d8"
+    size: heavy
+    tags: [weapon, melee, heavy]
+
+  - id: greataxe
+    name: "Greataxe"
+    description: "A massive two-handed axe"
+    cost: 30
+    weight: 7.0
+    equippable_type: melee_2h
+    damage_die: "1d10"
+    size: two-handed
+    tags: [weapon, melee, two-handed]
+
+  - id: shortbow
+    name: "Shortbow"
+    description: "A compact ranged weapon"
+    cost: 25
+    weight: 2.0
+    equippable_type: ranged_2h
+    damage_die: "1d6"
+    size: medium
+    tags: [weapon, ranged, medium]
+
+  - id: longbow
+    name: "Longbow"
+    description: "A powerful two-handed bow"
+    cost: 50
+    weight: 2.0
+    equippable_type: ranged_2h
+    damage_die: "1d10"
+    size: two-handed
+    tags: [weapon, ranged, two-handed]
+
+  - id: hand_axe
+    name: "Hand Axe"
+    description: "A light, throwable axe"
+    cost: 5
+    weight: 2.0
+    equippable_type: melee_1h
+    damage_die: "1d4"
+    size: light
+    tags: [weapon, melee, light, throwable]
+
+  - id: mace
+    name: "Mace"
+    description: "A heavy bludgeoning weapon"
+    cost: 5
+    weight: 4.0
+    equippable_type: melee_1h
+    damage_die: "1d6"
+    size: medium
+    tags: [weapon, melee, medium, bludgeoning]
+
+  - id: quarterstaff
+    name: "Quarterstaff"
+    description: "A simple wooden staff"
+    cost: 2
+    weight: 4.0
+    equippable_type: melee_2h
+    damage_die: "1d6"
+    size: medium
+    tags: [weapon, melee, medium, bludgeoning, simple]
+
+  - id: rapier
+    name: "Rapier"
+    description: "A slender, elegant thrusting sword"
+    cost: 25
+    weight: 2.0
+    equippable_type: melee_1h
+    damage_die: "1d6"
+    size: medium
+    tags: [weapon, melee, medium, finesse]

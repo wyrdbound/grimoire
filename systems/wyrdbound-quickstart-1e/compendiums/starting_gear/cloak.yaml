@@ -1,0 +1,14 @@
+kind: compendium
+id: starting_gear
+name: "Starting Gear"
+description: "Default starting equipment for all Wyrdbound Quickstart characters"
+model: equippable
+
+entries:
+  - id: cloak
+    name: "Cloak"
+    description: "A well-worn traveling cloak — practical and unassuming"
+    cost: 0
+    weight: 1.0
+    equippable_type: covering
+    tags: [equippable, covering, starting_gear]

@@ -1,0 +1,9 @@
+kind: table
+id: warrior-armor
+name: "Warrior Armor"
+version: 1
+description: "Armor available to Warriors — all armor types"
+entries:
+  1: plate_armor
+  2: chainmail
+  3: leather_armor

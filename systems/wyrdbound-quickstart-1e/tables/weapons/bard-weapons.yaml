@@ -1,0 +1,10 @@
+kind: table
+id: bard-weapons
+name: "Bard Weapons"
+version: 1
+description: "Weapons available to Bards — simple and light/finesse weapons"
+entries:
+  1: dagger
+  2: shortsword
+  3: rapier
+  4: quarterstaff

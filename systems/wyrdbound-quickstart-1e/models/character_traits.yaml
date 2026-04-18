@@ -1,0 +1,12 @@
+kind: model
+id: character_traits
+name: "Character Traits"
+description: "Roleplay-guiding traits for a Wyrdbound Quickstart character"
+version: 1
+
+attributes:
+  bearing:     { type: str, description: "Physical presence and how they carry themselves" }
+  manner:      { type: str, description: "Behavioral style — how they move and act" }
+  disposition: { type: str, description: "Inner personality and general outlook" }
+  speech:      { type: str, description: "Distinctive manner of speaking" }
+  background:  { type: str, description: "Life before adventure" }

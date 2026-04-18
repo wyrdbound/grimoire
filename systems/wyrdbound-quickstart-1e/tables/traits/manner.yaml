@@ -1,0 +1,27 @@
+kind: table
+id: manner
+name: "Manner"
+version: 1
+roll: 1d20
+description: "The character's behavioral style — how they move and carry themselves in the world"
+entries:
+  1: Brash
+  2: Careful
+  3: Composed
+  4: Deliberate
+  5: Distracted
+  6: Eager
+  7: Fidgety
+  8: Guarded
+  9: Impulsive
+  10: Measured
+  11: Methodical
+  12: Nervous
+  13: Relaxed
+  14: Restless
+  15: Secretive
+  16: Shambling
+  17: Stealthy
+  18: Twitchy
+  19: Unhurried
+  20: Vigilant

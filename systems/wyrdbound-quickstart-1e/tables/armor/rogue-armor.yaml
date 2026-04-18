@@ -1,0 +1,7 @@
+kind: table
+id: rogue-armor
+name: "Rogue Armor"
+version: 1
+description: "Armor available to Rogues — light armor only"
+entries:
+  1: leather_armor

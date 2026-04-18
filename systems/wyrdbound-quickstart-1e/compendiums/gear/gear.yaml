@@ -1,0 +1,106 @@
+kind: compendium
+id: gear
+name: "Adventuring Gear"
+description: "Equipment and supplies for adventurers"
+model: item
+
+entries:
+  - id: backpack
+    name: "Backpack"
+    description: "A sturdy leather pack for carrying equipment"
+    cost: 2
+    weight: 5.0
+    tags: [gear, container]
+  
+  - id: rope
+    name: "Rope (50 ft)"
+    description: "Hempen rope, 50 feet long"
+    cost: 1
+    weight: 10.0
+    tags: [gear, utility]
+  
+  - id: torch
+    name: "Torch"
+    description: "A wooden torch, burns for 1 hour"
+    cost: 0.17
+    weight: 1.0
+    qty: 1
+    tags: [gear, light]
+  
+  - id: rations
+    name: "Rations (1 day)"
+    description: "One day's worth of preserved food"
+    cost: 0.5
+    weight: 2.0
+    tags: [gear, consumable, food]
+  
+  - id: waterskin
+    name: "Waterskin"
+    description: "A leather container for carrying water"
+    cost: 1
+    weight: 5.0
+    tags: [gear, container, liquid]
+  
+  - id: bedroll
+    name: "Bedroll"
+    description: "A padded sleeping mat"
+    cost: 1
+    weight: 7.0
+    tags: [gear, camping]
+  
+  - id: healing_potion
+    name: "Healing Potion"
+    description: "Restores 2d4+2 HP when consumed"
+    cost: 50
+    weight: 0.5
+    tags: [potion, consumable, healing]
+  
+  - id: lantern
+    name: "Lantern"
+    description: "An oil lantern, illuminates 30-foot radius"
+    cost: 5
+    weight: 2.0
+    tags: [gear, light]
+  
+  - id: oil_flask
+    name: "Oil Flask"
+    description: "Flask of lamp oil, 6-hour burn time"
+    cost: 1
+    weight: 1.0
+    tags: [gear, consumable, fuel]
+  
+  - id: tinderbox
+    name: "Tinderbox"
+    description: "Flint, steel, and tinder for starting fires"
+    cost: 0.5
+    weight: 1.0
+    tags: [gear, utility]
+  
+  - id: grappling_hook
+    name: "Grappling Hook"
+    description: "Iron hook for climbing or securing rope"
+    cost: 2
+    weight: 4.0
+    tags: [gear, utility, climbing]
+  
+  - id: crowbar
+    name: "Crowbar"
+    description: "Iron prying tool"
+    cost: 2
+    weight: 5.0
+    tags: [tool, utility]
+  
+  - id: hammer
+    name: "Hammer"
+    description: "Simple hammer for driving spikes"
+    cost: 1
+    weight: 3.0
+    tags: [tool, utility]
+  
+  - id: piton
+    name: "Piton"
+    description: "Iron spike for securing rope"
+    cost: 0.05
+    weight: 0.25
+    qty: 1
+    tags: [gear, climbing]

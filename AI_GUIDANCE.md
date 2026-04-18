@@ -1,10 +1,10 @@
 # AI Guidance
 
-Always remember the following points as you are working on this code base:
+ALWAYS adhere to the following points as you are working on this code base:
 
-1. Use the virtual env in the project root (`source .venv/bin/activate && <your_command>`)
+1. Use `uv` to create our Python virtual env, manage package dependencies, and run scripts.
 
-2. Prefer explicit errors over fallbacks when fallbacks would mask issues. We want to fix issues so we can have a stable system.
+2. NEVER mask issues by using fallbacks that hide errors. Prefer explicit errors over fallbacks. Fixing issues is the only way to ensure a stable system.
 
 3. Follow good software development practices (like SOLID).
 
@@ -14,10 +14,18 @@ Always remember the following points as you are working on this code base:
 
 6. Do NOT make bandaid fixes that break the rearchitecture goals for the library. Always respect the architectural boundaries.
 
-7. After all code changes, run `source .venv/bin/activate && ruff format src/ tests/ && ruff check src/ tests/ --fix && mypy src/` to ensure code quality is retained in an iterative manner.
+7. **Practice Test-Driven Development (TDD):** Write tests BEFORE implementing features using the red-green-refactor cycle:
+   - **Red:** Write a failing test that defines the desired behavior
+   - **Green:** Write minimal code to make the test pass
+   - **Refactor:** Improve code quality while keeping tests green
 
-8. Avoid making lines longer than 88 characters (E501 ruff check).
+   Benefits:
+   - Forces clear requirement thinking before coding
+   - Ensures all code is testable and tested
+   - Creates a safety net for refactoring
+   - Documents expected behavior through tests
+   - Prevents scope creep and over-engineering
 
-9. This is a logging library - it should be robust, reliable, and have minimal dependencies. Don't add features that would compromise these principles.
+8. All package imports should be at the top of the file, following standard Python conventions. Avoid dynamic imports or imports within functions. Instead, consider refactoring code to allow for static imports. If circular dependencies arise, it's a sign that the code structure may need to be reconsidered.
 
-10. Thread safety is critical - all public APIs must be thread-safe and work correctly in concurrent environments.
+9. When implementing new features, always create corresponding example files in the `examples/` folder demonstrating usage. Follow existing example patterns (clear docstring, multiple use cases, well-commented code).

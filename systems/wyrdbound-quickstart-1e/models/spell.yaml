@@ -1,0 +1,14 @@
+id: spell
+kind: model
+name: "Spell"
+description: "Spell model for Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+attributes:
+  name: { type: str }
+  description: { type: str }
+  spell_type: { type: str, enum: ["attack", "defense", "restoration", "utility"], default: "utility" }
+  range: { type: str, description: "Range (e.g., 'touch', '60 feet', 'self')" }
+  duration: { type: str, description: "Duration (e.g., 'instantaneous', '1 minute', '1 hour')", default: "instantaneous" }
+  spell_level: { type: int, range: "1..9", default: 1 }
+  slot_cost: { type: int, range: "1..9", default: 1, description: "Spell slots consumed when cast" }

@@ -1,0 +1,253 @@
+id: character_creation
+kind: flow
+name: "Character Creation"
+description: "Character creation process for Wyrdbound Quickstart (1st Edition)"
+version: 1
+
+outputs:
+  - id: character
+    type: character
+    validate: true
+
+steps:
+  - id: roll_attributes
+    name: "Roll Attributes"
+    type: flow_call
+    flow: roll_attributes
+    actions:
+      - set_value:
+          path: "outputs.character.power.score"
+          value: "{{ result.power }}"
+      - set_value:
+          path: "outputs.character.agility.score"
+          value: "{{ result.agility }}"
+      - set_value:
+          path: "outputs.character.mind.score"
+          value: "{{ result.mind }}"
+      - set_value:
+          path: "outputs.character.charm.score"
+          value: "{{ result.charm }}"
+    next_step: choose_class
+
+  - id: choose_class
+    name: "Choose Class"
+    type: player_choice
+    prompt: "Choose your class:"
+    choices:
+      - id: warrior
+        label: "Warrior — Frontline fighter, high survivability (+1 melee attacks)"
+      - id: rogue
+        label: "Rogue — Sneaky scout, high mobility (+1 stealth/ranged, Sneak Attack)"
+      - id: mage
+        label: "Mage — Spellcaster, versatile magic (+1 magic checks, casts spells)"
+      - id: bard
+        label: "Bard — Social leader, support (+1 social checks, Inspire ability)"
+    actions:
+      - set_value:
+          path: "outputs.character.character_class"
+          value: "{{ choice }}"
+    next_step: choose_gender
+
+  - id: choose_gender
+    name: "Choose Gender"
+    type: player_choice
+    prompt: "Choose your gender:"
+    choices:
+      - id: male
+        label: "Male"
+      - id: female
+        label: "Female"
+      - id: nonbinary
+        label: "Nonbinary"
+      - id: none
+        label: "None"
+    actions:
+      - set_value:
+          path: "outputs.character.gender"
+          value: "{{ choice }}"
+    next_step: determine_traits
+
+  - id: determine_traits
+    name: "Determine Character Traits"
+    type: flow_call
+    flow: determine_traits
+    actions:
+      - set_value:
+          path: "outputs.character.traits.bearing"
+          value: "{{ result.traits.bearing }}"
+      - set_value:
+          path: "outputs.character.traits.manner"
+          value: "{{ result.traits.manner }}"
+      - set_value:
+          path: "outputs.character.traits.disposition"
+          value: "{{ result.traits.disposition }}"
+      - set_value:
+          path: "outputs.character.traits.speech"
+          value: "{{ result.traits.speech }}"
+      - set_value:
+          path: "outputs.character.traits.background"
+          value: "{{ result.traits.background }}"
+    next_step: calculate_starting_hp
+
+  - id: calculate_starting_hp
+    name: "Calculate Starting HP"
+    type: flow_call
+    flow: calculate_starting_hp
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+      power_modifier: "{{ outputs.character.power.modifier }}"
+      agility_modifier: "{{ outputs.character.agility.modifier }}"
+      mind_modifier: "{{ outputs.character.mind.modifier }}"
+      charm_modifier: "{{ outputs.character.charm.modifier }}"
+    actions:
+      - set_value:
+          path: "outputs.character.hit_points.max"
+          value: "{{ result.max_hp }}"
+      - set_value:
+          path: "outputs.character.hit_points.current"
+          value: "{{ result.max_hp }}"
+    next_step: calculate_spell_slots
+
+  - id: calculate_spell_slots
+    name: "Calculate Spell Slots (Mage only)"
+    type: conditional_branch
+    if: "{{ outputs.character.character_class == 'mage' }}"
+    then:
+      actions:
+        - set_value:
+            path: "outputs.character.spell_slots.max"
+            value: "{{ 3 + outputs.character.mind.modifier }}"
+        - set_value:
+            path: "outputs.character.spell_slots.current"
+            value: "{{ outputs.character.spell_slots.max }}"
+    next_step: roll_starting_gold
+
+  - id: roll_starting_gold
+    name: "Roll Starting Gold"
+    type: dice_roll
+    roll: "3d6"
+    actions:
+      - set_value:
+          path: "outputs.character.gold"
+          value: "{{ result.total * 10 }}"
+    next_step: choose_name
+
+  - id: choose_name
+    name: "Choose Character Name"
+    type: player_input
+    prompt: "Enter your character's name:"
+    actions:
+      - set_value:
+          path: "outputs.character.name"
+          value: "{{ result }}"
+    next_step: generating_description_notice
+
+  - id: generating_description_notice
+    name: "Generating Description Notice"
+    type: action
+    condition: llm_enabled
+    actions:
+      - display_message: "✍️  Generating character description..."
+    next_step: generate_description
+
+  - id: generate_description
+    name: "Generate Character Description"
+    type: llm_generation
+    condition: llm_enabled
+    prompt_id: generate_character_description
+    prompt_data:
+      name: "{{ outputs.character.name }}"
+      character_class: "{{ outputs.character.character_class }}"
+      gender: "{{ outputs.character.gender }}"
+      traits: "{{ outputs.character.traits }}"
+    llm_settings:
+      provider: ollama
+      model: gemma2
+      max_tokens: 200
+    actions:
+      - set_value:
+          path: "outputs.character.description"
+          value: "{{ result }}"
+    next_step: show_description
+
+  - id: show_description
+    name: "Show Generated Description"
+    type: action
+    condition: llm_enabled
+    actions:
+      - display_message: "{{ outputs.character.description }}"
+    next_step: confirm_description
+
+  - id: confirm_description
+    name: "Confirm Description"
+    type: player_choice
+    condition: llm_enabled
+    prompt: "How does this description feel?"
+    choices:
+      - id: keep
+        label: "✅ Keep it — that's my character"
+        next_step: purchase_equipment
+      - id: regenerate
+        label: "🔄 Regenerate — try another"
+        next_step: generating_description_notice
+
+  - id: purchase_equipment
+    name: "Purchase Starting Equipment"
+    type: flow_call
+    flow: purchase_equipment
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+      current_gold: "{{ outputs.character.gold }}"
+    actions:
+      - set_value:
+          path: "outputs.character.equipped.main_hand"
+          value: "{{ result.equipped_weapon }}"
+      - set_value:
+          path: "outputs.character.equipped.body"
+          value: "{{ result.equipped_armor }}"
+      - set_value:
+          path: "outputs.character.gold"
+          value: "{{ result.remaining_gold }}"
+      - set_value:
+          path: "outputs.character.inventory"
+          value: "{{ result.purchased_items }}"
+      - set_value:
+          path: "outputs.character.armor_class"
+          value: "{{ 10 + (result.equipped_armor.armor_class_bonus | default(0) | int) if result.equipped_armor else 10 }}"
+    next_step: select_spells
+
+  - id: select_spells
+    name: "Select Starting Spells"
+    type: flow_call
+    flow: select_spells
+    condition: "{{ outputs.character.character_class in ['mage', 'bard'] }}"
+    inputs:
+      character_class: "{{ outputs.character.character_class }}"
+    actions:
+      - set_value:
+          path: "outputs.character.spells"
+          value: "{{ [result.spell_1, result.spell_2] | reject('equalto', '') | list | tojson }}"
+    next_step: done
+
+  - id: done
+    name: "Character Created"
+    type: completion
+    actions:
+      - display_message:
+          text: "✅ {{ outputs.character.name }} ({{ outputs.character.character_class }}) is ready for adventure!"
+      - display_message:
+          text: "   HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
+      - display_message:
+          text: "   Gold: {{ outputs.character.gold }} gp"
+      - display_message:
+          text: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
+      - display_message:
+          text: "   Bearing: {{ outputs.character.traits.bearing }} | Manner: {{ outputs.character.traits.manner }} | Disposition: {{ outputs.character.traits.disposition }}"
+      - display_message:
+          text: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"
+      - display_message:
+          text: "   Weapon: {{ outputs.character.equipped.main_hand or 'none' }} | Armor: {{ outputs.character.equipped.body or 'none' }} | AC: {{ outputs.character.armor_class }}"
+      - display_message:
+          text: "   Spells: {{ outputs.character.spells | join(', ') or 'none' }}"
+      - display_message:
+          text: "   Description: {{ outputs.character.description }}"

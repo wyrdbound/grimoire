@@ -44,7 +44,7 @@ class PromptDefinition:
     version: str = "1.0"
     llm: LLMConfig | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Initialize LLM config from dict if necessary."""
         if isinstance(self.llm, dict):
             self.llm = LLMConfig(**self.llm)

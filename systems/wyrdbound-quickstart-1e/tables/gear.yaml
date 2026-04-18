@@ -1,0 +1,19 @@
+kind: table
+id: gear
+name: "Adventuring Gear"
+version: 1
+description: "General adventuring gear available to all classes"
+entries:
+  1: backpack
+  2: rope
+  3: torch
+  4: rations
+  5: waterskin
+  6: bedroll
+  7: healing_potion
+  8: lantern
+  9: oil_flask
+  10: tinderbox
+  11: grappling_hook
+  12: crowbar
+  13: hammer

@@ -1,0 +1,103 @@
+id: calculate_starting_hp
+kind: flow
+name: "Calculate Starting HP"
+description: "Determine starting HP based on class and attributes"
+version: 1
+
+inputs:
+  - id: character_class
+    type: str
+  - id: power_modifier
+    type: int
+  - id: agility_modifier
+    type: int
+  - id: mind_modifier
+    type: int
+  - id: charm_modifier
+    type: int
+
+outputs:
+  - id: max_hp
+    type: int
+
+variables:
+  - id: base_hp
+    type: int
+  - id: relevant_modifier
+    type: int
+
+steps:
+  - id: set_base_hp_warrior
+    name: "Set Base HP (Warrior)"
+    type: conditional_branch
+    if: "{{ inputs.character_class == 'warrior' }}"
+    then:
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "12"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.power_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_rogue
+
+  - id: set_base_hp_rogue
+    name: "Set Base HP (Rogue)"
+    type: conditional_branch
+    if: "{{ inputs.character_class == 'rogue' }}"
+    then:
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "8"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.agility_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_mage
+
+  - id: set_base_hp_mage
+    name: "Set Base HP (Mage)"
+    type: conditional_branch
+    if: "{{ inputs.character_class == 'mage' }}"
+    then:
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "6"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.mind_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: set_base_hp_bard
+
+  - id: set_base_hp_bard
+    name: "Set Base HP (Bard or default)"
+    type: conditional_branch
+    if: "{{ inputs.character_class == 'bard' or variables.base_hp == 0 }}"
+    then:
+      actions:
+        - set_value:
+            path: "variables.base_hp"
+            value: "8"
+        - set_value:
+            path: "variables.relevant_modifier"
+            value: "{{ inputs.charm_modifier }}"
+      next_step: compute_hp
+    else:
+      next_step: compute_hp
+
+  - id: compute_hp
+    name: "Compute Max HP"
+    type: completion
+    actions:
+      - set_value:
+          path: "outputs.max_hp"
+          value: "{{ variables.base_hp|int + variables.relevant_modifier|int }}"
+          type: int
+      - display_message:
+          text: "Starting HP: {{ outputs.max_hp }} ({{ variables.base_hp }} base + {{ variables.relevant_modifier }} modifier)"

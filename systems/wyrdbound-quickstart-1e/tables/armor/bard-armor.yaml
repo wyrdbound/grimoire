@@ -1,0 +1,7 @@
+kind: table
+id: bard-armor
+name: "Bard Armor"
+version: 1
+description: "Armor available to Bards — light armor only"
+entries:
+  1: leather_armor

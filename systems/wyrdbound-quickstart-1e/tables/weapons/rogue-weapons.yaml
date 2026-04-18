@@ -1,0 +1,11 @@
+kind: table
+id: rogue-weapons
+name: "Rogue Weapons"
+version: 1
+description: "Weapons available to Rogues — finesse, light, and ranged"
+entries:
+  1: dagger
+  2: shortsword
+  3: rapier
+  4: shortbow
+  5: hand_axe

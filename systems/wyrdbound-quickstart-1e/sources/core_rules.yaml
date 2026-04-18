@@ -1,0 +1,7 @@
+version: 1
+id: core_rules
+kind: source
+name: "Wyrdbound Quickstart (1st Edition) Core Rules"
+description: "Core rules for Wyrdbound Quickstart, a minimal fantasy TTRPG for the Wyrdbound MVP demo."
+publisher: "Night Owl & Justin"
+source_url: ""
