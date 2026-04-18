@@ -32,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
+      contents: read
       id-token: write # required for PyPI trusted publishing
 
     steps:
