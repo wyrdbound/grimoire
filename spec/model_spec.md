@@ -50,7 +50,7 @@ attributes:
     range: "0.."
   armor_class:
     type: int
-    derived: "{{ 10 + this.dexterity_modifier + this.armor_bonus }}"
+    derived: "{{ 10 + dexterity_modifier + armor_bonus }}"
   inventory:
     type: list
     of: item
@@ -101,7 +101,7 @@ experience: { type: int, range: "0.." }
 penalty: { type: int, range: "..0" }
 
 # Relative ranges (using other attributes)
-current_hp: { type: int, range: "0..{{ this.max_hp }}" }
+current_hp: { type: int, range: "0..{{ max_hp }}" }
 ```
 
 ### Derived Attributes
@@ -111,19 +111,54 @@ Derived attributes are calculated from other attributes using expression syntax:
 ```yaml
 armor_defense:
   type: int
-  derived: "{{ 10 + this.abilities.dex.bonus }}"
+  derived: "{{ 10 + abilities.dex.bonus }}"
 
 total_weight:
   type: float
-  derived: "{{ this.inventory | map(attribute='weight') | sum }}"
+  derived: "{{ inventory | map(attribute='weight') | sum }}"
 ```
 
 Derived attribute expressions support the Jinja2 templating syntax, including:
 
-- Attribute references using `this.attribute.path` syntax within `{{ }}` templates
+- Attribute references by bare name, using dotted paths for nested attributes
+  (`attribute`, `group.leaf`), within `{{ }}` templates
 - Basic arithmetic operations (`+`, `-`, `*`, `/`)
 - Function calls like `sum()`, `max()`, `min()`
 - Pipe operations for data transformation
+
+### Expression Evaluation Context
+
+Derived expressions, `range` expressions and `validations` expressions are all
+evaluated against **the model instance being validated**. The rules are the
+same in all three places:
+
+- **Attributes are referenced by bare name.** `level`, not `this.level` and not
+  `$level`. There is no instance prefix; the model's attributes *are* the
+  template context.
+- **Nested attributes use dotted paths from the root of the model.**
+  `abilities.strength.score` resolves the same way whether the expression
+  appears on a top-level attribute or on a leaf inside `abilities.strength` —
+  paths are always root-relative, never relative to the enclosing group.
+- **Expressions must be wrapped in `{{ }}`.** A bare expression is literal
+  text, not an expression.
+- **Jinja2 globals are not available.** `range`, `dict`, `namespace`,
+  `cycler`, `joiner` and `lipsum` are removed from the evaluation environment,
+  so an attribute may safely be named `range` or `dict`, and a misspelled
+  attribute name always raises rather than silently resolving to a builtin.
+  Filters (`map`, `sum`, `join`, `default`, …) are unaffected.
+- **An undefined name is an error.** Expressions are evaluated with strict
+  undefined semantics; a typo fails loudly instead of rendering empty.
+
+```yaml
+# Correct
+armor_class: { type: int, derived: "{{ 10 + abilities.dex.bonus }}" }
+current_hp:  { type: int, range: "0..{{ max_hp }}" }
+
+# Incorrect
+armor_class: { type: int, derived: "{{ 10 + this.abilities.dex.bonus }}" }
+current_hp:  { type: int, range: "0..$max_hp" }
+armor_class: { type: int, derived: "10 + abilities.dex.bonus" }
+```
 
 ### Nested Attributes
 
@@ -133,11 +168,11 @@ Attributes can contain nested structures:
 abilities:
   strength:
     score: { type: int, range: "3..18" }
-    modifier: { type: int, derived: "(this.abilities.strength.score - 10) / 2" }
+    modifier: { type: int, derived: "{{ (abilities.strength.score - 10) // 2 }}" }
   dexterity:
     score: { type: int, range: "3..18" }
     modifier:
-      { type: int, derived: "(this.abilities.dexterity.score - 10) / 2" }
+      { type: int, derived: "{{ (abilities.dexterity.score - 10) // 2 }}" }
 ```
 
 ## Model Inheritance
@@ -173,13 +208,13 @@ Validation rules ensure that model instances satisfy game logic constraints. Eac
 
 ```yaml
 validations:
-  - expression: "{{ this.current_hit_points <= this.max_hit_points }}"
+  - expression: "{{ current_hit_points <= max_hit_points }}"
     message: "Current HP cannot exceed maximum HP"
-  - expression: "{{ this.level >= 1 }}"
+  - expression: "{{ level >= 1 }}"
     message: "Character level must be at least 1"
-  - expression: "{{ this.inventory | map(attribute='weight') | sum <= this.carrying_capacity }}"
+  - expression: "{{ inventory | map(attribute='weight') | sum <= carrying_capacity }}"
     message: "Inventory weight cannot exceed carrying capacity"
-  - expression: "{{ this.abilities.strength.score >= 3 && this.abilities.strength.score <= 18 }}"
+  - expression: "{{ abilities.strength.score >= 3 && abilities.strength.score <= 18 }}"
     message: "Strength score must be between 3 and 18"
 ```
 
@@ -197,7 +232,7 @@ Validation expressions use the same syntax as derived attributes and must evalua
 - **Comparisons**: `<=`, `>=`, `<`, `>`, `==`, `!=`
 - **Logical operators**: `&&` (and), `||` (or), `!` (not)
 - **Function calls**: `sum()`, `count()`, `contains()`, `length`
-- **Attribute references**: `this.attribute.path` within `{{ }}` templates
+- **Attribute references**: bare names and dotted paths (`attribute`, `group.leaf`) within `{{ }}` templates
 - **Collection operations**: `| map(attribute='property') | sum`, `| count()`, `| max(attribute='property')`
 
 ## File Naming and Location
@@ -224,30 +259,30 @@ attributes:
   abilities:
     strength:
       bonus: { type: int, range: "1..10" }
-      defense: { type: int, derived: "{{ this.bonus + 10 }}" }
+      defense: { type: int, derived: "{{ bonus + 10 }}" }
     dexterity:
       bonus: { type: int, range: "1..10" }
-      defense: { type: int, derived: "{{ this.bonus + 10 }}" }
+      defense: { type: int, derived: "{{ bonus + 10 }}" }
 
   # Health
   max_hit_points: { type: int, range: "1.." }
-  current_hit_points: { type: int, range: "0..$max_hit_points" }
+  current_hit_points: { type: int, range: "0..{{ max_hit_points }}" }
 
   # Derived stats
   armor_class:
-    { type: int, derived: "{{ 10 + this.abilities.dexterity.bonus }}" }
+    { type: int, derived: "{{ 10 + abilities.dexterity.bonus }}" }
 
   # Inventory
   inventory: { type: list, of: "item" }
   carrying_capacity:
-    { type: int, derived: "{{ this.abilities.strength.bonus * 10 }}" }
+    { type: int, derived: "{{ abilities.strength.bonus * 10 }}" }
 
 validations:
-  - expression: "{{ this.current_hit_points <= this.max_hit_points }}"
+  - expression: "{{ current_hit_points <= max_hit_points }}"
     message: "Current HP cannot exceed maximum HP"
-  - expression: "{{ this.inventory | map(attribute='weight') | sum <= this.carrying_capacity }}"
+  - expression: "{{ inventory | map(attribute='weight') | sum <= carrying_capacity }}"
     message: "Inventory weight cannot exceed carrying capacity"
-  - expression: "{{ this.level >= 1 }}"
+  - expression: "{{ level >= 1 }}"
     message: "Character level must be at least 1"
 ```
 
