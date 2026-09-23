@@ -214,7 +214,7 @@ validations:
     message: "Character level must be at least 1"
   - expression: "{{ inventory | map(attribute='weight') | sum <= carrying_capacity }}"
     message: "Inventory weight cannot exceed carrying capacity"
-  - expression: "{{ abilities.strength.score >= 3 && abilities.strength.score <= 18 }}"
+  - expression: "{{ abilities.strength.score >= 3 and abilities.strength.score <= 18 }}"
     message: "Strength score must be between 3 and 18"
 ```
 
@@ -230,7 +230,7 @@ Each validation rule must include:
 Validation expressions use the same syntax as derived attributes and must evaluate to boolean results. Common patterns include:
 
 - **Comparisons**: `<=`, `>=`, `<`, `>`, `==`, `!=`
-- **Logical operators**: `&&` (and), `||` (or), `!` (not)
+- **Logical operators**: `and`, `or`, `not`
 - **Function calls**: `sum()`, `count()`, `contains()`, `length`
 - **Attribute references**: bare names and dotted paths (`attribute`, `group.leaf`) within `{{ }}` templates
 - **Collection operations**: `| map(attribute='property') | sum`, `| count()`, `| max(attribute='property')`
