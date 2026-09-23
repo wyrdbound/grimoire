@@ -66,7 +66,9 @@ Each attribute definition can include the following fields:
 - **`enum`** (optional): List of allowed values for string types
 - **`derived`** (optional): Formula for calculated attributes
 - **`of`** (optional): Element type for list attributes
-- **`optional`** (optional): Whether the attribute can be null/undefined
+- **`optional`** (optional): Whether the attribute may be left without a value.
+  Defaults to `false`: every attribute is required unless marked `optional: true`.
+  This is the only presence flag — there is no `required` field.
 
 ### Data Types
 
