@@ -534,7 +534,7 @@ Flows use Jinja2 templating syntax for dynamic content:
 - **Variables**: `{{ variables.hp_dice_roll }}`
 - **References**: `{{ outputs.character.name }}`
 - **Filters**: `{{ item|title }}`, `{{ value|upper }}`
-- **Conditionals**: `{{ outputs.character.name || 'Unnamed Character' }}`
+- **Conditionals**: `{{ outputs.character.name or 'Unnamed Character' }}`
 
 ## Flow Control
 
