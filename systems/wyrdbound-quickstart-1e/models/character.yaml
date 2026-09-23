@@ -94,7 +94,7 @@ attributes:
     two_hand:  { type: weapon, optional: true, description: "Equipped two-handed weapon (blocks off_hand)" }
     off_hand:  { type: equippable, optional: true, description: "Off-hand item (melee_1h, ranged_1h, or shield)" }
     body:      { type: armor, optional: true, description: "Equipped body armor" }
-    covering:  { type: str, default: "cloak", optional: true, description: "ID of equipped covering" }
+    covering:  { type: str, optional: true, description: "ID of equipped covering" }
 
   # --- Spells Known ---
   spells: { type: list, of: str, default: [] }

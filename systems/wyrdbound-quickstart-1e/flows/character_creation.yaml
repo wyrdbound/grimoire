@@ -186,10 +186,20 @@ steps:
     choices:
       - id: keep
         label: "✅ Keep it — that's my character"
-        next_step: purchase_equipment
+        next_step: equip_starting_gear
       - id: regenerate
         label: "🔄 Regenerate — try another"
         next_step: generating_description_notice
+
+  - id: equip_starting_gear
+    name: "Equip Starting Gear"
+    type: action
+    actions:
+      - set_value:
+          path: "outputs.character.equipped.covering"
+          value: "cloak"
+      - display_message: "🧥 You start with a well-worn traveling cloak — free starting gear, equipped to your covering slot."
+    next_step: purchase_equipment
 
   - id: purchase_equipment
     name: "Purchase Starting Equipment"
