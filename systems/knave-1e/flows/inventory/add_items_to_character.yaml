@@ -7,11 +7,9 @@ version: 1
 inputs:
   - type: "character"
     id: "character"
-    required: true
     description: "The character to add the items to"
   - type: "list"
     id: "items"
-    required: true
     description: "The list of items to add to the character's inventory"
 
 outputs:
