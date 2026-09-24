@@ -107,7 +107,7 @@ steps:
     actions:
       - set_value:
           path: "variables.shop_category"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
     next_step: route_category
 
   # ── Route to the right browse step ────────────────────────────────────────
@@ -141,34 +141,34 @@ steps:
     actions:
       - set_value:
           path: "variables.last_item_id"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
       - set_value:
           path: "variables.last_item_name"
-          value: "{{ choice_entry.name | default('') }}"
+          value: "{{ result.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_cost"
-          value: "{{ choice_entry.cost | default(0) | int }}"
+          value: "{{ result.entry.cost | default(0) | int }}"
       - set_value:
           path: "variables.last_item_equippable_type"
-          value: "{{ choice_entry.equippable_type | default('') }}"
+          value: "{{ result.entry.equippable_type | default('') }}"
       - set_value:
           path: "variables.last_item_ac_bonus"
           value: "0"
       - set_value:
           path: "variables.last_item_entry_name"
-          value: "{{ choice_entry.name | default('') }}"
+          value: "{{ result.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_entry_damage_die"
-          value: "{{ choice_entry.damage_die | default('') }}"
+          value: "{{ result.entry.damage_die | default('') }}"
       - set_value:
           path: "variables.last_item_entry_size"
-          value: "{{ choice_entry.size | default('') }}"
+          value: "{{ result.entry.size | default('') }}"
       - set_value:
           path: "variables.last_item_entry_cost"
-          value: "{{ choice_entry.cost | default(0) | int }}"
+          value: "{{ result.entry.cost | default(0) | int }}"
       - set_value:
           path: "variables.last_item_entry_tags"
-          value: "{{ choice_entry.tags | default([]) | join(',') }}"
+          value: "{{ result.entry.tags | default([]) | join(',') }}"
     next_step: skip_or_check
 
   - id: browse_armor
@@ -180,31 +180,31 @@ steps:
     actions:
       - set_value:
           path: "variables.last_item_id"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
       - set_value:
           path: "variables.last_item_name"
-          value: "{{ choice_entry.name | default('') }}"
+          value: "{{ result.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_cost"
-          value: "{{ choice_entry.cost | default(0) | int }}"
+          value: "{{ result.entry.cost | default(0) | int }}"
       - set_value:
           path: "variables.last_item_equippable_type"
-          value: "{{ choice_entry.equippable_type | default('body') }}"
+          value: "{{ result.entry.equippable_type | default('body') }}"
       - set_value:
           path: "variables.last_item_ac_bonus"
-          value: "{{ choice_entry.armor_class_bonus | default(0) | int }}"
+          value: "{{ result.entry.armor_class_bonus | default(0) | int }}"
       - set_value:
           path: "variables.last_item_entry_name"
-          value: "{{ choice_entry.name | default('') }}"
+          value: "{{ result.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_entry_armor_class_bonus"
-          value: "{{ choice_entry.armor_class_bonus | default(0) | int }}"
+          value: "{{ result.entry.armor_class_bonus | default(0) | int }}"
       - set_value:
           path: "variables.last_item_entry_armor_type"
-          value: "{{ choice_entry.armor_type | default('') }}"
+          value: "{{ result.entry.armor_type | default('') }}"
       - set_value:
           path: "variables.last_item_entry_cost"
-          value: "{{ choice_entry.cost | default(0) | int }}"
+          value: "{{ result.entry.cost | default(0) | int }}"
     next_step: skip_or_check
 
   - id: browse_gear
@@ -216,13 +216,13 @@ steps:
     actions:
       - set_value:
           path: "variables.last_item_id"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
       - set_value:
           path: "variables.last_item_name"
-          value: "{{ choice_entry.name | default('') }}"
+          value: "{{ result.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_cost"
-          value: "{{ choice_entry.cost | default(0) | int }}"
+          value: "{{ result.entry.cost | default(0) | int }}"
       - set_value:
           path: "variables.last_item_equippable_type"
           value: ""

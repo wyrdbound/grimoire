@@ -28,7 +28,7 @@ steps:
     actions:
       - set_value:
           path: "variables.selected_weapon"
-          value: "{{ result }}"
+          value: "{{ result.entry }}"
       - display_value: "variables.selected_weapon"
 
   - id: invoke_add_item_to_character

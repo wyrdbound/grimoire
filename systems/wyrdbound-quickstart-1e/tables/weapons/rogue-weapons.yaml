@@ -2,6 +2,7 @@ kind: table
 id: rogue-weapons
 name: "Rogue Weapons"
 version: 1
+entry_type: weapon
 description: "Weapons available to Rogues — finesse, light, and ranged"
 entries:
   1: dagger

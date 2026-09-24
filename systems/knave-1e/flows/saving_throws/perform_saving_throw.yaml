@@ -102,7 +102,7 @@ steps:
   - id: Evaluate_saving_throw_result
     name: "Evaluate Saving Throw Result"
     type: "completion"
-    result_message: "Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"
+    final_message: "Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"
     # actions:
     #   - set_value:
     #       path: "outputs.saving_throw_result"

@@ -65,7 +65,7 @@ steps:
   - id: evaluate_opposed_save_result
     name: "Evaluate Opposed Save Result"
     type: "completion"
-    result_message: "Opposed save complete - {% if outputs.opposed_save_result %}Success{% else %}Failure{% endif %}"
+    final_message: "Opposed save complete - {% if outputs.opposed_save_result %}Success{% else %}Failure{% endif %}"
     actions:
       - set_value:
           path: "outputs.opposed_save_result"

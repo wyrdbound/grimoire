@@ -209,6 +209,45 @@ choice_source:
   selection_count: 2
 ```
 
+**The selection.** After the player chooses, the step's own `actions` run with
+the selection bound to `{{ result }}` — the same name every step type uses.
+When the chosen option under `choices` has its own `actions`, those run first,
+then the step's `actions`; both see `result`. `result` is an object with two
+fields, following `table_roll`'s `result.entry`:
+
+| Source | `result.id` | `result.entry` |
+| --- | --- | --- |
+| `choices` | the chosen choice's `id` | null |
+| `choice_source.table` | the entry as written in the table (`"dagger"`), or its `id` for a `{ id: …, type: … }` entry | the entry, resolved: the compendium entry when the table's `entry_type` is a model, otherwise the same value as `id` |
+| `choice_source.table_from_values` | the key (`"strength"`) | the value at that key |
+
+With `selection_count` greater than 1, `result` is a **list** of these
+objects, in the order the player selected them.
+
+```yaml
+# The chosen class id
+- set_value:
+    path: "outputs.character.character_class"
+    value: "{{ result.id }}"
+
+# From a table of weapon ids with `entry_type: weapon`: the id and the entry
+- set_value:
+    path: "variables.last_item_id"
+    value: "{{ result.id }}"
+- set_value:
+    path: "variables.last_item_cost"
+    value: "{{ result.entry.cost }}"
+
+# selection_count: 2
+- swap_values:
+    path1: "outputs.abilities.{{ result[0].id }}.bonus"
+    path2: "outputs.abilities.{{ result[1].id }}.bonus"
+```
+
+Inside `display_format`, which renders each option *before* a selection
+exists, the option is available as `{{ entry }}` (table sources) or
+`{{ key }}` and `{{ value }}` (`table_from_values`).
+
 #### `table_roll`
 
 Rolls on predefined tables.
@@ -366,12 +405,20 @@ Marks the end of a flow. Useful when there are conditional branches in the flow 
 ```yaml
 - id: finish
   type: completion
-  prompt: "Character creation complete!"
+  final_message: "Character creation complete!"
   actions:
     - log_event:
         type: character_created
         data: "{{ outputs.new_character.name }}"
 ```
+
+- **`final_message`** (optional): Text shown to the player when the flow
+  finishes. It is a template, rendered after the step's actions run, so it can
+  report the flow's outcome:
+  `"Saving throw complete - {% if outputs.saving_throw_result %}Success{% else %}Failure{% endif %}"`.
+
+A completion step does not take `prompt` — `prompt` is text shown *before* a
+step asks the player for something, and a completion step asks for nothing.
 
 #### `conditional_branch`
 
@@ -488,7 +535,7 @@ Invokes another flow as a sub-flow. The sub-flow's outputs are available as `res
     # for this step, result is the "outputs" of the sub-flow
     - set_value:
         path: "variables.character.name"
-        value: "result.character.name"
+        value: "{{ result.character.name }}"
 ```
 
 ## Actions
@@ -589,6 +636,13 @@ Flows use Jinja2 templating syntax for dynamic content:
 - **References**: `{{ outputs.character.name }}`
 - **Filters**: `{{ item|title }}`, `{{ value|upper }}`
 - **Conditionals**: `{{ outputs.character.name or 'Unnamed Character' }}`
+
+**A step's output is always `{{ result }}`**, in that step's actions. Its shape
+depends on the step type and is documented with each one. There are no other
+names for it — not `choice`, `llm_result` or `results`. The only other
+step-scoped bindings are `{{ item }}`, the current element inside
+`dice_sequence`, and the option being rendered inside a `display_format`
+(`entry`, or `key` and `value`).
 
 ## Flow Control
 
