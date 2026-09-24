@@ -53,23 +53,7 @@ def test_no_retired_result_names(system: str) -> None:
             assert not RETIRED.search(line), f"{path}:{n}: {line.strip()}"
 
 
-@pytest.mark.parametrize(
-    "system",
-    [
-        pytest.param(
-            "knave-1e",
-            marks=pytest.mark.xfail(
-                strict=True,
-                reason=(
-                    "armor and helmets_and_shields use the string 'none' for "
-                    "'no armor'; the spec has no way for a model-typed table "
-                    "to yield nothing. Open finding, awaiting a decision."
-                ),
-            ),
-        ),
-        "wyrdbound-quickstart-1e",
-    ],
-)
+@pytest.mark.parametrize("system", SYSTEMS)
 def test_model_typed_table_entries_resolve_in_a_compendium(system: str) -> None:
     loaded = SystemLoader().load(SYSTEMS_DIR / system)
     by_model: dict[str, set[str]] = {}

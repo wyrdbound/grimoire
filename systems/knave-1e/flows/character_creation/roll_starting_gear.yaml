@@ -19,19 +19,28 @@ variables:
     description: "The armor rolled for the character"
 
 steps:
-  - id: roll_starting_gear
-    name: "Determine Starting Equipment"
+  - id: start_from_input
+    name: "Start From the Input Character"
+    type: action
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ inputs.knave }}"
+    next_step: roll_armor
+
+  - id: roll_armor
+    name: "Roll Starting Armor"
     type: table_roll
     prompt: "Rolling for your starting equipment..."
-    parallel: true
     tables:
       - table: armor
         actions:
-          - flow_call:
-              flow: add_item_to_character
-              inputs:
-                character: "{{ outputs.knave }}"
-                item: "{{ result.entry }}"
+          # null when the roll gives no armour (table entries 1-3)
+          - set_value:
+              path: "variables.starting_armor"
+              value: "{{ result.entry }}"
+      # Not yet enabled. Each follows the armour pattern: roll into a
+      # variable, then add it with a guarded flow_call step.
       # - table: helmets_and_shields
       #   actions:
       #     - flow_call:
@@ -68,3 +77,29 @@ steps:
     #         character: "{{ outputs.knave }}"
     #         item: rations
     #         quantity: 2
+
+  - id: check_armor
+    name: "Check For Starting Armor"
+    type: conditional_branch
+    if: "{{ variables.starting_armor is not none }}"
+    then:
+      next_step: add_armor
+    else:
+      next_step: done
+
+  - id: add_armor
+    name: "Add Starting Armor"
+    type: flow_call
+    flow: add_item_to_character
+    inputs:
+      character: "{{ outputs.knave }}"
+      item: "{{ variables.starting_armor }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result.character }}"
+    next_step: done
+
+  - id: done
+    name: "Starting Equipment Determined"
+    type: completion
