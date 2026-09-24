@@ -276,6 +276,33 @@ class SystemLoader:
             resume_points=data.get("resume_points", []),
         )
 
+    @staticmethod
+    def _check_validation_block(step_id: Any, vd: dict[str, Any]) -> None:
+        """Reject an `llm_generation` validation block the spec does not allow."""
+        where = f"Step '{step_id}' validation"
+        vtype = vd.get("type")
+        if vtype not in ("json", "json_schema"):
+            raise ValueError(
+                f"{where}: `type` must be 'json' or 'json_schema', got {vtype!r}"
+            )
+        if vtype == "json_schema" and not isinstance(vd.get("schema"), dict):
+            raise ValueError(f"{where}: `json_schema` requires a `schema` mapping")
+        attempts = vd.get("max_attempts", 3)
+        if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 1:
+            raise ValueError(
+                f"{where}: `max_attempts` must be an integer of at least 1"
+            )
+        on_failure = vd.get("on_failure", "continue")
+        if on_failure not in ("continue", "fail", "fallback"):
+            raise ValueError(
+                f"{where}: `on_failure` must be 'continue', 'fail' or 'fallback', "
+                f"got {on_failure!r}"
+            )
+        if on_failure == "fallback" and "fallback_value" not in vd:
+            raise ValueError(
+                f"{where}: `on_failure: fallback` requires a `fallback_value`"
+            )
+
     def _parse_variable(self, data: dict[str, Any]) -> VariableDefinition:
         if "required" in data:
             raise ValueError(
@@ -332,6 +359,7 @@ class SystemLoader:
         validation: LLMValidationDefinition | None = None
         if "validation" in data:
             vd = data["validation"]
+            self._check_validation_block(data.get("id"), vd)
             validation = LLMValidationDefinition(
                 type=vd["type"],
                 schema=vd.get("schema"),
