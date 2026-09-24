@@ -273,6 +273,24 @@ entries:
   2: { type: "armor" } # Random armor from compendium
 ```
 
+#### Empty Entries
+
+A `null` entry means the roll produced **nothing** — no armour, no encounter.
+It is how a model-typed table says "none" without inventing a compendium entry
+for it:
+
+```yaml
+entry_type: "armor"
+entries:
+  1-3: null # no armour
+  4-14: "gambeson"
+```
+
+When a `table_roll` lands on a `null` entry, `result.entry` is null, and the
+step's actions still run so the flow can react (`{{ result.entry is none }}`).
+A `player_choice` sourced from a table does not offer `null` entries as
+options.
+
 #### Dynamic Generation
 
 ```yaml
@@ -314,10 +332,11 @@ entries:
 
 ### Resolution Rules
 
-1. **Simple String**: Uses table's `entry_type` for compendium lookup
-2. **Explicit ID**: If `type` specified, uses that type; otherwise uses `entry_type`
-3. **Random Selection**: If no `id` but `type` specified, selects random compendium entry for that type
-4. **Generation**: If `generate: true`, engine attempts to create new content based on:
+1. **Null**: No entry; `result.entry` is null
+2. **Simple String**: Uses table's `entry_type` for compendium lookup
+3. **Explicit ID**: If `type` specified, uses that type; otherwise uses `entry_type`
+4. **Random Selection**: If no `id` but `type` specified, selects random compendium entry for that type
+5. **Generation**: If `generate: true`, engine attempts to create new content based on:
    - Existing compendium entries for the specified type
    - Model structure and constraints
    - System-specific generation rules
