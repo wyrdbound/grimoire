@@ -139,7 +139,13 @@ class System:
         for model_id, model in self.models.items():
             errors.extend(f"Model '{model_id}': {e}" for e in model.validate())
 
-        # Validate currency denominations
+        # Validate tables, resolving their entries against the system
+        for table_id, table in self.tables.items():
+            errors.extend(
+                f"Table '{table_id}': {e}" for e in table.validate_with_system(self)
+            )
+
+            # Validate currency denominations
         if self.currency:
             for denom_id, denom in self.currency.denominations.items():
                 if denom.value <= 0:

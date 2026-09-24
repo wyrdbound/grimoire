@@ -4,6 +4,17 @@ import random
 from dataclasses import dataclass, field
 from typing import Any
 
+PRIMITIVE_ENTRY_TYPES = {"str", "int", "float", "bool"}
+REFERENCE_KEYS = {"id", "type", "generate"}
+
+
+def _resolve(system: Any, key: Any, model_id: str, entry_id: Any) -> list[str]:
+    """Check that `entry_id` is an entry of some compendium of `model_id`."""
+    for compendium in system.compendiums.values():
+        if compendium.model == model_id and entry_id in compendium.entries:
+            return []
+    return [f"Entry '{key}': {entry_id!r} is not in any '{model_id}' compendium"]
+
 
 @dataclass
 class TableEntry:
@@ -101,59 +112,54 @@ class TableDefinition:
         if not self.entries:
             errors.append("Table must have at least one entry")
 
-        # Validate roll expression format (basic check)
-        if self.roll:
-            # Use wyrdbound_dice to validate the expression
-            try:
-                from wyrdbound_dice import roll
-
-                # Try to parse the expression (don't execute, just validate syntax)
-                # We'll use a simple test roll to validate the expression is parseable
-                roll(self.roll)
-            except Exception as e:
-                errors.append(f"Invalid roll expression: '{self.roll}' ({str(e)})")
-
-        # Basic entry_type validation (without model details)
-        if self.entry_type != "str":
-            for entry_key, entry_value in self.entries.items():
-                # Check for obvious type mismatches
-                if self.entry_type not in ["str", "int", "float", "bool"]:
-                    # entry_type appears to reference a model, entries should be dicts
-                    if not isinstance(entry_value, dict):
-                        errors.append(
-                            f"Entry '{entry_key}' has entry_type "
-                            f"'{self.entry_type}' but contains "
-                            f"{type(entry_value).__name__} instead of "
-                            f"model instance (dict)"
-                        )
+        # The `roll` expression is not syntax-checked here: the loader has no
+        # dice parser, and checking by rolling it drew real randomness at load.
 
         return errors
 
     def validate_with_system(self, system: Any) -> list[str]:
-        """Validate the table definition with access to system models."""
-        errors = self.validate()  # Start with basic validation
+        """Validate the table, resolving its entries against the system.
 
-        # If entry_type is not the default "str", validate entries against model
-        if self.entry_type != "str" and self.entry_type in system.models:
-            model = system.models[self.entry_type]
-
-            # Validate each entry against the model
-            for entry_key, entry_value in self.entries.items():
-                if isinstance(entry_value, dict):
-                    # Entry is a dictionary - validate it as a model instance
-                    entry_errors = model.validate_instance(entry_value)
-                    for error in entry_errors:
-                        errors.append(f"Entry '{entry_key}': {error}")
-                else:
-                    # Entry is not a dictionary - this is a type mismatch
-                    errors.append(
-                        f"Entry '{entry_key}' has entry_type "
-                        f"'{self.entry_type}' but contains "
-                        f"{type(entry_value).__name__} instead of "
-                        f"model instance"
-                    )
-        elif self.entry_type != "str" and self.entry_type not in system.models:
-            # entry_type references a model that doesn't exist
+        Follows spec/table_spec.md "Cross-References and Dynamic Generation":
+        with a model `entry_type`, an entry is `null` (nothing), a string id
+        looked up in a compendium of that model, a reference mapping
+        (`{id, type, generate}`), or an inline instance of the model. With
+        `entry_type: table`, every entry names another table.
+        """
+        errors = self.validate()
+        if self.entry_type in PRIMITIVE_ENTRY_TYPES:
+            return errors
+        if self.entry_type == "table":
+            for key, entry in self.entries.items():
+                if entry is not None and entry not in system.tables:
+                    errors.append(f"Entry '{key}' references unknown table {entry!r}")
+            return errors
+        if self.entry_type not in system.models:
             errors.append(f"entry_type '{self.entry_type}' references unknown model")
+            return errors
 
+        for key, entry in self.entries.items():
+            if entry is None:
+                continue
+            if isinstance(entry, str):
+                errors.extend(_resolve(system, key, self.entry_type, entry))
+            elif isinstance(entry, dict) and set(entry) <= REFERENCE_KEYS:
+                ref_type = entry.get("type", self.entry_type)
+                if ref_type not in system.models:
+                    errors.append(
+                        f"Entry '{key}' references unknown model {ref_type!r}"
+                    )
+                elif "id" in entry:
+                    errors.extend(_resolve(system, key, ref_type, entry["id"]))
+            elif isinstance(entry, dict):
+                model = system.models[self.entry_type]
+                errors.extend(
+                    f"Entry '{key}': {e}" for e in model.validate_instance(entry)
+                )
+            else:
+                errors.append(
+                    f"Entry '{key}' has entry_type '{self.entry_type}' but is "
+                    f"a {type(entry).__name__}; expected null, an id, a "
+                    "reference mapping or an inline instance"
+                )
         return errors
