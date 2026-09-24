@@ -57,7 +57,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.spell_1"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
     next_step: spell_pick_2
 
   - id: spell_pick_2
@@ -79,7 +79,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.spell_2"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
     next_step: done
 
   - id: done

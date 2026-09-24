@@ -45,7 +45,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.character.character_class"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
     next_step: choose_gender
 
   - id: choose_gender
@@ -64,7 +64,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.character.gender"
-          value: "{{ choice }}"
+          value: "{{ result.id }}"
     next_step: determine_traits
 
   - id: determine_traits

@@ -2,6 +2,7 @@ kind: table
 id: gear
 name: "Adventuring Gear"
 version: 1
+entry_type: item
 description: "General adventuring gear available to all classes"
 entries:
   1: backpack

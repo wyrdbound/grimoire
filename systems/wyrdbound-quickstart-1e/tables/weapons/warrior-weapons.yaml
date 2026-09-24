@@ -2,6 +2,7 @@ kind: table
 id: warrior-weapons
 name: "Warrior Weapons"
 version: 1
+entry_type: weapon
 description: "Weapons available to Warriors — all weapon types"
 entries:
   1: longsword

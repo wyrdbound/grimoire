@@ -112,7 +112,7 @@ steps:
   - id: finish_flow
     name: "Finish Name and Gender Selection"
     type: completion
-    prompt: "Selection of character gender and name complete!"
+    final_message: "Selection of character gender and name complete!"
     actions:
       - display_value: "outputs.character_name"
       - display_value: "outputs.character_gender"

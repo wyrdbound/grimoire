@@ -137,9 +137,7 @@ class StepDefinition(StepDefinitionBase):
 
     prompt: str | None = None
     condition: str | None = None
-    result_message: str | None = (
-        None  # Custom result message (emoji will be auto-prepended)
-    )
+    final_message: str | None = None  # completion: shown when the flow finishes
     next_step: str | None = None
     output: str | None = None  # Variable name to store step result
 

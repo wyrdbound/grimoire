@@ -2,5 +2,6 @@ kind: table
 id: mage-armor
 name: "Mage Armor"
 version: 1
+entry_type: armor
 description: "Mages cannot wear armor"
 entries: {}

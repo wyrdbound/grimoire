@@ -321,6 +321,16 @@ class SystemLoader:
 
     def _parse_step(self, data: dict[str, Any]) -> StepDefinition:
         type_str = data.get("type", "")
+        if "result_message" in data:
+            raise ValueError(
+                f"Step '{data.get('id')}': `result_message` was renamed "
+                "`final_message`."
+            )
+        if type_str == "completion" and "prompt" in data:
+            raise ValueError(
+                f"Step '{data.get('id')}': a completion step takes "
+                "`final_message`, not `prompt` — it asks the player for nothing."
+            )
         try:
             step_type: StepType | None = StepType(type_str)
         except ValueError:
@@ -377,7 +387,7 @@ class SystemLoader:
             next_step=data.get("next_step"),
             prompt=data.get("prompt"),
             condition=data.get("condition"),
-            result_message=data.get("result_message"),
+            final_message=data.get("final_message"),
             output=data.get("output"),
             roll=data.get("roll"),
             sequence=sequence,

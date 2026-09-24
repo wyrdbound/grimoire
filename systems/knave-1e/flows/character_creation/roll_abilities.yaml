@@ -52,15 +52,15 @@ steps:
       display_format: "{{ key|title }}: +{{ value.bonus }}"
       selection_count: 2
     actions:
-      - display_message: "Swapping {{ results[0] | title }} and {{ results[1] | title }}."
+      - display_message: "Swapping {{ result[0].id | title }} and {{ result[1].id | title }}."
       - swap_values:
-          path1: "outputs.abilities.{{ results[0] }}.bonus"
-          path2: "outputs.abilities.{{ results[1] }}.bonus"
+          path1: "outputs.abilities.{{ result[0].id }}.bonus"
+          path2: "outputs.abilities.{{ result[1].id }}.bonus"
     next_step: complete_roll_abilities
 
   - id: complete_roll_abilities
     name: "Complete Roll Abilities"
     type: completion
-    prompt: "Abilities have been rolled for your character."
+    final_message: "Abilities have been rolled for your character."
     actions:
       - display_value: "outputs.abilities"

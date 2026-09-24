@@ -2,6 +2,7 @@ kind: table
 id: bard-weapons
 name: "Bard Weapons"
 version: 1
+entry_type: weapon
 description: "Weapons available to Bards — simple and light/finesse weapons"
 entries:
   1: dagger

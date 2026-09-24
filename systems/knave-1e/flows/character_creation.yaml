@@ -123,7 +123,7 @@ steps:
   - id: finalize_character
     name: "Character Creation Complete"
     type: completion
-    prompt: "Your Knave is ready for adventure!"
+    final_message: "Your Knave is ready for adventure!"
     actions:
       - display_value: "outputs.knave"
       - validate_value: "outputs.knave"

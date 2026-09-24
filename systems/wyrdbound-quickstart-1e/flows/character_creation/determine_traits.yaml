@@ -85,7 +85,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.traits.bearing"
-          value: "{{ choice }}"
+          value: "{{ result.entry }}"
     next_step: choose_manner
 
   - id: choose_manner
@@ -98,7 +98,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.traits.manner"
-          value: "{{ choice }}"
+          value: "{{ result.entry }}"
     next_step: choose_disposition
 
   - id: choose_disposition
@@ -111,7 +111,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.traits.disposition"
-          value: "{{ choice }}"
+          value: "{{ result.entry }}"
     next_step: choose_speech
 
   - id: choose_speech
@@ -124,7 +124,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.traits.speech"
-          value: "{{ choice }}"
+          value: "{{ result.entry }}"
     next_step: choose_background
 
   - id: choose_background
@@ -137,7 +137,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.traits.background"
-          value: "{{ choice }}"
+          value: "{{ result.entry }}"
     next_step: done
 
   - id: done
