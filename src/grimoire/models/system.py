@@ -135,6 +135,10 @@ class System:
         if self.default_source and self.default_source not in self.sources:
             errors.append(f"Default source '{self.default_source}' not found")
 
+        # Validate model definitions
+        for model_id, model in self.models.items():
+            errors.extend(f"Model '{model_id}': {e}" for e in model.validate())
+
         # Validate currency denominations
         if self.currency:
             for denom_id, denom in self.currency.denominations.items():

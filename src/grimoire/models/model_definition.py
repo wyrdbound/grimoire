@@ -13,10 +13,48 @@ class AttributeDefinition:
     range: str | None = None  # e.g., "1..20", "1..", etc.
     enum: list[str] | None = None
     derived: str | None = None  # Formula for derived attributes
-    required: bool = True
     description: str | None = None
     of: str | None = None  # Element type for list/map attributes
-    optional: bool | None = None  # Whether attribute can be null/undefined
+    # The only presence flag. Attributes are required unless marked optional.
+    optional: bool = False
+
+
+def attribute_definition_errors(path: str, data: dict[str, Any]) -> list[str]:
+    """Return the spec violations in one raw attribute definition.
+
+    Checked on the raw mapping, because only the mapping can tell an explicit
+    ``default: null`` apart from an omitted default.
+    """
+    errors = []
+    if "required" in data:
+        errors.append(
+            f"Attribute '{path}': `required` is not an attribute field. "
+            "Attributes are required by default; mark an attribute that may be "
+            "left without a value `optional: true`."
+        )
+    if "default" in data and data["default"] is None:
+        errors.append(
+            f"Attribute '{path}': `default: null` is not a valid default. An "
+            "attribute that may be left without a value should be marked "
+            "`optional: true` and given no default."
+        )
+    if data.get("optional") and data.get("default") is not None:
+        errors.append(
+            f"Attribute '{path}': an optional attribute cannot have a default. "
+            "Set its starting value when the instance is created instead."
+        )
+    return errors
+
+
+def _to_attribute_definition(data: dict[str, Any]) -> AttributeDefinition:
+    """Build an AttributeDefinition from a raw mapping.
+
+    ``required`` is dropped here so that a definition still using it is
+    reported by ``ModelDefinition.validate`` rather than crashing the build.
+    """
+    return AttributeDefinition(
+        **{key: value for key, value in data.items() if key != "required"}
+    )
 
 
 @dataclass
@@ -65,7 +103,7 @@ class ModelDefinition:
             return attr
         elif isinstance(attr, dict) and "type" in attr:
             # Convert dict to AttributeDefinition
-            return AttributeDefinition(**attr)
+            return _to_attribute_definition(attr)
 
         return None
 
@@ -83,7 +121,7 @@ class ModelDefinition:
                 elif isinstance(value, dict):
                     if "type" in value:
                         # Convert dict to AttributeDefinition
-                        all_attrs[full_key] = AttributeDefinition(**value)
+                        all_attrs[full_key] = _to_attribute_definition(value)
                     else:
                         # Nested attributes
                         _extract_attributes(value, full_key)
@@ -96,10 +134,17 @@ class ModelDefinition:
         errors = []
         all_attrs = self.get_all_attributes()
 
-        # Check required attributes
+        # Check required attributes. Derived attributes are computed, and an
+        # absent attribute with a default receives it when the instance is
+        # created, so neither has to be present in the data.
         for attr_path, attr_def in all_attrs.items():
-            if attr_def.required and not self._has_nested_value(instance, attr_path):
-                errors.append(f"Required attribute '{attr_path}' is missing")
+            if attr_def.optional or attr_def.derived is not None:
+                continue
+            if not self._has_nested_value(instance, attr_path):
+                if attr_def.default is None:
+                    errors.append(f"Required attribute '{attr_path}' is missing")
+            elif self._get_nested_value(instance, attr_path) is None:
+                errors.append(f"Required attribute '{attr_path}' cannot be null")
 
         # Validate attribute values
         for attr_path, attr_def in all_attrs.items():
@@ -210,7 +255,21 @@ class ModelDefinition:
             errors.append(f"Model kind must be 'model', got '{self.kind}'")
 
         # TODO: Validate extends references
-        # TODO: Validate attribute definitions
+        errors.extend(self._attribute_definition_errors(self.attributes))
         # TODO: Validate validation expressions
 
+        return errors
+
+    def _attribute_definition_errors(
+        self, attrs: dict[str, Any], prefix: str = ""
+    ) -> list[str]:
+        """Check every raw attribute definition, recursing into groups."""
+        errors = []
+        for key, value in attrs.items():
+            path = f"{prefix}.{key}" if prefix else key
+            if isinstance(value, dict):
+                if "type" in value:
+                    errors.extend(attribute_definition_errors(path, value))
+                else:
+                    errors.extend(self._attribute_definition_errors(value, path))
         return errors
