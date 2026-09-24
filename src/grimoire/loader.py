@@ -331,6 +331,16 @@ class SystemLoader:
                 f"Step '{data.get('id')}': `optional` applies only to "
                 "`player_choice` steps."
             )
+        condition = data.get("condition")
+        if condition is not None and not (
+            isinstance(condition, str)
+            and condition.strip().startswith("{{")
+            and condition.strip().endswith("}}")
+        ):
+            raise ValueError(
+                f"Step '{data.get('id')}': `condition` must be a `{{{{ }}}}` "
+                f"template, got {condition!r}."
+            )
         if type_str == "completion" and "prompt" in data:
             raise ValueError(
                 f"Step '{data.get('id')}': a completion step takes "
