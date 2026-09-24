@@ -43,7 +43,11 @@ Each input/output/variable definition includes:
 
 - **`type`**: The data type (model name, or basic types like `str`, `int`, `bool`, `float`, `list`, `dict`)
 - **`id`**: Reference identifier used within the flow
-- **`required`** (inputs only): Whether the input is mandatory
+- **`optional`** (inputs only): Whether the caller may omit the input.
+  Defaults to `false`: every input must be supplied unless marked
+  `optional: true`. This is the same presence flag models use — there is no
+  `required` field. An optional input the caller omits reads as null in
+  templates, so a flow can test it: `{{ inputs.player_name or 'Stranger' }}`.
 - **`validate`** (outputs only): Whether to run validation on the output
 
 ### Inputs
@@ -54,10 +58,9 @@ Inputs allow the flow to be passed existing data from the caller.
 inputs:
   - type: character
     id: existing_character
-    required: true
   - type: str
     id: player_name
-    required: false
+    optional: true
 ```
 
 ### Outputs

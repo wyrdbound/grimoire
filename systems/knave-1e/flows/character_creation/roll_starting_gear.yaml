@@ -7,7 +7,6 @@ version: 1
 inputs:
   - type: character
     id: knave
-    required: true
     description: "The character to add starting gear to"
 outputs:
   - type: character

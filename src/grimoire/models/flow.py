@@ -30,6 +30,9 @@ class VariableDefinition:
     description: str | None = None
     default: Any = None  # Default value for the variable
     enum: list[str] | None = None
+    # Inputs only: whether the caller may omit it. The same presence flag as
+    # model attributes; there is no `required` field.
+    optional: bool = False
 
 
 @dataclass

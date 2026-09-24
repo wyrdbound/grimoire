@@ -277,12 +277,19 @@ class SystemLoader:
         )
 
     def _parse_variable(self, data: dict[str, Any]) -> VariableDefinition:
+        if "required" in data:
+            raise ValueError(
+                f"Variable '{data.get('id')}': `required` is not a flow variable "
+                "field. Inputs are required by default; mark an input the caller "
+                "may omit `optional: true`."
+            )
         return VariableDefinition(
             id=data["id"],
             type=data.get("type", "unknown"),
             description=data.get("description"),
             default=data.get("default"),
             enum=data.get("enum"),
+            optional=bool(data.get("optional", False)),
         )
 
     def _parse_step(self, data: dict[str, Any]) -> StepDefinition:
