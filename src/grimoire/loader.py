@@ -326,6 +326,11 @@ class SystemLoader:
                 f"Step '{data.get('id')}': `result_message` was renamed "
                 "`final_message`."
             )
+        if "optional" in data and type_str != "player_choice":
+            raise ValueError(
+                f"Step '{data.get('id')}': `optional` applies only to "
+                "`player_choice` steps."
+            )
         if type_str == "completion" and "prompt" in data:
             raise ValueError(
                 f"Step '{data.get('id')}': a completion step takes "
@@ -388,6 +393,7 @@ class SystemLoader:
             prompt=data.get("prompt"),
             condition=data.get("condition"),
             final_message=data.get("final_message"),
+            optional=bool(data.get("optional", False)),
             output=data.get("output"),
             roll=data.get("roll"),
             sequence=sequence,

@@ -68,3 +68,39 @@ def test_model_typed_table_entries_resolve_in_a_compendium(system: str) -> None:
                     f"{table.id}[{key}] = {entry!r}: no {table.entry_type} "
                     "compendium entry"
                 )
+
+
+def test_optional_player_choice_is_parsed(tmp_path: Path) -> None:
+    step = _load_one_step(
+        tmp_path,
+        {
+            "id": "pick",
+            "type": "player_choice",
+            "optional": True,
+            "choices": [{"id": "a", "label": "A"}],
+        },
+    )
+    assert step.optional is True
+
+
+def test_player_choice_is_required_by_default(tmp_path: Path) -> None:
+    step = _load_one_step(
+        tmp_path,
+        {"id": "pick", "type": "player_choice", "choices": [{"id": "a"}]},
+    )
+    assert step.optional is False
+
+
+def test_optional_on_other_steps_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(SystemLoadError, match="only to `player_choice`"):
+        _load_one_step(tmp_path, {"id": "x", "type": "action", "optional": True})
+
+
+def test_quickstart_shop_browse_steps_are_optional() -> None:
+    flow = (
+        SystemLoader()
+        .load(SYSTEMS_DIR / "wyrdbound-quickstart-1e")
+        .flows["purchase_equipment"]
+    )
+    browse = [s for s in flow.steps if s.id.startswith("browse_")]
+    assert len(browse) == 3 and all(s.optional for s in browse)

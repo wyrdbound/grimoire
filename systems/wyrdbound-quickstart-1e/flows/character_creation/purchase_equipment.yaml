@@ -35,6 +35,9 @@ variables:
   - id: shop_category
     type: str
     default: ""
+  - id: last_choice
+    type: dict
+    description: "The shop selection ({id, entry}), or null when the player skipped"
   - id: last_item_id
     type: str
     default: ""
@@ -135,112 +138,160 @@ steps:
   - id: browse_weapons
     name: "Browse Weapons"
     type: player_choice
+    optional: true
     prompt: "⚔️  Weapons (you have {{ variables.gold }} gp)\nChoose a weapon, or skip:"
     choice_source:
       table: "{{ inputs.character_class }}-weapons"
     actions:
       - set_value:
-          path: "variables.last_item_id"
-          value: "{{ result.id }}"
-      - set_value:
-          path: "variables.last_item_name"
-          value: "{{ result.entry.name | default('') }}"
-      - set_value:
-          path: "variables.last_item_cost"
-          value: "{{ result.entry.cost | default(0) | int }}"
-      - set_value:
-          path: "variables.last_item_equippable_type"
-          value: "{{ result.entry.equippable_type | default('') }}"
-      - set_value:
-          path: "variables.last_item_ac_bonus"
-          value: "0"
-      - set_value:
-          path: "variables.last_item_entry_name"
-          value: "{{ result.entry.name | default('') }}"
-      - set_value:
-          path: "variables.last_item_entry_damage_die"
-          value: "{{ result.entry.damage_die | default('') }}"
-      - set_value:
-          path: "variables.last_item_entry_size"
-          value: "{{ result.entry.size | default('') }}"
-      - set_value:
-          path: "variables.last_item_entry_cost"
-          value: "{{ result.entry.cost | default(0) | int }}"
-      - set_value:
-          path: "variables.last_item_entry_tags"
-          value: "{{ result.entry.tags | default([]) | join(',') }}"
-    next_step: skip_or_check
+          path: "variables.last_choice"
+          value: "{{ result }}"
+    next_step: weapon_chosen
 
   - id: browse_armor
     name: "Browse Armor"
     type: player_choice
+    optional: true
     prompt: "🛡️  Armor (you have {{ variables.gold }} gp)\nChoose armor, or skip:"
     choice_source:
       table: "{{ inputs.character_class }}-armor"
     actions:
       - set_value:
-          path: "variables.last_item_id"
-          value: "{{ result.id }}"
-      - set_value:
-          path: "variables.last_item_name"
-          value: "{{ result.entry.name | default('') }}"
-      - set_value:
-          path: "variables.last_item_cost"
-          value: "{{ result.entry.cost | default(0) | int }}"
-      - set_value:
-          path: "variables.last_item_equippable_type"
-          value: "{{ result.entry.equippable_type | default('body') }}"
-      - set_value:
-          path: "variables.last_item_ac_bonus"
-          value: "{{ result.entry.armor_class_bonus | default(0) | int }}"
-      - set_value:
-          path: "variables.last_item_entry_name"
-          value: "{{ result.entry.name | default('') }}"
-      - set_value:
-          path: "variables.last_item_entry_armor_class_bonus"
-          value: "{{ result.entry.armor_class_bonus | default(0) | int }}"
-      - set_value:
-          path: "variables.last_item_entry_armor_type"
-          value: "{{ result.entry.armor_type | default('') }}"
-      - set_value:
-          path: "variables.last_item_entry_cost"
-          value: "{{ result.entry.cost | default(0) | int }}"
-    next_step: skip_or_check
+          path: "variables.last_choice"
+          value: "{{ result }}"
+    next_step: armor_chosen
 
   - id: browse_gear
     name: "Browse Gear"
     type: player_choice
+    optional: true
     prompt: "🎒 Adventuring Gear (you have {{ variables.gold }} gp)\nChoose an item, or skip:"
     choice_source:
       table: gear
     actions:
       - set_value:
+          path: "variables.last_choice"
+          value: "{{ result }}"
+    next_step: gear_chosen
+
+  # ── Skip gate: a skipped (optional) choice returns to the menu ──────────
+
+  - id: weapon_chosen
+    name: "Skip or Unpack Weapon"
+    type: conditional_branch
+    if: "{{ variables.last_choice is none }}"
+    then:
+      next_step: shop_menu
+    else:
+      next_step: unpack_weapon
+
+  - id: unpack_weapon
+    name: "Unpack Weapon Selection"
+    type: action
+    actions:
+      - set_value:
           path: "variables.last_item_id"
-          value: "{{ result.id }}"
+          value: "{{ variables.last_choice.id }}"
       - set_value:
           path: "variables.last_item_name"
-          value: "{{ result.entry.name | default('') }}"
+          value: "{{ variables.last_choice.entry.name | default('') }}"
       - set_value:
           path: "variables.last_item_cost"
-          value: "{{ result.entry.cost | default(0) | int }}"
+          value: "{{ variables.last_choice.entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_equippable_type"
+          value: "{{ variables.last_choice.entry.equippable_type | default('') }}"
+      - set_value:
+          path: "variables.last_item_ac_bonus"
+          value: "0"
+      - set_value:
+          path: "variables.last_item_entry_name"
+          value: "{{ variables.last_choice.entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_entry_damage_die"
+          value: "{{ variables.last_choice.entry.damage_die | default('') }}"
+      - set_value:
+          path: "variables.last_item_entry_size"
+          value: "{{ variables.last_choice.entry.size | default('') }}"
+      - set_value:
+          path: "variables.last_item_entry_cost"
+          value: "{{ variables.last_choice.entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_entry_tags"
+          value: "{{ variables.last_choice.entry.tags | default([]) | join(',') }}"
+    next_step: check_afford
+
+  - id: armor_chosen
+    name: "Skip or Unpack Armor"
+    type: conditional_branch
+    if: "{{ variables.last_choice is none }}"
+    then:
+      next_step: shop_menu
+    else:
+      next_step: unpack_armor
+
+  - id: unpack_armor
+    name: "Unpack Armor Selection"
+    type: action
+    actions:
+      - set_value:
+          path: "variables.last_item_id"
+          value: "{{ variables.last_choice.id }}"
+      - set_value:
+          path: "variables.last_item_name"
+          value: "{{ variables.last_choice.entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_cost"
+          value: "{{ variables.last_choice.entry.cost | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_equippable_type"
+          value: "{{ variables.last_choice.entry.equippable_type | default('body') }}"
+      - set_value:
+          path: "variables.last_item_ac_bonus"
+          value: "{{ variables.last_choice.entry.armor_class_bonus | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_entry_name"
+          value: "{{ variables.last_choice.entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_entry_armor_class_bonus"
+          value: "{{ variables.last_choice.entry.armor_class_bonus | default(0) | int }}"
+      - set_value:
+          path: "variables.last_item_entry_armor_type"
+          value: "{{ variables.last_choice.entry.armor_type | default('') }}"
+      - set_value:
+          path: "variables.last_item_entry_cost"
+          value: "{{ variables.last_choice.entry.cost | default(0) | int }}"
+    next_step: check_afford
+
+  - id: gear_chosen
+    name: "Skip or Unpack Gear"
+    type: conditional_branch
+    if: "{{ variables.last_choice is none }}"
+    then:
+      next_step: shop_menu
+    else:
+      next_step: unpack_gear
+
+  - id: unpack_gear
+    name: "Unpack Gear Selection"
+    type: action
+    actions:
+      - set_value:
+          path: "variables.last_item_id"
+          value: "{{ variables.last_choice.id }}"
+      - set_value:
+          path: "variables.last_item_name"
+          value: "{{ variables.last_choice.entry.name | default('') }}"
+      - set_value:
+          path: "variables.last_item_cost"
+          value: "{{ variables.last_choice.entry.cost | default(0) | int }}"
       - set_value:
           path: "variables.last_item_equippable_type"
           value: ""
       - set_value:
           path: "variables.last_item_ac_bonus"
           value: "0"
-    next_step: skip_or_check
-
-  # ── Skip gate (empty choice = "No X") ─────────────────────────────────────
-
-  - id: skip_or_check
-    name: "Skip or Check Afford"
-    type: conditional_branch
-    if: "{{ variables.last_item_id == '' }}"
-    then:
-      next_step: shop_menu
-    else:
-      next_step: check_afford
+    next_step: check_afford
 
   # ── Affordability check ────────────────────────────────────────────────────
 
