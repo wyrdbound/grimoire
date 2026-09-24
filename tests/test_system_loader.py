@@ -115,8 +115,9 @@ class TestSystemLoaderTables:
         assert len(knave.tables["armor"].entries) > 0
 
     def test_wyrdbound_loads_all_tables(self, wyrdbound: System) -> None:
-        # 14 table YAML files in systems/wyrdbound-quickstart-1e/tables/ (recursive)
-        assert len(wyrdbound.tables) == 14
+        # 13 table YAML files in systems/wyrdbound-quickstart-1e/tables/
+        # (recursive). mage-armor was removed: mages cannot wear armor (F30).
+        assert len(wyrdbound.tables) == 13
 
 
 # ---------------------------------------------------------------------------
@@ -249,13 +250,6 @@ class TestSystemValidation:
         errors = knave.validate()
         assert errors == [], f"Unexpected errors: {errors}"
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason=(
-            "mage-armor has no entries; the table spec requires at least one. "
-            "Open finding."
-        ),
-    )
     def test_wyrdbound_validates_with_no_errors(self, wyrdbound: System) -> None:
         errors = wyrdbound.validate()
         assert errors == [], f"Unexpected errors: {errors}"
@@ -269,11 +263,4 @@ class TestKnownSystemValidationGaps:
             "Table 'helmets_and_shields': Entry '20' has entry_type 'armor' but "
             "is a list; expected null, an id, a reference mapping or an inline "
             "instance"
-        ]
-
-    def test_quickstart_only_gap_is_the_empty_mage_armor_table(
-        self, wyrdbound: System
-    ) -> None:
-        assert wyrdbound.validate() == [
-            "Table 'mage-armor': Table must have at least one entry"
         ]
