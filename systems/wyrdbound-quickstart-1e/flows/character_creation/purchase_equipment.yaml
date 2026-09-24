@@ -129,9 +129,20 @@ steps:
     type: conditional_branch
     if: "{{ variables.shop_category == 'armor' }}"
     then:
-      next_step: browse_armor
+      next_step: check_can_wear_armor
     else:
       next_step: browse_gear
+
+  - id: check_can_wear_armor
+    name: "Check Whether the Class Can Wear Armor"
+    type: conditional_branch
+    if: "{{ inputs.character_class == 'mage' }}"
+    then:
+      actions:
+        - display_message: "🚫 Mages cannot wear armor."
+      next_step: shop_menu
+    else:
+      next_step: browse_armor
 
   # ── Browse steps (one per category) ───────────────────────────────────────
 

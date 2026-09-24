@@ -104,3 +104,15 @@ def test_quickstart_shop_browse_steps_are_optional() -> None:
     )
     browse = [s for s in flow.steps if s.id.startswith("browse_")]
     assert len(browse) == 3 and all(s.optional for s in browse)
+
+
+def test_quickstart_mages_are_turned_away_from_armor() -> None:
+    system = SystemLoader().load(SYSTEMS_DIR / "wyrdbound-quickstart-1e")
+    assert "mage-armor" not in system.tables
+    for cls in ("warrior", "rogue", "bard"):
+        assert f"{cls}-armor" in system.tables
+    steps = {s.id: s for s in system.flows["purchase_equipment"].steps}
+    gate = steps["check_can_wear_armor"]
+    assert gate.if_condition == "{{ inputs.character_class == 'mage' }}"
+    assert gate.then_actions["next_step"] == "shop_menu"
+    assert gate.else_actions["next_step"] == "browse_armor"
