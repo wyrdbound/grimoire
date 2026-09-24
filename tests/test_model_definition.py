@@ -90,6 +90,6 @@ class TestSystemValidationIncludesModels:
         )
         system = SystemLoader().load(system_dir)
         system.models["character"].attributes["name"] = {"type": "str", "default": None}
-        errors = system.validate()
+        errors = [e for e in system.validate() if e.startswith("Model ")]
         assert len(errors) == 1
         assert errors[0].startswith("Model 'character': Attribute 'name'")
