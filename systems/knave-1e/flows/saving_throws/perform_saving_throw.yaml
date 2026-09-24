@@ -55,9 +55,9 @@ steps:
     actions:
       - set_value:
           path: "variables.saving_throw_ability"
-          value: "{{ llm_result.ability }}"
+          value: "{{ result.ability }}"
       - display_message: "Determined Ability: {{ variables.saving_throw_ability }}"
-      - display_message: "Justification: {{ llm_result.reason }}"
+      - display_message: "Justification: {{ result.reason }}"
 
   - id: determine_saving_throw_type
     name: "Determine Saving Throw Type"
@@ -81,9 +81,9 @@ steps:
     actions:
       - set_value:
           path: "variables.saving_throw_type"
-          value: "{{ llm_result.type }}"
-      - display_message: "Determined Roll Type: {{ llm_result.type | capitalize }}"
-      - display_message: "Justification: {{ llm_result.reason }}"
+          value: "{{ result.type }}"
+      - display_message: "Determined Roll Type: {{ result.type | capitalize }}"
+      - display_message: "Justification: {{ result.reason }}"
 
   - id: perform_saving_throw
     name: "Perform Saving Throw"
