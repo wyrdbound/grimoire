@@ -138,6 +138,7 @@ class StepDefinition(StepDefinitionBase):
     prompt: str | None = None
     condition: str | None = None
     final_message: str | None = None  # completion: shown when the flow finishes
+    optional: bool = False  # player_choice: the player may choose nothing
     next_step: str | None = None
     output: str | None = None  # Variable name to store step result
 

@@ -224,6 +224,33 @@ fields, following `table_roll`'s `result.entry`:
 With `selection_count` greater than 1, `result` is a **list** of these
 objects, in the order the player selected them.
 
+**Choosing nothing.** A `player_choice` marked `optional: true` — the same
+presence flag attributes and inputs use — lets the player choose nothing. The
+step's `actions` then run with `result` null (no option's own actions run), so
+the flow can route on it. Without `optional: true`, the player must choose.
+
+```yaml
+- id: browse_weapons
+  type: player_choice
+  optional: true
+  prompt: "Choose a weapon, or skip:"
+  choice_source:
+    table: warrior-weapons
+  actions:
+    - set_value:
+        path: "variables.last_choice"
+        value: "{{ result }}"   # null when skipped
+  next_step: weapon_chosen
+
+- id: weapon_chosen
+  type: conditional_branch
+  if: "{{ variables.last_choice is none }}"
+  then:
+    next_step: shop_menu
+  else:
+    next_step: buy_weapon
+```
+
 ```yaml
 # The chosen class id
 - set_value:
