@@ -613,17 +613,35 @@ condition: "previous_choice == 'advanced_rules'"
 
 ### Parallel Execution
 
-Steps can execute operations in parallel:
+A step that performs several independent operations — several tables in one
+`table_roll`, for example — may mark them as parallelisable:
 
 ```yaml
-parallel: true
+- id: generate_traits
+  type: table_roll
+  parallel: true
+  tables:
+    - table: physique
+      actions: [...]
+    - table: face
+      actions: [...]
 ```
 
-This is particularly useful for:
+`parallel: true` is a **permission, not a promise of concurrency.** An
+implementation may evaluate the operations independently, but it must behave
+exactly as if they ran one at a time **in the order they are declared**:
 
-- Multiple table rolls
-- Independent dice rolls
-- API calls (like LLM generation)
+- each operation's result is produced, and its actions are applied, in
+  declaration order;
+- an operation's actions see the effects of every earlier operation's actions,
+  and none of any later one's;
+- any randomness is drawn in declaration order, so the same seed produces the
+  same outcome whether or not the operations were evaluated concurrently.
+
+This makes every flow deterministic and replayable, and it keeps flows safe
+whose operations touch shared state — for example, several table rolls whose
+actions each add an item to the same inventory. An implementation that runs
+operations sequentially in declaration order is always correct.
 
 ### Resume Points
 
