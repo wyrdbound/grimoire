@@ -102,7 +102,7 @@ Steps are the core building blocks of flows. Each step has a consistent structur
   name: "Human Readable Step Name"
   type: step_type
   prompt: "Text displayed to the user"
-  condition: optional_condition
+  condition: "{{ optional_condition }}" # optional - see Conditional Execution
   parallel: true # optional
   pre_actions: [] # optional - actions to run before step execution
   actions: []
@@ -321,7 +321,7 @@ Uses Large Language Models to generate content.
 ```yaml
 - id: generate_description
   type: llm_generation
-  condition: llm_enabled
+  condition: "{{ variables.wants_description }}"
   prompt_id: character_description_prompt
   prompt_data:
     traits: "{{ outputs.character.traits }}"
@@ -685,12 +685,29 @@ Or rely on sequential execution (next step in the array).
 
 ### Conditional Execution
 
-Steps can include conditions for execution:
+Any step may carry a `condition`. It is a `{{ }}` template, like every other
+expression in a flow; a bare expression is an error, not literal text.
 
 ```yaml
-condition: "llm_enabled"
-condition: "previous_choice == 'advanced_rules'"
+- id: spell_pick_2
+  type: player_choice
+  condition: "{{ inputs.character_class == 'mage' }}"
+  prompt: "Choose your second spell:"
+  choices: [...]
+  next_step: done
 ```
+
+The condition is evaluated when the flow reaches the step:
+
+- **True** — the step runs normally.
+- **False** — the step is **skipped entirely**: no `pre_actions`, no prompt, no
+  resolution, no `actions`, no `result`. The flow continues at the step's own
+  `next_step` if it has one, otherwise at the next step in order. A branch- or
+  choice-level `next_step` does not apply, because no branch or choice was
+  taken.
+
+A condition that needs different routing when false is a `conditional_branch`,
+not a `condition`.
 
 ### Parallel Execution
 

@@ -116,3 +116,16 @@ def test_quickstart_mages_are_turned_away_from_armor() -> None:
     assert gate.if_condition == "{{ inputs.character_class == 'mage' }}"
     assert gate.then_actions["next_step"] == "shop_menu"
     assert gate.else_actions["next_step"] == "browse_armor"
+
+
+def test_templated_condition_is_accepted(tmp_path: Path) -> None:
+    step = _load_one_step(
+        tmp_path, {"id": "x", "type": "action", "condition": "{{ variables.go }}"}
+    )
+    assert step.condition == "{{ variables.go }}"
+
+
+@pytest.mark.parametrize("condition", ["llm_enabled", "a == 'b'", True])
+def test_bare_condition_is_rejected(tmp_path: Path, condition: object) -> None:
+    with pytest.raises(SystemLoadError, match="must be a `\\{\\{ \\}\\}` template"):
+        _load_one_step(tmp_path, {"id": "x", "type": "action", "condition": condition})
