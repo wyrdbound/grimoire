@@ -61,7 +61,9 @@ attributes:
 Each attribute definition can include the following fields:
 
 - **`type`** (required): The data type of the attribute
-- **`default`** (optional): Default value if not specified
+- **`default`** (optional): Value given to the attribute when an instance is
+  created without one. Only a required attribute may have a default — see
+  [Presence, Defaults and Null](#presence-defaults-and-null).
 - **`range`** (optional): Valid range for numeric types
 - **`enum`** (optional): List of allowed values for string types
 - **`derived`** (optional): Formula for calculated attributes
@@ -69,6 +71,30 @@ Each attribute definition can include the following fields:
 - **`optional`** (optional): Whether the attribute may be left without a value.
   Defaults to `false`: every attribute is required unless marked `optional: true`.
   This is the only presence flag — there is no `required` field.
+
+### Presence, Defaults and Null
+
+- **Required attributes must have a value.** An instance is created with a
+  value for every required attribute, either supplied or taken from its
+  `default`. A required attribute is never null.
+- **A default is applied once, at creation, and stored.** It is part of the
+  instance from then on, exactly as if it had been supplied.
+- **Only required attributes may have a default.** An optional attribute can
+  be emptied on purpose, and a default would undo that the next time the
+  instance is rebuilt. If an optional attribute should start with a value, the
+  flow that creates the instance sets it.
+- **`default: null` is invalid.** On a required attribute it contradicts
+  itself; an attribute that may be empty is marked `optional: true` instead.
+- **Null on an optional attribute means "no value".** Setting an optional
+  attribute to null unsets it, and it is stored as absent. There is no
+  distinction between "unset" and "null".
+- **Derived attributes** are computed, and are neither supplied nor defaulted.
+
+```yaml
+equipped:
+  main_hand: { type: str, optional: true }   # empty until something is equipped
+level: { type: int, range: "1..20", default: 1 }  # every character starts at 1
+```
 
 ### Data Types
 
@@ -125,8 +151,14 @@ Derived attribute expressions support the Jinja2 templating syntax, including:
 - Attribute references by bare name, using dotted paths for nested attributes
   (`attribute`, `group.leaf`), within `{{ }}` templates
 - Basic arithmetic operations (`+`, `-`, `*`, `/`)
-- Function calls like `sum()`, `max()`, `min()`
-- Pipe operations for data transformation
+- Filters for aggregation and transformation: `| sum`, `| max`, `| min`,
+  `| length`, `| map(attribute='…')` — for example
+  `{{ inventory | sum(attribute='weight') }}`
+- The `in` operator for membership: `{{ 'poisoned' in conditions }}`
+
+There are no function-call forms: `sum(xs)`, `max(a, b)`, `count(xs)` and
+`contains(xs, x)` are not part of the language. Use `xs | sum`, `[a, b] | max`,
+`xs | length` and `x in xs`.
 
 ### Expression Evaluation Context
 
@@ -150,6 +182,11 @@ same in all three places:
   Filters (`map`, `sum`, `join`, `default`, …) are unaffected.
 - **An undefined name is an error.** Expressions are evaluated with strict
   undefined semantics; a typo fails loudly instead of rendering empty.
+- **An unset optional attribute reads as null.** A declared, optional,
+  non-derived attribute with no value evaluates to `none`, so expressions can
+  test for it: `{{ equipped.main_hand or 'nothing' }}`,
+  `{{ equipped.main_hand is none }}`. This applies only to declared attributes
+  — an undeclared name still raises.
 
 ```yaml
 # Correct
@@ -233,9 +270,10 @@ Validation expressions use the same syntax as derived attributes and must evalua
 
 - **Comparisons**: `<=`, `>=`, `<`, `>`, `==`, `!=`
 - **Logical operators**: `and`, `or`, `not`
-- **Function calls**: `sum()`, `count()`, `contains()`, `length`
+- **Membership**: `x in xs`
 - **Attribute references**: bare names and dotted paths (`attribute`, `group.leaf`) within `{{ }}` templates
-- **Collection operations**: `| map(attribute='property') | sum`, `| count()`, `| max(attribute='property')`
+- **Collection operations** (filters): `| map(attribute='property') | sum`,
+  `| sum(attribute='property')`, `| length`, `| max`, `| min`
 
 ## File Naming and Location
 
