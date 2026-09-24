@@ -270,6 +270,57 @@ Uses Large Language Models to generate content.
         value: "{{ result }}"
 ```
 
+The generated text is available as `{{ result }}`.
+
+##### Validating the response
+
+An `llm_generation` step may carry a `validation` block. The response is then
+parsed as JSON, checked, and retried if it does not conform. This is what makes
+small and local models usable for rules decisions: a structured answer either
+conforms or the step says exactly what happens instead.
+
+```yaml
+- id: determine_saving_throw_ability
+  type: llm_generation
+  prompt_id: determine_saving_throw_ability
+  prompt_data:
+    context_summary: "{{ inputs.context_summary }}"
+  validation:
+    type: json_schema
+    schema:
+      type: object
+      properties:
+        ability: { type: string, enum: [strength, dexterity, constitution] }
+        reason: { type: string, minLength: 10 }
+      required: [ability, reason]
+    max_attempts: 3
+    on_failure: fail
+  actions:
+    - set_value:
+        path: "variables.saving_throw_ability"
+        value: "{{ result.ability }}"
+```
+
+- **`type`** (required): `json` — the response must parse as JSON; or
+  `json_schema` — it must parse and validate against `schema`.
+- **`schema`** (required for `json_schema`): A JSON Schema the parsed response
+  must satisfy.
+- **`max_attempts`** (optional): Total attempts, including the first. Defaults
+  to `3`; must be at least `1`.
+- **`cleanup_enabled`** (optional): When `true` (the default), surrounding
+  whitespace and a Markdown code fence (```` ```json … ``` ````) are stripped
+  before parsing. Models often wrap JSON this way; it is not a validation
+  failure.
+- **`on_failure`** (optional): What happens when every attempt fails.
+  - `continue` (the default) — the step's actions run with `result` null.
+  - `fail` — the flow fails. It must not substitute a value.
+  - `fallback` — the step's actions run with `result` set to `fallback_value`.
+- **`fallback_value`** (required for `fallback`): The value bound to `result`
+  when `on_failure` is `fallback`. It may be any value, including null.
+
+When a `validation` block is present, `{{ result }}` is the parsed JSON value —
+`{{ result.ability }}` above — not the raw text.
+
 #### `name_generation`
 
 Generates random names using a requested generator. Defaults to the [wyrdbound-rng](https://github.com/wyrdbound/wyrdbound-rng) library.
