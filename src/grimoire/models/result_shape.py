@@ -81,6 +81,10 @@ def check_flow(flow_id: str, flow: FlowDefinition, tables: dict[str, Any]) -> li
         if step.type == StepType.TABLE_ROLL:
             for roll in step.tables:
                 errors.extend(_check_roll(where, roll.table, roll.actions, tables))
+        elif step.type == StepType.TABLE_SEQUENCE and step.table_sequence:
+            seq = step.table_sequence
+            errors.extend(_check_roll(where, seq.table, seq.actions, tables))
+            errors.extend(_check_no_result(where, step.actions))
         elif step.type == StepType.PLAYER_CHOICE and isinstance(
             step.choice_source, dict
         ):
@@ -117,6 +121,24 @@ def _check_roll(
                 "result is `result.entry`, not `result.entries`"
             )
     return errors
+
+
+def _check_no_result(where: str, actions: Any) -> list[str]:
+    """`result` is per roll; a table_sequence's step-level actions cannot read it."""
+    for text in _strings(actions):
+        if "{{" not in text and "{%" not in text:
+            continue
+        try:
+            tree = _ENV.parse(text)
+        except jinja2.TemplateSyntaxError as exc:
+            return [f"{where}: template {text!r} does not parse: {exc.message}"]
+        if any(n.name == "result" for n in tree.find_all(nodes.Name)):
+            return [
+                f"{where}: `result` is only available in the sequence's own "
+                "actions, which run once per roll; the step's actions run once, "
+                "after every roll"
+            ]
+    return []
 
 
 def _check_choice(where: str, reference: str, tables: dict[str, Any]) -> list[str]:

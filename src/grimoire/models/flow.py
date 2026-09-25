@@ -13,6 +13,7 @@ class StepType(Enum):
     PLAYER_CHOICE = "player_choice"
     PLAYER_INPUT = "player_input"
     TABLE_ROLL = "table_roll"
+    TABLE_SEQUENCE = "table_sequence"
     LLM_GENERATION = "llm_generation"
     NAME_GENERATION = "name_generation"
     COMPLETION = "completion"
@@ -57,10 +58,9 @@ class ActionDefinition:
 
 @dataclass
 class TableRollDefinition:
-    """Table roll configuration."""
+    """Table roll configuration: one roll on `table`."""
 
     table: str
-    count: int = 1
     actions: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -71,6 +71,18 @@ class DiceSequenceDefinition:
     items: list[str]
     roll: str
     actions: list[dict[str, Any]] | None = None
+
+
+@dataclass
+class TableSequenceDefinition:
+    """table_sequence configuration: one table, rolled `count` times or once per
+    element of `items`. Exactly one of `count` and `items` is set; either may be
+    a `{{ }}` template rendered at run time."""
+
+    table: str
+    count: int | str | None = None
+    items: list[Any] | str | None = None
+    actions: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -148,6 +160,8 @@ class StepDefinition(StepDefinitionBase):
 
     # For dice_sequence
     sequence: DiceSequenceDefinition | None = None
+    # For table_sequence
+    table_sequence: TableSequenceDefinition | None = None
 
     # For player_choice
     choices: list[ChoiceDefinition] = field(default_factory=list)
