@@ -129,3 +129,29 @@ def test_templated_condition_is_accepted(tmp_path: Path) -> None:
 def test_bare_condition_is_rejected(tmp_path: Path, condition: object) -> None:
     with pytest.raises(SystemLoadError, match="must be a `\\{\\{ \\}\\}` template"):
         _load_one_step(tmp_path, {"id": "x", "type": "action", "condition": condition})
+
+
+def test_runtime_llm_available_is_accepted(tmp_path: Path) -> None:
+    step = _load_one_step(
+        tmp_path,
+        {"id": "x", "type": "action", "condition": "{{ runtime.llm_available }}"},
+    )
+    assert step.condition == "{{ runtime.llm_available }}"
+
+
+def test_unknown_runtime_name_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(SystemLoadError, match="`runtime.llm_enabled` is not"):
+        _load_one_step(
+            tmp_path,
+            {
+                "id": "x",
+                "type": "action",
+                "actions": [{"display_message": "{{ runtime.llm_enabled }}"}],
+            },
+        )
+
+
+@pytest.mark.parametrize("system", SYSTEMS)
+def test_no_undeclared_llm_enabled_flag(system: str) -> None:
+    for path in (SYSTEMS_DIR / system / "flows").rglob("*.yaml"):
+        assert "llm_enabled" not in path.read_text(), path

@@ -145,7 +145,7 @@ steps:
   - id: generating_description_notice
     name: "Generating Description Notice"
     type: action
-    condition: "{{ llm_enabled }}"
+    condition: "{{ runtime.llm_available }}"
     actions:
       - display_message: "✍️  Generating character description..."
     next_step: generate_description
@@ -153,7 +153,7 @@ steps:
   - id: generate_description
     name: "Generate Character Description"
     type: llm_generation
-    condition: "{{ llm_enabled }}"
+    condition: "{{ runtime.llm_available }}"
     prompt_id: generate_character_description
     prompt_data:
       name: "{{ outputs.character.name }}"
@@ -173,7 +173,7 @@ steps:
   - id: show_description
     name: "Show Generated Description"
     type: action
-    condition: "{{ llm_enabled }}"
+    condition: "{{ runtime.llm_available }}"
     actions:
       - display_message: "{{ outputs.character.description }}"
     next_step: confirm_description
@@ -181,7 +181,7 @@ steps:
   - id: confirm_description
     name: "Confirm Description"
     type: player_choice
-    condition: "{{ llm_enabled }}"
+    condition: "{{ runtime.llm_available }}"
     prompt: "How does this description feel?"
     choices:
       - id: keep

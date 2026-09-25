@@ -1,5 +1,6 @@
 """SystemLoader — loads a GRIMOIRE system directory into a System object."""
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,10 @@ from grimoire.models.prompt import PromptDefinition
 from grimoire.models.source import SourceDefinition
 from grimoire.models.system import Credits, Currency, CurrencyDenomination, System
 from grimoire.models.table import TableDefinition
+
+# The read-only `runtime` namespace (spec/flow_spec.md, "Runtime Values").
+RUNTIME_NAMES = frozenset({"llm_available"})
+RUNTIME_REFERENCE = re.compile(r"\bruntime\.([A-Za-z_][A-Za-z0-9_]*)")
 
 
 class SystemLoadError(Exception):
@@ -261,6 +266,7 @@ class SystemLoader:
                 ) from exc
 
     def _parse_flow(self, data: dict[str, Any]) -> FlowDefinition:
+        self._check_runtime_names(data)
         version_raw = data.get("version")
         return FlowDefinition(
             id=data["id"],
@@ -275,6 +281,23 @@ class SystemLoader:
             steps=[self._parse_step(s) for s in data.get("steps", [])],
             resume_points=data.get("resume_points", []),
         )
+
+    @staticmethod
+    def _check_runtime_names(value: Any) -> None:
+        """Reject references to `runtime.<name>` the flow spec does not define."""
+        if isinstance(value, str):
+            for name in RUNTIME_REFERENCE.findall(value):
+                if name not in RUNTIME_NAMES:
+                    raise ValueError(
+                        f"`runtime.{name}` is not a runtime value. Defined: "
+                        f"{', '.join(sorted(RUNTIME_NAMES))}."
+                    )
+        elif isinstance(value, dict):
+            for item in value.values():
+                SystemLoader._check_runtime_names(item)
+        elif isinstance(value, list):
+            for item in value:
+                SystemLoader._check_runtime_names(item)
 
     @staticmethod
     def _check_validation_block(step_id: Any, vd: dict[str, Any]) -> None:
