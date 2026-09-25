@@ -277,7 +277,9 @@ exists, the option is available as `{{ entry }}` (table sources) or
 
 #### `table_roll`
 
-Rolls on predefined tables.
+Rolls once on each listed table. Each entry under `tables` has its own
+`actions`, which see that roll's `result`. To roll **one** table several times,
+use `table_sequence`.
 
 ```yaml
 - id: random_encounter
@@ -309,6 +311,50 @@ validation, naming the step and the table. When the table name is a template
 wildcard over table ids, every matching table is checked, and a name no table
 matches is also an error. The same rule stops a `multiple_entries` table from
 being a `player_choice` source.
+
+#### `table_sequence`
+
+Rolls **one** table several times — a number of times, or once per item in a
+list — running the sequence's actions after each roll. It is to `table_roll`
+what `dice_sequence` is to `dice_roll`.
+
+```yaml
+- id: roll_gems
+  type: table_sequence
+  sequence:
+    table: gems
+    count: "{{ variables.gem_count }}" # e.g. set from an earlier 1d4 roll
+    actions: # run once per roll
+      - append_value:
+          path: "outputs.hoard"
+          value: "{{ result.entry }}"
+  actions: # run once, after every roll
+    - display_message: "Found {{ outputs.hoard | length }} gems."
+```
+
+- **`sequence.table`** (required): The table to roll on. It may be a `{{ }}`
+  template, checked at load as for `table_roll`.
+- **`sequence.count`** or **`sequence.items`** (exactly one is required):
+  - `count` — how many times to roll: a whole number, or a `{{ }}` template
+    that renders one. `0` means no rolls. A negative or non-whole value is an
+    error when the step runs.
+  - `items` — roll once per element of a list (or of a `{{ }}` template that
+    renders a list), as in `dice_sequence`.
+- **`sequence.actions`**: Run after each roll, in order.
+- **`actions`** (step level): Run once, after the last roll.
+
+In the sequence's actions:
+
+- **`{{ result }}`** is that roll's result, exactly as a `table_roll` on the
+  same table: `result.entry` — or only `result.entries` for a
+  `multiple_entries` table — plus `result.roll_result`. The load-time shape
+  check applies.
+- **`{{ item }}`** is the current element of `items`, or the roll number
+  (`1` to `count`) when rolling by `count`.
+
+`result` and `item` are not available in the step-level `actions`; reading
+`result` there fails validation. Rolls happen in order, and randomness is drawn
+in that order (see [Parallel Execution](#parallel-execution)).
 
 #### `player_input`
 
@@ -593,6 +639,18 @@ Sets a value at a reference path.
     value: 1
 ```
 
+#### `append_value`
+
+Appends a value to the list at a reference path. If nothing is at the path —
+it is unset or null — a list containing just the value is created there.
+Appending to a value that is not a list is an error.
+
+```yaml
+- append_value:
+    path: "outputs.purchased_items"
+    value: "{{ variables.last_item_id }}"
+```
+
 #### `swap_values`
 
 Swaps values between two reference paths.
@@ -680,7 +738,7 @@ Flows use Jinja2 templating syntax for dynamic content:
 depends on the step type and is documented with each one. There are no other
 names for it — not `choice`, `llm_result` or `results`. The only other
 step-scoped bindings are `{{ item }}`, the current element inside
-`dice_sequence`, and the option being rendered inside a `display_format`
+`dice_sequence` or `table_sequence`, and the option being rendered inside a `display_format`
 (`entry`, or `key` and `value`).
 
 ### Runtime Values

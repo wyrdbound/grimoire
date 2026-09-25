@@ -48,14 +48,9 @@ steps:
       #         inputs:
       #           character: "{{ outputs.knave }}"
       #           items: "{{ result.entries }}"
-      # - table: dungeoneering_gear
-      #   count: 2
-      #   actions:
-      #     - flow_call:
-      #         flow: add_items_to_character
-      #         inputs:
-      #           character: "{{ outputs.knave }}"
-      #           items: "{{ results | map(attribute='entry') | list }}"
+      # dungeoneering_gear is rolled twice: a separate table_sequence step,
+      #   sequence: { table: dungeoneering_gear, count: 2, actions: [...] }
+      #   adding `result.entry` on each roll.
       # - table: general_gear_1
       #   actions:
       #     - flow_call:

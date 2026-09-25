@@ -16,6 +16,7 @@ from grimoire.models.flow import (
     StepDefinition,
     StepType,
     TableRollDefinition,
+    TableSequenceDefinition,
     VariableDefinition,
 )
 from grimoire.models.model_definition import ModelDefinition, ValidationRule
@@ -27,6 +28,15 @@ from grimoire.models.table import TableDefinition
 # The read-only `runtime` namespace (spec/flow_spec.md, "Runtime Values").
 RUNTIME_NAMES = frozenset({"llm_available"})
 RUNTIME_REFERENCE = re.compile(r"\bruntime\.([A-Za-z_][A-Za-z0-9_]*)")
+
+
+def _is_template(value: Any) -> bool:
+    """True for a string that is a single `{{ }}` template."""
+    return (
+        isinstance(value, str)
+        and value.strip().startswith("{{")
+        and value.strip().endswith("}}")
+    )
 
 
 class SystemLoadError(Exception):
@@ -284,6 +294,41 @@ class SystemLoader:
         )
 
     @staticmethod
+    def _parse_table_sequence(step_id: Any, sd: Any) -> TableSequenceDefinition:
+        """Parse and check a `table_sequence` step's `sequence` block."""
+        where = f"Step '{step_id}' sequence"
+        if not isinstance(sd, dict):
+            raise ValueError(f"{where}: a table_sequence step needs a `sequence`.")
+        table = sd.get("table")
+        if not isinstance(table, str) or not table:
+            raise ValueError(f"{where}: `table` is required.")
+        if ("count" in sd) == ("items" in sd):
+            raise ValueError(f"{where}: give exactly one of `count` and `items`.")
+        count = sd.get("count")
+        if "count" in sd and not (
+            (isinstance(count, int) and not isinstance(count, bool) and count >= 0)
+            or _is_template(count)
+        ):
+            raise ValueError(
+                f"{where}: `count` must be a whole number of at least 0 or a "
+                f"`{{{{ }}}}` template, got {count!r}."
+            )
+        items = sd.get("items")
+        if "items" in sd and not (
+            (isinstance(items, list) and items) or _is_template(items)
+        ):
+            raise ValueError(
+                f"{where}: `items` must be a non-empty list or a `{{{{ }}}}` "
+                f"template, got {items!r}."
+            )
+        return TableSequenceDefinition(
+            table=table,
+            count=count,
+            items=items,
+            actions=sd.get("actions") or [],
+        )
+
+    @staticmethod
     def _check_runtime_names(value: Any) -> None:
         """Reject references to `runtime.<name>` the flow spec does not define."""
         if isinstance(value, str):
@@ -356,11 +401,7 @@ class SystemLoader:
                 "`player_choice` steps."
             )
         condition = data.get("condition")
-        if condition is not None and not (
-            isinstance(condition, str)
-            and condition.strip().startswith("{{")
-            and condition.strip().endswith("}}")
-        ):
+        if condition is not None and not _is_template(condition):
             raise ValueError(
                 f"Step '{data.get('id')}': `condition` must be a `{{{{ }}}}` "
                 f"template, got {condition!r}."
@@ -380,14 +421,24 @@ class SystemLoader:
         tables = [
             TableRollDefinition(
                 table=t["table"],
-                count=t.get("count", 1),
                 actions=t.get("actions", []),
             )
             for t in data.get("tables", [])
         ]
+        for t in data.get("tables", []):
+            if "count" in t:
+                raise ValueError(
+                    f"Step '{data.get('id')}': `count` is not a `table_roll` field. "
+                    "Use a `table_sequence` step to roll one table several times."
+                )
 
         sequence: DiceSequenceDefinition | None = None
-        if "sequence" in data:
+        table_sequence: TableSequenceDefinition | None = None
+        if type_str == "table_sequence":
+            table_sequence = self._parse_table_sequence(
+                data.get("id"), data.get("sequence")
+            )
+        elif "sequence" in data:
             sd = data["sequence"]
             sequence = DiceSequenceDefinition(
                 items=sd["items"],
@@ -431,6 +482,7 @@ class SystemLoader:
             output=data.get("output"),
             roll=data.get("roll"),
             sequence=sequence,
+            table_sequence=table_sequence,
             choices=choices,
             choice_source=data.get("choice_source"),
             pre_actions=data.get("pre_actions", []),
