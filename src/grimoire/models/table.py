@@ -36,6 +36,8 @@ class TableDefinition:
     roll: str | None = None  # e.g., "1d10", "2d6"
     description: str | None = None
     entry_type: str = "str"  # Type hint for entries, defaults to "str"
+    # A roll may yield several entries; `result.entries` replaces `result.entry`
+    multiple_entries: bool = False
 
     # Entries can be simple dict (roll_value -> result) or weighted
     entries: dict[int | str, Any] = field(default_factory=dict)
@@ -124,42 +126,65 @@ class TableDefinition:
         with a model `entry_type`, an entry is `null` (nothing), a string id
         looked up in a compendium of that model, a reference mapping
         (`{id, type, generate}`), or an inline instance of the model. With
-        `entry_type: table`, every entry names another table.
+        `entry_type: table`, every entry names another table. A list of such
+        entries is allowed only when the table declares `multiple_entries`.
         """
         errors = self.validate()
-        if self.entry_type in PRIMITIVE_ENTRY_TYPES:
-            return errors
-        if self.entry_type == "table":
-            for key, entry in self.entries.items():
-                if entry is not None and entry not in system.tables:
-                    errors.append(f"Entry '{key}' references unknown table {entry!r}")
-            return errors
-        if self.entry_type not in system.models:
+        if (
+            self.entry_type not in PRIMITIVE_ENTRY_TYPES
+            and self.entry_type != "table"
+            and self.entry_type not in system.models
+        ):
             errors.append(f"entry_type '{self.entry_type}' references unknown model")
             return errors
 
         for key, entry in self.entries.items():
-            if entry is None:
-                continue
-            if isinstance(entry, str):
-                errors.extend(_resolve(system, key, self.entry_type, entry))
-            elif isinstance(entry, dict) and set(entry) <= REFERENCE_KEYS:
-                ref_type = entry.get("type", self.entry_type)
-                if ref_type not in system.models:
-                    errors.append(
-                        f"Entry '{key}' references unknown model {ref_type!r}"
-                    )
-                elif "id" in entry:
-                    errors.extend(_resolve(system, key, ref_type, entry["id"]))
-            elif isinstance(entry, dict):
-                model = system.models[self.entry_type]
-                errors.extend(
-                    f"Entry '{key}': {e}" for e in model.validate_instance(entry)
+            if not isinstance(entry, list):
+                errors.extend(self._entry_errors(system, str(key), entry))
+            elif not self.multiple_entries:
+                errors.append(
+                    f"Entry '{key}' is a list; a table with list entries must "
+                    "declare `multiple_entries: true`"
+                )
+            elif not entry:
+                errors.append(
+                    f"Entry '{key}' is an empty list; use `null` for an entry "
+                    "that yields nothing"
                 )
             else:
-                errors.append(
-                    f"Entry '{key}' has entry_type '{self.entry_type}' but is "
-                    f"a {type(entry).__name__}; expected null, an id, a "
-                    "reference mapping or an inline instance"
-                )
+                for index, element in enumerate(entry):
+                    label = f"{key}[{index}]"
+                    if element is None or isinstance(element, list):
+                        errors.append(
+                            f"Entry '{label}' must be a single entry, not "
+                            f"{'null' if element is None else 'a list'}"
+                        )
+                    else:
+                        errors.extend(self._entry_errors(system, label, element))
         return errors
+
+    def _entry_errors(self, system: Any, key: str, entry: Any) -> list[str]:
+        """Check one single (non-list) entry."""
+        if entry is None or self.entry_type in PRIMITIVE_ENTRY_TYPES:
+            return []
+        if self.entry_type == "table":
+            if entry not in system.tables:
+                return [f"Entry '{key}' references unknown table {entry!r}"]
+            return []
+        if isinstance(entry, str):
+            return _resolve(system, key, self.entry_type, entry)
+        if isinstance(entry, dict) and set(entry) <= REFERENCE_KEYS:
+            ref_type = entry.get("type", self.entry_type)
+            if ref_type not in system.models:
+                return [f"Entry '{key}' references unknown model {ref_type!r}"]
+            if "id" in entry:
+                return _resolve(system, key, ref_type, entry["id"])
+            return []
+        if isinstance(entry, dict):
+            model = system.models[self.entry_type]
+            return [f"Entry '{key}': {e}" for e in model.validate_instance(entry)]
+        return [
+            f"Entry '{key}' has entry_type '{self.entry_type}' but is a "
+            f"{type(entry).__name__}; expected null, an id, a reference mapping "
+            "or an inline instance"
+        ]

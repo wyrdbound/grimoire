@@ -295,8 +295,20 @@ Rolls on predefined tables.
 
 **Table Roll Result Object**: The `result` contains:
 
-- **`entry`**: The selected entry from the table
+- **`entry`**: The selected entry from the table — null for a `null` entry.
+  Present only for an ordinary table.
+- **`entries`**: For a table that declares `multiple_entries: true`, a list of
+  every entry the roll produced (`[]` for a `null` entry). Present only for
+  such tables. See `spec/table_spec.md`, "Multiple Entries".
 - **`roll_result`**: The dice roll result object with `total` and `detail` fields
+
+**Checked at load.** A flow that reads `result.entry` from a
+`multiple_entries` table, or `result.entries` from an ordinary one, fails
+validation, naming the step and the table. When the table name is a template
+(`"{{ inputs.character_class }}-armor"`), each `{{ }}` is treated as a
+wildcard over table ids, every matching table is checked, and a name no table
+matches is also an error. The same rule stops a `multiple_entries` table from
+being a `player_choice` source.
 
 #### `player_input`
 

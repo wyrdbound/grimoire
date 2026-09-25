@@ -30,6 +30,7 @@ entries: {}
 - **`roll`** (required): Dice expression that determines how to roll on this table
 - **`description`** (optional): Description of what the table generates or represents
 - **`entry_type`** (optional): Type of entries returned by this table. Defaults to `"str"` for simple string values. Set to a model ID (e.g., `"armor"`, `"weapon"`, `"item"`) when the table returns structured data based on a specific model.
+- **`multiple_entries`** (optional): `true` when a roll can yield more than one entry. Defaults to `false`. See [Multiple Entries](#multiple-entries).
 - **`entries`** (required): Map of roll results to their corresponding values
 
 ## Roll Expressions
@@ -291,6 +292,40 @@ step's actions still run so the flow can react (`{{ result.entry is none }}`).
 A `player_choice` sourced from a table does not offer `null` entries as
 options.
 
+#### Multiple Entries
+
+A table whose rolls can yield more than one thing declares
+`multiple_entries: true`. Its entries may then be lists:
+
+```yaml
+entry_type: "armor"
+multiple_entries: true
+entries:
+  1-13: null # nothing
+  14-16: "helmet"
+  17-19: "shield"
+  20: ["helmet", "shield"] # both
+```
+
+- Each element of a list follows the single-entry rules above. An element may
+  not be `null` or a list, and a list may not be empty — an entry that yields
+  nothing is `null`.
+- A table with any list entry **must** declare `multiple_entries: true`.
+
+**The declaration fixes the shape of every roll's result**, whatever the dice
+show (`spec/flow_spec.md`, `table_roll`):
+
+| Table | Result | Value |
+| --- | --- | --- |
+| ordinary | `result.entry` | the entry, or null for a `null` entry |
+| `multiple_entries: true` | `result.entries` | always a list: `[]` for `null`, one element for a single entry, every element for a list |
+
+The other name is not defined. Because the shape depends on the table and not
+on the roll, a flow that reads the wrong one is wrong on every roll, and the
+loader rejects it before the system runs (see the flow spec).
+
+A `multiple_entries` table cannot be the source of a `player_choice`.
+
 #### Dynamic Generation
 
 ```yaml
@@ -389,3 +424,8 @@ entries:
 6. Range entries (e.g., "1-5") must not overlap
 7. Referenced tables or content must exist
 8. The file must be valid YAML syntax
+9. A table with a list entry must declare `multiple_entries: true`; list
+   elements are single entries, and a list is never empty
+10. A flow reads each table's result by the name the table's shape gives it
+    (`result.entry` or `result.entries`), and never uses a `multiple_entries`
+    table as a `player_choice` source

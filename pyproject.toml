@@ -4,6 +4,7 @@ version = "0.1.1"
 description = "GRIMOIRE system definition loader and validator for tabletop RPG systems"
 requires-python = ">=3.11"
 dependencies = [
+    "jinja2>=3.1",
     "pyyaml>=6.0",
 ]
 

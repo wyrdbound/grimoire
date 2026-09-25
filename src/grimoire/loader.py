@@ -203,6 +203,7 @@ class SystemLoader:
             roll=str(data["roll"]) if "roll" in data else None,
             description=data.get("description"),
             entry_type=data.get("entry_type", "str"),
+            multiple_entries=bool(data.get("multiple_entries", False)),
             entries=entries,
         )
 

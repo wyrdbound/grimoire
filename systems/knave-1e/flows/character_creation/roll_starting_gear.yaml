@@ -41,13 +41,13 @@ steps:
               value: "{{ result.entry }}"
       # Not yet enabled. Each follows the armour pattern: roll into a
       # variable, then add it with a guarded flow_call step.
-      # - table: helmets_and_shields
+      # - table: helmets_and_shields   # multiple_entries: use result.entries
       #   actions:
       #     - flow_call:
-      #         flow: add_item_to_character
+      #         flow: add_items_to_character
       #         inputs:
       #           character: "{{ outputs.knave }}"
-      #           item: "{{ result.entry }}"
+      #           items: "{{ result.entries }}"
       # - table: dungeoneering_gear
       #   count: 2
       #   actions:
