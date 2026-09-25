@@ -19,7 +19,7 @@ attributes:
 
   armor:
     bonus: { type: int, range: "0..10" }
-    defense: { type: int, derived: "{{ 10 + bonus }}" }
+    defense: { type: int, derived: "{{ 10 + armor.bonus }}" }
 
   exploration_speed: { type: int, default: 120, range: "0..240" } # in feet
   combat_speed: { type: int, default: 40, range: "0..160" } # in feet
