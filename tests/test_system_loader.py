@@ -239,13 +239,6 @@ class TestSystemLoaderCurrency:
 
 
 class TestSystemValidation:
-    @pytest.mark.xfail(
-        strict=True,
-        reason=(
-            "helmets_and_shields entry 20 is a list ([helmet, shield]); the "
-            "table spec has no multi-result entries. Open finding."
-        ),
-    )
     def test_knave_validates_with_no_errors(self, knave: System) -> None:
         errors = knave.validate()
         assert errors == [], f"Unexpected errors: {errors}"
@@ -253,14 +246,3 @@ class TestSystemValidation:
     def test_wyrdbound_validates_with_no_errors(self, wyrdbound: System) -> None:
         errors = wyrdbound.validate()
         assert errors == [], f"Unexpected errors: {errors}"
-
-
-class TestKnownSystemValidationGaps:
-    """Pin the exact open gaps, so a new error cannot hide behind the xfails."""
-
-    def test_knave_only_gap_is_the_multi_result_entry(self, knave: System) -> None:
-        assert knave.validate() == [
-            "Table 'helmets_and_shields': Entry '20' has entry_type 'armor' but "
-            "is a list; expected null, an id, a reference mapping or an inline "
-            "instance"
-        ]

@@ -7,6 +7,7 @@ from .compendium_definition import CompendiumDefinition
 from .flow import FlowDefinition
 from .model_definition import ModelDefinition
 from .prompt import PromptDefinition
+from .result_shape import check_flow
 from .source import SourceDefinition
 from .table import TableDefinition
 
@@ -144,6 +145,10 @@ class System:
             errors.extend(
                 f"Table '{table_id}': {e}" for e in table.validate_with_system(self)
             )
+
+            # Flows must read table results in the shape each table gives
+        for flow_id, flow in self.flows.items():
+            errors.extend(check_flow(flow_id, flow, self.tables))
 
             # Validate currency denominations
         if self.currency:
