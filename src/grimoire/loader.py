@@ -389,6 +389,7 @@ class SystemLoader:
             has_default="default" in data,
             enum=data.get("enum"),
             optional=bool(data.get("optional", False)),
+            validate=bool(data.get("validate", False)),
         )
 
     def _parse_step(self, data: dict[str, Any]) -> StepDefinition:

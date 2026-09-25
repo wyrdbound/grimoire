@@ -39,6 +39,9 @@ class VariableDefinition:
     # `None`. Downstream, a declared default (which may be null) is applied at
     # flow start while an absent one is not — see wyrdbound F50.
     has_default: bool = False
+    # Outputs: whether the engine validates the output (spec "Inputs, Outputs,
+    # and Variables").
+    validate: bool = False
 
 
 @dataclass
