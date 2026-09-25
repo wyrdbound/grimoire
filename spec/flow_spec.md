@@ -671,6 +671,27 @@ step-scoped bindings are `{{ item }}`, the current element inside
 `dice_sequence`, and the option being rendered inside a `display_format`
 (`entry`, or `key` and `value`).
 
+### Runtime Values
+
+Some facts belong to the engine running the flow, not to the flow or the
+system. They are available in every template under the read-only `runtime`
+namespace:
+
+| Name | Meaning |
+| --- | --- |
+| `runtime.llm_available` | `true` when an `llm_generation` step would be answered by a language model; `false` when no model is available (for example, the engine has none configured, or asks a person instead). |
+
+```yaml
+- id: generate_description
+  type: llm_generation
+  condition: "{{ runtime.llm_available }}"
+  prompt_id: generate_character_description
+```
+
+Every engine provides every name in this table. A flow cannot write to
+`runtime`, and a reference to a name not listed here fails to load. New names
+are added to this table, never invented by a flow.
+
 ## Flow Control
 
 ### Step Transitions

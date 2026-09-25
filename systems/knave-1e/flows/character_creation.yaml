@@ -91,7 +91,7 @@ steps:
   - id: generate_character_description
     name: "Generate Character Description"
     type: llm_generation
-    condition: "{{ llm_enabled }}"
+    condition: "{{ runtime.llm_available }}"
     prompt_id: generate_character_description
     prompt_data:
       name: "{{ outputs.knave.name }}"
