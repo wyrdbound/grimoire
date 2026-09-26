@@ -51,18 +51,22 @@ steps:
           value: "{{ result }}"
     next_step: invoke_determine_traits # TODO: Put this back to invoke_roll_starting_gear
 
-  # TBD: This step does not work yet because starting gear flow is not completed.
-  #   We need to figure out how to handle tables with multiple values in an entry.
+  # Ready to uncomment: roll_starting_gear is now complete. It rolls armour,
+  # helmets/shields, dungeoneering gear (twice) and two general-gear tables,
+  # then adds each rolled entry through add_item_to_character /
+  # add_items_to_character. The step-form `flow_call` is used because the
+  # action form is unspecified (wyrdbound F49). When this is re-enabled, set
+  # the previous step's `next_step` to `invoke_roll_starting_gear`.
   # - id: invoke_roll_starting_gear
   #   name: "Invoke Roll Starting Gear"
   #   type: flow_call
   #   flow: roll_starting_gear
   #   inputs:
-  #     character: "{{ outputs.knave }}"
+  #     knave: "{{ outputs.knave }}"
   #   actions:
   #     - set_value:
   #         path: "outputs.knave"
-  #         value: "{{ result }}"
+  #         value: "{{ result.knave }}"
   #   next_step: generate_traits
 
   - id: invoke_determine_traits

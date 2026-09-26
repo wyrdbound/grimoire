@@ -2,7 +2,7 @@ id: roll_starting_gear
 kind: "flow"
 name: "Determine Starting Equipment"
 description: "Determine the starting equipment for a Character"
-version: 1
+version: 2
 
 inputs:
   - type: character
@@ -17,7 +17,26 @@ variables:
   - type: armor
     id: starting_armor
     description: "The armor rolled for the character"
+  - type: list
+    id: starting_helmets_shields
+    description: "Helmet/shield entries rolled (empty when the roll gives none)"
+  - type: list
+    id: starting_dungeoneering
+    description: "The two dungeoneering gear entries rolled"
+  - type: item
+    id: starting_general_1
+    description: "The general gear entry rolled on table 1"
+  - type: item
+    id: starting_general_2
+    description: "The general gear entry rolled on table 2"
 
+# Each gear table is rolled into a variable, then added with a step-form
+# `flow_call` to `add_item_to_character` / `add_items_to_character`. The
+# action-form `flow_call` this flow once sketched is not specified (wyrdbound
+# F49), and a `table_sequence`'s per-roll actions cannot invoke a step, so the
+# roll and the add are separate steps. `helmets_and_shields` declares
+# `multiple_entries`, so its result is `result.entries`; `dungeoneering_gear`
+# is rolled twice with `table_sequence` and each `result.entry` is appended.
 steps:
   - id: start_from_input
     name: "Start From the Input Character"
@@ -39,39 +58,7 @@ steps:
           - set_value:
               path: "variables.starting_armor"
               value: "{{ result.entry }}"
-      # Not yet enabled. Each follows the armour pattern: roll into a
-      # variable, then add it with a guarded flow_call step.
-      # - table: helmets_and_shields   # multiple_entries: use result.entries
-      #   actions:
-      #     - flow_call:
-      #         flow: add_items_to_character
-      #         inputs:
-      #           character: "{{ outputs.knave }}"
-      #           items: "{{ result.entries }}"
-      # dungeoneering_gear is rolled twice: a separate table_sequence step,
-      #   sequence: { table: dungeoneering_gear, count: 2, actions: [...] }
-      #   adding `result.entry` on each roll.
-      # - table: general_gear_1
-      #   actions:
-      #     - flow_call:
-      #         flow: add_item_to_character
-      #         inputs:
-      #           character: "{{ outputs.knave }}"
-      #           item: "{{ result.entry }}"
-      # - table: general_gear_2
-      #   actions:
-      #     - flow_call:
-      #         flow: add_item_to_character
-      #         inputs:
-      #           character: "{{ outputs.knave }}"
-      #           item: "{{ result.entry }}"
-    # additional_actions:
-    #   - flow_call:
-    #       flow: add_item_to_character
-    #       inputs:
-    #         character: "{{ outputs.knave }}"
-    #         item: rations
-    #         quantity: 2
+    next_step: check_armor
 
   - id: check_armor
     name: "Check For Starting Armor"
@@ -80,7 +67,7 @@ steps:
     then:
       next_step: add_armor
     else:
-      next_step: done
+      next_step: roll_helmets_and_shields
 
   - id: add_armor
     name: "Add Starting Armor"
@@ -89,6 +76,113 @@ steps:
     inputs:
       character: "{{ outputs.knave }}"
       item: "{{ variables.starting_armor }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result.character }}"
+    next_step: roll_helmets_and_shields
+
+  - id: roll_helmets_and_shields
+    name: "Roll Helmets and Shields"
+    type: table_roll
+    tables:
+      - table: helmets_and_shields
+        actions:
+          # a multiple_entries table: result.entries is [] for a null roll
+          - set_value:
+              path: "variables.starting_helmets_shields"
+              value: "{{ result.entries }}"
+    next_step: check_helmets_and_shields
+
+  - id: check_helmets_and_shields
+    name: "Check For Helmets or Shields"
+    type: conditional_branch
+    if: "{{ variables.starting_helmets_shields | length > 0 }}"
+    then:
+      next_step: add_helmets_and_shields
+    else:
+      next_step: roll_dungeoneering
+
+  - id: add_helmets_and_shields
+    name: "Add Helmets and Shields"
+    type: flow_call
+    flow: add_items_to_character
+    inputs:
+      character: "{{ outputs.knave }}"
+      items: "{{ variables.starting_helmets_shields }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result.character }}"
+    next_step: roll_dungeoneering
+
+  - id: roll_dungeoneering
+    name: "Roll Dungeoneering Gear (twice)"
+    type: table_sequence
+    sequence:
+      table: dungeoneering_gear
+      count: 2
+      actions:
+        - append_value:
+            path: "variables.starting_dungeoneering"
+            value: "{{ result.entry }}"
+    next_step: add_dungeoneering
+
+  - id: add_dungeoneering
+    name: "Add Dungeoneering Gear"
+    type: flow_call
+    flow: add_items_to_character
+    inputs:
+      character: "{{ outputs.knave }}"
+      items: "{{ variables.starting_dungeoneering }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result.character }}"
+    next_step: roll_general_1
+
+  - id: roll_general_1
+    name: "Roll General Gear (table 1)"
+    type: table_roll
+    tables:
+      - table: general_gear_1
+        actions:
+          - set_value:
+              path: "variables.starting_general_1"
+              value: "{{ result.entry }}"
+    next_step: add_general_1
+
+  - id: add_general_1
+    name: "Add General Gear (table 1)"
+    type: flow_call
+    flow: add_item_to_character
+    inputs:
+      character: "{{ outputs.knave }}"
+      item: "{{ variables.starting_general_1 }}"
+    actions:
+      - set_value:
+          path: "outputs.knave"
+          value: "{{ result.character }}"
+    next_step: roll_general_2
+
+  - id: roll_general_2
+    name: "Roll General Gear (table 2)"
+    type: table_roll
+    tables:
+      - table: general_gear_2
+        actions:
+          - set_value:
+              path: "variables.starting_general_2"
+              value: "{{ result.entry }}"
+    next_step: add_general_2
+
+  - id: add_general_2
+    name: "Add General Gear (table 2)"
+    type: flow_call
+    flow: add_item_to_character
+    inputs:
+      character: "{{ outputs.knave }}"
+      item: "{{ variables.starting_general_2 }}"
     actions:
       - set_value:
           path: "outputs.knave"
