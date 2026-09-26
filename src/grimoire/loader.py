@@ -384,6 +384,9 @@ class SystemLoader:
             type=data.get("type", "unknown"),
             description=data.get("description"),
             default=data.get("default"),
+            # Distinguish an explicit `default: null` from an omitted default:
+            # both leave `default` as None, but only the first was declared.
+            has_default="default" in data,
             enum=data.get("enum"),
             optional=bool(data.get("optional", False)),
         )

@@ -34,6 +34,11 @@ class VariableDefinition:
     # Inputs only: whether the caller may omit it. The same presence flag as
     # model attributes; there is no `required` field.
     optional: bool = False
+    # Whether the definition declared a default at all. `default` alone cannot
+    # say: an explicit `default: null` and an omitted default both read as
+    # `None`. Downstream, a declared default (which may be null) is applied at
+    # flow start while an absent one is not — see wyrdbound F50.
+    has_default: bool = False
 
 
 @dataclass
