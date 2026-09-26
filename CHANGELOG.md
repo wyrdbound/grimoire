@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.1.1...grimoire-spec-v1.2.0) (2026-09-26)
+
+
+### Features
+
+* **knave:** complete roll_starting_gear for re-enabling ([38088de](https://github.com/wyrdbound/grimoire/commit/38088de6937776fd342451d26683dab5a430ac12))
+
+
+### Bug Fixes
+
+* **knave:** stop add_items_to_character shadowing inputs and truncating ([1ff9190](https://github.com/wyrdbound/grimoire/commit/1ff91905faf08354992499fb209de15a42680a04))
+* **quickstart:** complete spell_slots defaults and store spells as a list ([d625c16](https://github.com/wyrdbound/grimoire/commit/d625c160286ca32534977e59b2d3b20f34d418b6))
+
 ## [1.1.1](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.1.0...grimoire-spec-v1.1.1) (2026-09-26)
 
 
