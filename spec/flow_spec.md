@@ -48,6 +48,12 @@ Each input/output/variable definition includes:
   `optional: true`. This is the same presence flag models use — there is no
   `required` field. An optional input the caller omits reads as null in
   templates, so a flow can test it: `{{ inputs.player_name or 'Stranger' }}`.
+- **`default`** (outputs and variables): The value the variable or output
+  starts with. It may be null. A variable or output **without** a `default` is
+  absent until the flow sets it, and reading it before then is an error — an
+  omitted declaration is not the same as `default: null`. An optional input
+  the caller omits takes its `default` if it declares one, and is null
+  otherwise.
 - **`validate`** (outputs only): Whether to run validation on the output
 
 ### Inputs
@@ -72,6 +78,9 @@ outputs:
   - type: character
     id: new_character
     validate: true
+  - type: str
+    id: equipped_item
+    default: null    # starts as null; a later step may set it
 ```
 
 ### Variables
