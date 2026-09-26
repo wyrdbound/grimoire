@@ -236,7 +236,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.character.spells"
-          value: "{{ [result.spell_1, result.spell_2] | reject('equalto', '') | list | tojson }}"
+          value: "{{ [result.spell_1, result.spell_2] | reject('equalto', '') | list }}"
     next_step: done
 
   - id: done
