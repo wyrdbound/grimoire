@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.0.0...grimoire-spec-v1.1.0) (2026-09-26)
+
+
+### Features
+
+* distinguish an explicit `default: null` from no default ([b82dd7f](https://github.com/wyrdbound/grimoire/commit/b82dd7f7038b2c7d6cf68b2b64e80ff3061a1c26))
+
 ## [1.0.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v0.1.1...grimoire-spec-v1.0.0) (2026-09-25)
 
 
