@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.1.0...grimoire-spec-v1.1.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* **knave:** derive armor.defense from armor.bonus, not a bare bonus ([6f88a5d](https://github.com/wyrdbound/grimoire/commit/6f88a5de230b5079c648e1d7e18504e50fbe62d4))
+* parse an output's `validate` flag ([c0aff71](https://github.com/wyrdbound/grimoire/commit/c0aff71a847403620a29eddc457363616e210c43))
+
 ## [1.1.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.0.0...grimoire-spec-v1.1.0) (2026-09-26)
 
 
