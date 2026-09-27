@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.2.0...grimoire-spec-v1.3.0) (2026-09-27)
+
+
+### Features
+
+* **model:** reserve `_` attribute names; tag derived-model instances with `_model` ([dfa027f](https://github.com/wyrdbound/grimoire/commit/dfa027fb59387098757ac7fcd4e24c9da1b58883))
+
 ## [1.2.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.1.1...grimoire-spec-v1.2.0) (2026-09-26)
 
 
