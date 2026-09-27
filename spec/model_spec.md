@@ -72,6 +72,19 @@ Each attribute definition can include the following fields:
   Defaults to `false`: every attribute is required unless marked `optional: true`.
   This is the only presence flag — there is no `required` field.
 
+### Attribute Names
+
+Attribute names beginning with `_` are reserved for GRIMOIRE. Declaring one —
+as a leaf or as a group — is an error when the system is loaded. The prefix
+holds data that GRIMOIRE itself records on an instance; the one such key today
+is `_model` (see [Instances of Derived Models](#instances-of-derived-models)).
+
+```yaml
+attributes:
+  model: { type: str }    # fine: an ordinary name
+  _model: { type: str }   # error: `_` names are reserved
+```
+
 ### Presence, Defaults and Null
 
 - **Required attributes must have a value.** An instance is created with a
@@ -115,6 +128,12 @@ level: { type: int, range: "1..20", default: 1 }  # every character starts at 1
 #### Model Types
 
 Any model ID can be used as a type to reference other models.
+
+A value declared as a model — an attribute's `type`, or a list's `of` — accepts
+an instance of that model **or of any model that extends it**, directly or
+through its own parents. A `weapon` that extends `item` is an `item`, so it may
+be stored in `inventory: { type: list, of: item }` and keeps its own
+attributes there. The reverse does not hold: an `item` is not a `weapon`.
 
 ### Ranges
 
@@ -241,6 +260,43 @@ attributes:
 3. Multiple inheritance is supported via array notation
 4. Inheritance is resolved in the order specified in the `extends` array. Later models override fields from earlier ones where conflicts occur.
 
+### Instances of Derived Models
+
+Because a `weapon` may be stored where an `item` is declared, an instance must
+say which model it is — otherwise, once it has been saved as plain data and
+read back, nothing tells a weapon from an item. GRIMOIRE records this in a
+reserved key, `_model`:
+
+1. **An instance of a model that extends another model carries `_model`, set
+   to its own model id.** An instance of a model with no `extends` carries
+   none, and its data is unchanged. Authors never declare `_model` and never
+   write it: an implementation records it when it creates the instance.
+2. **`_model` is read-only.** Setting it to anything else is an error.
+3. **`_model` is part of the instance's data.** It is saved, copied and read
+   back with the rest, so a weapon stays a weapon through persistence, a flow
+   copying it into a list, or a template passing it along.
+4. **Where a model is declared, `_model` chooses what is built.** Data read
+   where `item` is declared is built as the model its `_model` names, which
+   must be `item` or a model that extends it; any other value is an error.
+   Data with no `_model` is built as the declared model.
+
+```yaml
+# character.inventory — { type: list, of: item } — as stored
+- { _model: weapon, name: "Sword", damage: "1d6", weapon_type: melee }
+- { name: "Rope", weight: 1.0, cost: 1 } # an item: no `_model`
+```
+
+Expressions may read `_model` like any attribute. It names the instance's own
+model exactly, so it matches `weapon` for a sword but never `item`. An instance
+of a model with no `extends` has none, and reading a missing `_model` is an
+error like any undefined name — so test `defined` first:
+
+```yaml
+weapons_carried:
+  type: list
+  derived: "{{ inventory | selectattr('_model', 'defined') | selectattr('_model', 'equalto', 'weapon') | list }}"
+```
+
 ## Validations
 
 Validation rules ensure that model instances satisfy game logic constraints. Each validation rule includes both an expression and a descriptive message:
@@ -335,3 +391,4 @@ validations:
 5. Derived attribute expressions must be syntactically valid
 6. Validation expressions must evaluate to boolean results
 7. The file must be valid YAML syntax
+8. Attribute names, at any depth, must not begin with `_` (reserved for GRIMOIRE)
