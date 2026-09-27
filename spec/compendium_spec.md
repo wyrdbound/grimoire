@@ -26,6 +26,11 @@ entries: {}
 - **`model`** (required): The model ID that all entries in this compendium must conform to
 - **`entries`** (required): Map of entry instances, where keys are entry IDs and values are model instances
 
+An entry does not declare `_model`. Every entry is an instance of the
+compendium's `model`; when that model extends another, an implementation
+records `_model` on the instance it builds from the entry (see
+`model_spec.md`, "Instances of Derived Models").
+
 ## Entries
 
 The entries section contains the actual game content. Each entry must be a valid instance of the specified model:

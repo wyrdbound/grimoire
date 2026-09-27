@@ -19,6 +19,25 @@ class AttributeDefinition:
     optional: bool = False
 
 
+RESERVED_PREFIX = "_"
+"""Attribute names beginning with this are reserved for GRIMOIRE.
+
+The first reserved name is ``_model``, the tag an instance of a derived model
+carries naming its own model (spec/model_spec.md, "Instances of Derived
+Models"). Reserving the whole prefix keeps any later tag from colliding with a
+system's attributes too.
+"""
+
+
+def reserved_name_error(path: str) -> str:
+    """The error for an attribute or group whose name uses the reserved prefix."""
+    return (
+        f"Attribute '{path}': names beginning with `{RESERVED_PREFIX}` are "
+        "reserved for GRIMOIRE (an instance of a derived model records its "
+        "model in `_model`). Rename it."
+    )
+
+
 def attribute_definition_errors(path: str, data: dict[str, Any]) -> list[str]:
     """Return the spec violations in one raw attribute definition.
 
@@ -263,10 +282,16 @@ class ModelDefinition:
     def _attribute_definition_errors(
         self, attrs: dict[str, Any], prefix: str = ""
     ) -> list[str]:
-        """Check every raw attribute definition, recursing into groups."""
+        """Check every raw attribute definition, recursing into groups.
+
+        Names are checked at every depth: a leaf and a group alike may not use
+        the reserved prefix.
+        """
         errors = []
         for key, value in attrs.items():
             path = f"{prefix}.{key}" if prefix else key
+            if key.startswith(RESERVED_PREFIX):
+                errors.append(reserved_name_error(path))
             if isinstance(value, dict):
                 if "type" in value:
                     errors.extend(attribute_definition_errors(path, value))
