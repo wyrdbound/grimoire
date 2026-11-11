@@ -420,7 +420,9 @@ class SystemLoader:
         except ValueError:
             step_type = None
 
-        choices = [self._parse_choice(c) for c in data.get("choices", [])]
+        choices = [
+            self._parse_choice(c, data.get("id")) for c in data.get("choices", [])
+        ]
 
         tables = [
             TableRollDefinition(
@@ -507,11 +509,30 @@ class SystemLoader:
             settings=data.get("settings") or {},
         )
 
-    def _parse_choice(self, data: dict[str, Any]) -> ChoiceDefinition:
-        # Some YAML files use 'value' instead of 'id' for the choice identifier
-        choice_id = data.get("id") or data.get("value", "")
+    def _parse_choice(self, data: dict[str, Any], step_id: Any) -> ChoiceDefinition:
+        """Parse one `player_choice` choice.
+
+        The player answers with the choice's `id`, so it must be exactly the
+        string the author wrote. A bare YAML `yes`/`no`/`on`/`off` is a
+        boolean by the time it reaches here, and coercing it with `str()`
+        would silently produce an id the author never wrote.
+        """
+        where = f"Step '{step_id}'"
+        if "value" in data:
+            raise ValueError(f"{where}: `value` is not a choice field; use `id`.")
+        if "id" not in data:
+            raise ValueError(f"{where}: every choice needs an `id`.")
+        choice_id = data["id"]
+        if not isinstance(choice_id, str):
+            raise ValueError(
+                f"{where}: choice `id` must be a string, got {choice_id!r} "
+                f"({type(choice_id).__name__}). YAML reads bare yes/no/on/off "
+                'and numbers as non-strings — quote the id (`id: "yes"`).'
+            )
+        if not choice_id:
+            raise ValueError(f"{where}: choice `id` must not be empty.")
         return ChoiceDefinition(
-            id=str(choice_id),
+            id=choice_id,
             label=data.get("label", ""),
             next_step=data.get("next_step"),
             actions=data.get("actions", []),
