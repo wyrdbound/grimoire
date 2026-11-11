@@ -357,10 +357,10 @@ steps:
     type: player_choice
     prompt: "Would you like to equip {{ variables.last_item_name }}?"
     choices:
-      - id: yes
+      - id: "yes"
         label: "Yes, equip it now"
         next_step: validate_equip_slot
-      - id: no
+      - id: "no"
         label: "No, keep it in my pack"
         next_step: shop_menu
 
