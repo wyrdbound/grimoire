@@ -1,11 +1,9 @@
-"""`roll_starting_gear` is complete and ready to be re-enabled.
+"""`roll_starting_gear` is implemented and live in character creation.
 
-`character_creation` skips starting gear (the step is commented out), but the
-sub-flow itself is implemented: it rolls armour, helmets/shields,
-dungeoneering gear (twice) and two general-gear tables, adding each roll
-through the inventory flows. This is the preparation for re-enabling it — the
-content is complete and loads; the caller's step stays commented until a
-decision is made to switch it on.
+The sub-flow rolls armour, helmets/shields, dungeoneering gear (twice) and two
+general-gear tables, adding each roll through the inventory flows.
+`character_creation` calls it between choosing the starting weapon and
+determining traits.
 
 The shape rules this pins:
 
@@ -73,14 +71,16 @@ def test_the_system_loads_and_validates_with_the_gear_flow() -> None:
     assert "roll_starting_gear" in system.flows
 
 
-def test_the_reenable_snippet_names_the_right_input_and_output() -> None:
-    """The commented caller step must use the sub-flow's declared input id and
-    read its output correctly, so uncommenting it works."""
-    body = CHAR_FLOW.read_text()
-    snippet = body[body.index("# - id: invoke_roll_starting_gear") :]
+def test_the_gear_step_is_live() -> None:
+    """The caller step uses the sub-flow's declared input id, reads its output
+    correctly, and chains on to a step that exists."""
+    flow = yaml.safe_load(CHAR_FLOW.read_text())
+    step = _step(flow, "invoke_roll_starting_gear")
+    step_ids = {s["id"] for s in flow["steps"]}
 
-    assert 'knave: "{{ outputs.knave }}"' in snippet  # the sub-flow's input id
-    assert 'value: "{{ result.knave }}"' in snippet
+    assert step["inputs"]["knave"] == "{{ outputs.knave }}"  # the declared id
+    assert step["actions"][0]["set_value"]["value"] == "{{ result.knave }}"
+    assert step["next_step"] in step_ids
 
 
 def test_helmet_and_shield_table_entry_is_read_as_a_collection() -> None:
