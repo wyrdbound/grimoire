@@ -20,18 +20,19 @@ entries:
     tags: [gear, utility]
   
   - id: torch
-    name: "Torch"
-    description: "A wooden torch, burns for 1 hour"
-    cost: 0.17
-    weight: 1.0
-    qty: 1
+    name: "Torches (6)"
+    description: "Six wooden torches, each burns for 1 hour"
+    cost: 1
+    weight: 6.0
+    qty: 6
     tags: [gear, light]
   
   - id: rations
-    name: "Rations (1 day)"
-    description: "One day's worth of preserved food"
-    cost: 0.5
-    weight: 2.0
+    name: "Rations (2 days)"
+    description: "Two days' worth of preserved food"
+    cost: 1
+    weight: 4.0
+    qty: 2
     tags: [gear, consumable, food]
   
   - id: waterskin
@@ -72,7 +73,7 @@ entries:
   - id: tinderbox
     name: "Tinderbox"
     description: "Flint, steel, and tinder for starting fires"
-    cost: 0.5
+    cost: 1
     weight: 1.0
     tags: [gear, utility]
   
@@ -98,9 +99,9 @@ entries:
     tags: [tool, utility]
   
   - id: piton
-    name: "Piton"
-    description: "Iron spike for securing rope"
-    cost: 0.05
-    weight: 0.25
-    qty: 1
+    name: "Pitons (10)"
+    description: "Ten iron spikes for securing rope"
+    cost: 1
+    weight: 2.5
+    qty: 10
     tags: [gear, climbing]
