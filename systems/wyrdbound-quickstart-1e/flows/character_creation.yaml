@@ -244,20 +244,20 @@ steps:
     type: completion
     actions:
       - display_message:
-          text: "✅ {{ outputs.character.name }} ({{ outputs.character.character_class }}) is ready for adventure!"
+          message: "✅ {{ outputs.character.name }} ({{ outputs.character.character_class }}) is ready for adventure!"
       - display_message:
-          text: "   HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
+          message: "   HP: {{ outputs.character.hit_points.current }}/{{ outputs.character.hit_points.max }}"
       - display_message:
-          text: "   Gold: {{ outputs.character.gold }} gp"
+          message: "   Gold: {{ outputs.character.gold }} gp"
       - display_message:
-          text: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
+          message: "   POW {{ outputs.character.power.score }} ({{ outputs.character.power.modifier }}) | AGI {{ outputs.character.agility.score }} ({{ outputs.character.agility.modifier }}) | MND {{ outputs.character.mind.score }} ({{ outputs.character.mind.modifier }}) | CHA {{ outputs.character.charm.score }} ({{ outputs.character.charm.modifier }})"
       - display_message:
-          text: "   Bearing: {{ outputs.character.traits.bearing }} | Manner: {{ outputs.character.traits.manner }} | Disposition: {{ outputs.character.traits.disposition }}"
+          message: "   Bearing: {{ outputs.character.traits.bearing }} | Manner: {{ outputs.character.traits.manner }} | Disposition: {{ outputs.character.traits.disposition }}"
       - display_message:
-          text: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"
+          message: "   Speech: {{ outputs.character.traits.speech }} | Background: {{ outputs.character.traits.background }}"
       - display_message:
-          text: "   Weapon: {{ outputs.character.equipped.main_hand or 'none' }} | Armor: {{ outputs.character.equipped.body or 'none' }} | AC: {{ outputs.character.armor_class }}"
+          message: "   Weapon: {{ outputs.character.equipped.main_hand or 'none' }} | Armor: {{ outputs.character.equipped.body or 'none' }} | AC: {{ outputs.character.armor_class }}"
       - display_message:
-          text: "   Spells: {{ outputs.character.spells | join(', ') or 'none' }}"
+          message: "   Spells: {{ outputs.character.spells | join(', ') or 'none' }}"
       - display_message:
-          text: "   Description: {{ outputs.character.description }}"
+          message: "   Description: {{ outputs.character.description }}"
