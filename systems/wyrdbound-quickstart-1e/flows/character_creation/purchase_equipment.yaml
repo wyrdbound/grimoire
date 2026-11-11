@@ -5,7 +5,7 @@ description: >
   Continuous equipment shop. Player chooses a category (weapons, armor, gear),
   browses items, gets an affordability check, then optionally equips the item.
   Loop continues until the player chooses "Done shopping".
-version: 4
+version: 5
 
 inputs:
   - id: character_class
@@ -25,7 +25,7 @@ outputs:
     default: 0
   - id: purchased_items
     type: list
-    of: str
+    of: item
     default: []
 
 variables:
@@ -337,7 +337,7 @@ steps:
           value: "{{ variables.gold }}"
       - append_value:
           path: "outputs.purchased_items"
-          value: "{{ variables.last_item_id }}"
+          value: "{{ variables.last_choice.entry }}"
       - display_message: "✅ Purchased {{ variables.last_item_name }} for {{ variables.last_item_cost }} gp. Remaining: {{ variables.gold }} gp."
     next_step: prompt_equip
 
