@@ -1,10 +1,10 @@
 kind: table
 id: gender
 name: "Gender"
-version: 1
+version: 2
 roll: 1d20
 description: "Gender options for characters"
 entries:
-  1-10: Female
-  11-19: Male
-  20: Non-binary
+  1-10: female
+  11-19: male
+  20: non-binary

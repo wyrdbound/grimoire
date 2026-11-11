@@ -2,7 +2,7 @@ kind: model
 id: character
 name: Knave
 description: "Character model for Knave (1st Edition)"
-version: 1
+version: 2
 attributes:
   name: { type: str }
   gender: { type: str, enum: ["female", "male", "non-binary"] }
@@ -18,7 +18,7 @@ attributes:
     current: { type: int, range: "0..{{ hit_points.max }}" } # track current
 
   armor:
-    bonus: { type: int, range: "0..10" }
+    bonus: { type: int, range: "0..10", default: 1 }
     defense: { type: int, derived: "{{ 10 + armor.bonus }}" }
 
   exploration_speed: { type: int, default: 120, range: "0..240" } # in feet

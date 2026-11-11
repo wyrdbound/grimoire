@@ -2,7 +2,7 @@ id: choose_name_and_gender
 kind: flow
 name: "Choose Character Name and Gender"
 description: "Name and gender selection for character creation process for {{ system.name }}"
-version: 1
+version: 2
 
 outputs:
   - id: character_name
@@ -33,19 +33,19 @@ steps:
         actions:
           - set_value:
               path: outputs.character_gender
-              value: Female
+              value: "{{ result.id }}"
       - id: male
         label: Male
         actions:
           - set_value:
               path: "outputs.character_gender"
-              value: Male
+              value: "{{ result.id }}"
       - id: non_binary
         label: Non-binary
         actions:
           - set_value:
               path: "outputs.character_gender"
-              value: Non-binary
+              value: "{{ result.id }}"
     actions:
       - display_value: "outputs.character_gender"
       - display_message: "Character gender is {{ outputs.character_gender }}"
@@ -100,7 +100,7 @@ steps:
       corpus: generic-fantasy
       segmenter: fantasy
       algorithm: bayesian
-      min_probability: 1e-4
+      min_probability: 0.0001
       best_of: 2
     actions:
       - set_value:
