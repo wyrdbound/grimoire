@@ -2,7 +2,7 @@ id: character_creation
 kind: flow
 name: "Character Creation"
 description: "Character creation process for {{ system.name }}"
-version: 1
+version: 2
 
 outputs:
   - id: knave
@@ -37,7 +37,7 @@ steps:
       - set_value:
           path: "outputs.knave.hit_points.current"
           value: "{{ result.hit_points }}"
-    next_step: invoke_choose_starting_weapon
+    next_step: invoke_choose_name_and_gender
 
   - id: invoke_choose_starting_weapon
     name: "Invoke Choose Starting Weapon"
@@ -48,7 +48,7 @@ steps:
     actions:
       - set_value:
           path: "outputs.knave"
-          value: "{{ result }}"
+          value: "{{ result.knave }}"
     next_step: invoke_determine_traits # TODO: Put this back to invoke_roll_starting_gear
 
   # Ready to uncomment: roll_starting_gear is now complete. It rolls armour,
@@ -77,7 +77,7 @@ steps:
       - set_value:
           path: "outputs.knave.traits"
           value: "{{ result.traits }}"
-    next_step: invoke_choose_name_and_gender
+    next_step: generate_character_description
 
   - id: invoke_choose_name_and_gender
     name: "Invoke Choose Name and Gender"
@@ -90,7 +90,7 @@ steps:
       - set_value:
           path: "outputs.knave.gender"
           value: "{{ result.character_gender }}"
-    next_step: generate_character_description
+    next_step: invoke_choose_starting_weapon
 
   - id: generate_character_description
     name: "Generate Character Description"
