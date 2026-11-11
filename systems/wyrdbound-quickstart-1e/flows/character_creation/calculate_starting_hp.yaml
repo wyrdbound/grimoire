@@ -98,6 +98,5 @@ steps:
       - set_value:
           path: "outputs.max_hp"
           value: "{{ variables.base_hp|int + variables.relevant_modifier|int }}"
-          type: int
       - display_message:
-          text: "Starting HP: {{ outputs.max_hp }} ({{ variables.base_hp }} base + {{ variables.relevant_modifier }} modifier)"
+          message: "Starting HP: {{ outputs.max_hp }} ({{ variables.base_hp }} base + {{ variables.relevant_modifier }} modifier)"
