@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.1](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.3.0...grimoire-spec-v1.3.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* **knave:** run name and gender before gear (F58, F59, F63–F65) ([231d38e](https://github.com/wyrdbound/grimoire/commit/231d38e0013d192cd44c468f7ca0cd8ebf25d446))
+* **knave:** switch starting gear on in character creation (B3) ([5fb4faa](https://github.com/wyrdbound/grimoire/commit/5fb4faae01f00ff7b43570c310669c88752d2208))
+* **loader:** reject a missing, empty or non-string choice id ([c9def93](https://github.com/wyrdbound/grimoire/commit/c9def93e58a7e5e68f45e96e1b080e018b435ba8))
+* **quickstart:** price adventuring gear in whole gold pieces ([60fac55](https://github.com/wyrdbound/grimoire/commit/60fac55f1ff7e2718c1f5031bfb5886c322b7f46))
+* **quickstart:** quote the yes/no choice ids in ask_equip ([758bbe7](https://github.com/wyrdbound/grimoire/commit/758bbe77a2cdd6c1d019ffe82cbec74ea71feeca))
+* **quickstart:** return purchased items from the shop as item entries ([0547b0b](https://github.com/wyrdbound/grimoire/commit/0547b0b16c35c5186a29aaa7ff8852b5df69063b))
+* **quickstart:** use the spec's action keys and dice result field ([58d2465](https://github.com/wyrdbound/grimoire/commit/58d24655ab54d7aa7d760716aecf135333b77d53))
+
 ## [1.3.0](https://github.com/wyrdbound/grimoire/compare/grimoire-spec-v1.2.0...grimoire-spec-v1.3.0) (2026-09-27)
 
 
