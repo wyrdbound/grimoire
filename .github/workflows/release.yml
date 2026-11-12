@@ -49,7 +49,7 @@ jobs:
   build-and-publish:
     needs: test
     runs-on: ubuntu-latest
-    environment: release
+    environment: pypi
     permissions:
       contents: read
       id-token: write # required for PyPI trusted publishing
