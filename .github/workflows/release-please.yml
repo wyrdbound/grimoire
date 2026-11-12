@@ -6,12 +6,14 @@ on:
       - main
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     outputs:
@@ -24,17 +26,21 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-  # A release created here is made with GITHUB_TOKEN, which emits no
-  # `release: published` event other workflows can see — so release.yml's
-  # `release` trigger never fires for it. Call the publish workflow directly
-  # instead: this job is part of a run triggered by a push to main, so it is
-  # not suppressed. No PAT is required.
+  # A release created here is made with GITHUB_TOKEN, whose events start no
+  # other workflow, so release.yml's `release: published` trigger never fires
+  # for it. workflow_dispatch is the exception GitHub makes, so the publish is
+  # dispatched. Calling release.yml as a reusable workflow instead fails at
+  # PyPI: the attestation names the calling workflow (release-please.yml),
+  # while the trusted publisher is registered for release.yml run on its own.
   publish:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
-    uses: ./.github/workflows/release.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag_name }}
+    runs-on: ubuntu-latest
     permissions:
-      contents: read
-      id-token: write # required for PyPI trusted publishing
+      actions: write
+    steps:
+      - name: Dispatch the release workflow for the new tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG" -f tag="$TAG"

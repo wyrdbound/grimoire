@@ -1,14 +1,15 @@
 name: Release
 
 # This workflow is the single publish path. It runs:
-#   - on a published Release (a human-created one, or a workflow_call below);
-#   - manually via workflow_dispatch, naming a tag;
-#   - when release-please.yml calls it after creating a release.
+#   - on a human-published Release;
+#   - via workflow_dispatch, naming a tag: by hand, or dispatched by
+#     release-please.yml after it creates a release.
 #
 # A release-please release is created with GITHUB_TOKEN, which emits no
-# `release: published` event other workflows can see, so it is reached through
-# workflow_call from release-please.yml (which runs on a normal push to main)
-# rather than through the `release` trigger. No PAT is needed.
+# `release: published` event other workflows can see, so release-please.yml
+# dispatches this workflow instead. It must run as a top-level workflow, not
+# a reusable one: PyPI's trusted publisher is registered for release.yml, and
+# a reusable workflow's attestation names its caller. No PAT is needed.
 on:
   release:
     types: [published]
@@ -17,12 +18,6 @@ on:
       tag:
         description: "Tag to publish (e.g. grimoire-spec-v1.0.0)"
         required: true
-  workflow_call:
-    inputs:
-      tag:
-        description: "Tag to publish"
-        required: true
-        type: string
 
 jobs:
   test:
@@ -32,7 +27,7 @@ jobs:
         python-version: ["3.11", "3.12"]
 
     steps:
-      # `inputs.tag` is set by workflow_call and workflow_dispatch; a release
+      # `inputs.tag` is set by workflow_dispatch; a release
       # event falls back to the tag it was published for.
       - uses: actions/checkout@v4
         with:
